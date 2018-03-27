@@ -1,6 +1,6 @@
 ## Collection
 
-![Travis](https://img.shields.io/badge/release-1.1.1-green.svg)
+![Travis](https://img.shields.io/badge/release-1.1.2-green.svg)
 ![Travis](https://img.shields.io/badge/llicense-MIT-green.svg)
 ![Travis](https://img.shields.io/badge/build-passing-green.svg)
 
