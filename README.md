@@ -11,14 +11,15 @@ Collection聚合了项目搭建的一些基本模块，节约开发者时间，�
 ![](https://upload-images.jianshu.io/upload_images/4361802-88c89753c38ddf70.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 
-
->###### github地址：
+>###### 简书地址：
 >###### 掘金地址：
 
 ## 项目介绍
 ### 文章目录
 
-**1.框架的引入**  
+**1.框架的引入**
+
+>implementation 'com.youngman:collectionlibrary:1.1.3'
 
 **2.PullToRefreshRecyclerView的使用** 
 

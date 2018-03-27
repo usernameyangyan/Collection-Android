@@ -74,7 +74,7 @@ bintray {
 
         version {
             name = '1.1.3'
-            desc = '节约开发者时间，协助项目的快速搭建，框架中提供的模块能够满足一个项目的基本实现。'
+            desc = 'Collection aggregates some of the basic modules of the project, saving developer time.'
             released  = new Date()
             vcsTag = 'v1.1.3'
             attributes = ['gradle-plugin': 'com.use.less:com.use.less.gradle:gradle-useless-plugin']
@@ -92,7 +92,7 @@ install {
                 packaging 'aar'
                 // Add your description here
                 name 'Collecction-Android'
-                description '节约开发者时间，协助项目的快速搭建，框架中提供的模块能够满足一个项目的基本实现。'
+                description 'Collection aggregates some of the basic modules of the project, saving developer time.'
                 url siteUrl
                 // Set your license
                 licenses {
