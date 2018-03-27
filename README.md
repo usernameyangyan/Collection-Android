@@ -1,5 +1,11 @@
 ## Collection
->Collection聚合了项目搭建的一些基本模块，节约开发者时间，协助项目的快速搭建,RecyclerView+Adapter+网络请求+MVP+基本Base,能够满足一个项目的基本实现，框架中暂时还没有把数据库和SharePrefence添加进去，以后会把两者跟网络请求封装在一起的 。
+
+![Travis](https://img.shields.io/badge/release-1.1.0-green.svg)
+![Travis](https://img.shields.io/badge/llicense-MIT-green.svg)
+![Travis](https://img.shields.io/badge/build-passing-green.svg)
+
+
+Collection聚合了项目搭建的一些基本模块，节约开发者时间，协助项目的快速搭建,RecyclerView+Adapter+网络请求+MVP+基本Base,能够满足一个项目的基本实现，框架中暂时还没有把数据库和SharePrefence添加进去，以后会把两者跟网络请求封装在一起的 。
 
 #### 更多交流请加微信公众号
 ![](https://upload-images.jianshu.io/upload_images/4361802-88c89753c38ddf70.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
@@ -558,7 +564,7 @@ destroy()是用来关掉改页面时把刷新View的一些动画等释放，防�
 	}
 #### 3.MVP+RxJava+Retrofit+OkHttp的缓存机制
 
-![](https://upload-images.jianshu.io/upload_images/4361802-e0f0294088db24bd.gif?imageMogr2/auto-orient/strip)
+[效果图](https://upload-images.jianshu.io/upload_images/4361802-e0f0294088db24bd.gif?imageMogr2/auto-orient/strip)
 
 
 ###### RetrofitManager.getApiService()+RequestManager.loadOnlyNetWork()+缓存配置即可  
@@ -606,9 +612,7 @@ destroy()是用来关掉改页面时把刷新View的一些动画等释放，防�
 
 #### 4.MVP+RxJava+Retrofit+自定义磁盘缓存机制
 
-
-![](https://upload-images.jianshu.io/upload_images/4361802-04e2322fc5f515ee.gif?imageMogr2/auto-orient/strip)
-
+[效果图](https://upload-images.jianshu.io/upload_images/4361802-04e2322fc5f515ee.gif?imageMogr2/auto-orient/strip)
 
 ###### RetrofitManager.getNoCacheApiService()+RequestManager提供的除了loadOnlyNetWork()的其他数据获取方式即可使用自定义磁盘缓存
 
