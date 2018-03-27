@@ -57,7 +57,7 @@ dependencies {
 
 }
 
-version = "1.1.2"
+version = "1.1.3"
 group = "com.youngman"
 
 bintray {
@@ -65,7 +65,7 @@ bintray {
     key = properties.getProperty("bintray.apikey")
     pkg {
         repo = 'collection'//自己bintray创建仓库名字
-        name = 'Collection'//Library的名字
+        name = 'collectionlibrary'//Library的名字
         websiteUrl = siteUrl
         vcsUrl = gitUrl
         licenses = ['MIT']//不能随便写，只能是仓库创建时选择的license type
@@ -73,10 +73,10 @@ bintray {
         publish = true // 是否是公开项目。
 
         version {
-            name = '1.1.2'
+            name = '1.1.3'
             desc = '节约开发者时间，协助项目的快速搭建，框架中提供的模块能够满足一个项目的基本实现。'
             released  = new Date()
-            vcsTag = 'v1.1.2'
+            vcsTag = 'v1.1.3'
             attributes = ['gradle-plugin': 'com.use.less:com.use.less.gradle:gradle-useless-plugin']
         }
     }
@@ -134,4 +134,13 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 artifacts {
     archives javadocJar
     archives sourcesJar
+}
+
+tasks.withType(Javadoc) {
+    options.addStringOption('Xdoclint:none', '-quiet') //忽略javadoc错误
+    options{
+        encoding "UTF-8"
+        charSet 'UTF-8'
+        links "http://docs.oracle.com/javase/7/docs/api"
+    }
 }
