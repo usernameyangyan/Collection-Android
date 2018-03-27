@@ -41,11 +41,10 @@ public class PermissionActivity extends BaseActivity{
 	@Override
 	public void requestData() {
 		permissionManager=PermissionManager.with(this).
-				setNonEssentialPermissions(PERMISSIONS1)
 				//必须权限
-				.setNecessaryPermissions(PERMISSIONS)
+				setNecessaryPermissions(PERMISSIONS)
 				//非必须权限
-
+				.setNonEssentialPermissions(PERMISSIONS1)
 				.build();
 	}
 
