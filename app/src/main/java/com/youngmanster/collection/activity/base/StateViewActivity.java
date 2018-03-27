@@ -81,9 +81,11 @@ public class StateViewActivity extends BaseActivity implements StateView.OnEmpty
 	}
 
 	private void setData(){
-		defaultRefreshAdapter = new DefaultRecyclerAdapter(this, mDatas, mRecyclerView);
-		mRecyclerView.setAdapter(defaultRefreshAdapter);
+		if(mRecyclerView!=null){
+			defaultRefreshAdapter = new DefaultRecyclerAdapter(this, mDatas, mRecyclerView);
+			mRecyclerView.setAdapter(defaultRefreshAdapter);
+			stateView.showViewByState(StateView.STATE_NO_DATA);
+		}
 
-		stateView.showViewByState(StateView.STATE_NO_DATA);
 	}
 }
