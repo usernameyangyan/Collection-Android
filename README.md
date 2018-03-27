@@ -880,10 +880,6 @@ destroy()是用来关掉改页面时把刷新View的一些动画等释放，防�
 			Manifest.permission.READ_SMS,
 			Manifest.permission.RECEIVE_WAP_PUSH,
 	};
-	//非必要权限，就算禁止对项目也没有多大影响
-	private static final String[] PERMISSIONS1 = new String[]{
-			Manifest.permission.RECORD_AUDIO
-	};
 
 
 ##### （2）权限通过PermissionManager管理
@@ -891,8 +887,6 @@ destroy()是用来关掉改页面时把刷新View的一些动画等释放，防�
 	PermissionManager permissionManager=PermissionManager.with(this).
 				//必须权限
 				setNecessaryPermissions(PERMISSIONS)
-				//非必须权限
-				.setNonEssentialPermissions(PERMISSIONS1)
 				.build();
 
 
@@ -915,10 +909,11 @@ destroy()是用来关掉改页面时把刷新View的一些动画等释放，防�
 
 
 
-- 如果是非必要权限被禁止了，就默认用户已经不需要重新对该权限就行提示。
+- 多个权限请求如果其中某一个被禁止提醒，会先把没有禁止提醒的权限处理完之后再进行处理。
 - 如果是必要权限被禁止而没有选择禁止提醒退出之后下次会重新请求权限。
 - 如果必要权限被禁止和选择了禁止提醒重新进入页面在onRequestPermissionsResult会重新回调方法。
 - 使用者可以根据onRequestPermissionsResult（）方法中返回来的标志PermissionManager.EXIST_NECESSARY_PERMISSIONS_PROHIBTED和PermissionManager.EXIST_NECESSARY_PERMISSIONS_PROHIBTED_NOT_REMIND做出对应的显示和操作（例如弹框提示跳转到设置页面或者toat提示）。
+
 
 #### 本文章会根据需要持续更新，建议star收藏，便于查看。也欢迎大家提出更多建议。
 
