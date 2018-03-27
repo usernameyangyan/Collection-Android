@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -108,21 +109,39 @@ public class PermissionManager {
 		}
 	}
 
+	private boolean isNotRemind;
+	private boolean isRemind;
+
 	/**
 	 * 是否存在必要权限没有允许
 	 */
 	public int getShouldShowRequestPermissionsCode() {
-		for (String permission : necessaryPermissions) {
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-				if (isLackPermission(permission) && mActivity.shouldShowRequestPermissionRationale(permission)) {
-					return EXIST_NECESSARY_PERMISSIONS_PROHIBTED;
-				} else if (isLackPermission(permission) && !mActivity.shouldShowRequestPermissionRationale(permission)) {
-					return EXIST_NECESSARY_PERMISSIONS_PROHIBTED_NOT_REMIND;
+		isNotRemind = false;
+		isRemind = false;
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+
+			for (int i = 0; i < deniedPermissions.size(); i++) {
+				boolean isTip = ActivityCompat.shouldShowRequestPermissionRationale(mActivity, deniedPermissions.get(i));
+				if (isLackPermission(deniedPermissions.get(i))) {
+					if (isTip) {//表明用户没有彻底禁止弹出权限请求
+						isRemind = true;
+					} else {//表明用户已经彻底禁止弹出权限请求
+						isNotRemind = true;
+					}
 				}
-			} else {
-				return 0;
 			}
+
+			if (isRemind) {
+				return EXIST_NECESSARY_PERMISSIONS_PROHIBTED;
+			} else if (isNotRemind) {
+				return EXIST_NECESSARY_PERMISSIONS_PROHIBTED_NOT_REMIND;
+
+			}
+
+		} else {
+			return 0;
 		}
+
 		return 0;
 	}
 
