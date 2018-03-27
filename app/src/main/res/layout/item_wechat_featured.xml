@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.v7.widget.CardView
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:id="@+id/card_view"
+	style="@style/CardItemClick"
+	android:layout_width="wrap_content"
+	android:layout_height="120dp"
+	android:layout_gravity="center"
+	android:layout_marginLeft="5dp"
+	android:layout_marginRight="5dp"
+	android:layout_marginTop="10dp">
+
+	<LinearLayout
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content">
+
+		<ImageView
+			android:id="@+id/weChatIv"
+			android:layout_width="120dp"
+			android:layout_height="120dp"
+			android:scaleType="fitXY"/>
+
+
+		<RelativeLayout
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:layout_marginLeft="10dp"
+			android:layout_marginRight="5dp">
+
+			<TextView
+				android:id="@+id/weChatTitleTv"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="5dp"
+				android:lines="4"
+				android:ellipsize="end"
+				android:textColor="@android:color/black"/>
+
+			<TextView
+				android:id="@+id/weChatNameTv"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_alignParentBottom="true"
+				android:layout_marginBottom="10dp"
+				android:layout_marginRight="5dp"/>
+
+			<TextView
+				android:id="@+id/weChatTimeTv"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_alignParentBottom="true"
+				android:layout_alignParentRight="true"
+				android:layout_marginBottom="10dp"
+				android:layout_marginRight="5dp"/>
+		</RelativeLayout>
+	</LinearLayout>
+
+</android.support.v7.widget.CardView>
+
+

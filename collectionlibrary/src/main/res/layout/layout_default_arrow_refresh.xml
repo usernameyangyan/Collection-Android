@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+			  xmlns:app="http://schemas.android.com/apk/res-auto"
+			  android:layout_width="match_parent"
+			  android:layout_height="wrap_content"
+			  android:orientation="vertical">
+
+	<LinearLayout
+		android:layout_width="wrap_content"
+		android:layout_height="80dp"
+		android:layout_centerInParent="true"
+		android:layout_alignParentBottom="true"
+		android:gravity="bottom">
+
+		<RelativeLayout
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:layout_marginRight="10dp">
+			<ImageView
+				android:id="@+id/refresh_arrow"
+				android:layout_width="20dp"
+				android:layout_height="20dp"
+				android:layout_centerVertical="true"
+
+				android:src="@mipmap/icon_refresh_arrow"/>
+
+			<com.wang.avi.AVLoadingIndicatorView
+				android:id="@+id/av_progressbar"
+				android:layout_width="30dp"
+				android:layout_height="30dp"
+				android:layout_centerVertical="true"
+				android:visibility="invisible"
+				app:indicatorName="BallClipRotateMultipleIndicator"/>
+		</RelativeLayout>
+
+
+		<LinearLayout
+			android:id="@+id/refresh_tip_ll"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_centerInParent="true"
+			android:layout_gravity="center"
+			android:orientation="vertical">
+
+			<TextView
+				android:id="@+id/refresh_status_tv"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_gravity="center_horizontal"
+				android:gravity="center"
+				android:text="@string/collection_pull_to_refresh"/>
+
+			<LinearLayout
+				android:id="@+id/refresh_time_container"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_marginTop="3dp"
+				android:visibility="gone">
+
+				<TextView
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:text="@string/collection_last_refresh_time"
+					android:textSize="12sp"/>
+
+				<TextView
+					android:id="@+id/last_refresh_time"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:textSize="12sp"/>
+			</LinearLayout>
+
+		</LinearLayout>
+
+
+	</LinearLayout>
+
+</RelativeLayout>

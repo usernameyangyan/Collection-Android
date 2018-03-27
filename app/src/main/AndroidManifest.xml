@@ -1,0 +1,111 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+		  package="com.youngmanster.collection">
+
+	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+
+	<!--测试权限-->
+	<uses-permission android:name="android.permission.RECORD_AUDIO"/>
+	<uses-permission android:name="android.permission.READ_SMS"/>
+	<uses-permission android:name="android.permission.RECEIVE_WAP_PUSH"/>
+
+	<application
+		android:allowBackup="true"
+		android:name=".common.AppApplication"
+		android:icon="@mipmap/ic_launcher"
+		android:label="@string/app_name"
+		android:roundIcon="@mipmap/ic_launcher_round"
+		android:supportsRtl="true"
+		android:theme="@style/AppTheme">
+
+		<activity
+			android:name=".activity.MainActivity"
+			android:screenOrientation="portrait"
+			android:theme="@style/AppTheme.NoActionBar">
+			<intent-filter>
+				<action android:name="android.intent.action.MAIN"/>
+
+				<category android:name="android.intent.category.LAUNCHER"/>
+			</intent-filter>
+		</activity>
+
+		<activity
+			android:name=".activity.recyclerview.RecyclerViewActivity"
+			android:screenOrientation="portrait"
+			android:theme="@style/AppTheme.NoActionBar"/>
+
+		<activity
+			android:name=".activity.recyclerview.RefreshActivity"
+			android:screenOrientation="portrait"
+			android:theme="@style/AppTheme.NoActionBar"/>
+
+		<activity
+			android:name=".activity.recyclerview.HeaderAndEmptyViewActivity"
+			android:screenOrientation="portrait"
+			android:theme="@style/AppTheme.NoActionBar"/>
+
+		<activity
+			android:name=".activity.recyclerview.NoMoreDateAndAutoRefreshActivity"
+			android:screenOrientation="portrait"
+			android:theme="@style/AppTheme.NoActionBar"/>
+
+		<activity
+			android:name=".activity.baseadapter.BaseAdapterActivity"
+			android:screenOrientation="portrait"
+			android:theme="@style/AppTheme.NoActionBar"/>
+
+		<activity
+			android:name=".activity.baseadapter.ItemClickActivity"
+			android:screenOrientation="portrait"
+			android:theme="@style/AppTheme.NoActionBar"/>
+
+		<activity
+			android:name=".activity.baseadapter.DragAndDeleteActivity"
+			android:screenOrientation="portrait"
+			android:theme="@style/AppTheme.NoActionBar"/>
+
+		<activity
+			android:name=".activity.baseadapter.MultipleItemActivity"
+			android:screenOrientation="portrait"
+			android:theme="@style/AppTheme.NoActionBar"/>
+
+		<activity
+			android:name=".activity.base.BaseUiActivity"
+			android:screenOrientation="portrait"
+			android:theme="@style/AppTheme.NoActionBar"/>
+
+		<activity
+			android:name=".activity.base.IntroductionActivity"
+			android:screenOrientation="portrait"
+			android:theme="@style/AppTheme.NoActionBar"/>
+
+		<activity
+			android:name=".activity.base.StateViewActivity"
+			android:screenOrientation="portrait"
+			android:theme="@style/AppTheme.NoActionBar"/>
+
+		<activity
+			android:name=".mvp.ui.wechat.activity.WeChatFeaturedActivity"
+			android:screenOrientation="portrait"
+			android:theme="@style/AppTheme.NoActionBar"/>
+
+		<activity
+			android:name=".mvp.ui.MVPActivity"
+			android:screenOrientation="portrait"
+			android:theme="@style/AppTheme.NoActionBar"/>
+
+		<activity
+			android:name=".mvp.ui.wechat.activity.WeChatNewsActivity"
+			android:screenOrientation="portrait"
+			android:theme="@style/AppTheme.NoActionBar"/>
+
+		<activity android:name=".activity.base.PermissionActivity"
+				  android:screenOrientation="portrait"
+				  android:theme="@style/AppTheme.NoActionBar"/>
+
+		<activity android:name=".mvp.ui.wechat.activity.WeChatNewsDefinitionActivity"
+			android:screenOrientation="portrait"
+			android:theme="@style/AppTheme.NoActionBar"/>
+
+	</application>
+</manifest>

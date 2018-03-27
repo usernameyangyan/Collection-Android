@@ -1,0 +1,40 @@
+<resources>
+	<string name="app_name">Collection-master</string>
+
+	<string name="activity_main_title">Collection</string>
+	<string name="activity_pull_refresh_title">RecyclerView</string>
+	<string name="fragment_refresh_title">Refresh/LoadingMore</string>
+	<string name="fragment_header_title">AddHeader/EmptyView</string>
+	<string name="fragment_auto_title">NoMoreData/AutoRefresh</string>
+
+	<string name="activity_base_adapter_title">BaseAdapter</string>
+	<string name="activity_item_click_title">ItemClick/ItemLongClick</string>
+	<string name="activity_drag_delete_title">Drag/Delete</string>
+	<string name="activity_multiple_title">MultipleItem</string>
+
+	<string name="activity_wechat_title">微信精选</string>
+
+	<string name="activity_base_ui_title">Base介绍</string>
+	<string name="activity_state_view">StateView</string>
+	<string name="activity_permission">权限管理</string>
+
+
+	<string name="default_refresh">默认</string>
+	<string name="definition_refresh">自定义</string>
+	<string name="google_refresh">Google刷新</string>
+
+	<string name="news_title">新闻资讯</string>
+	<string name="world_news">国际新闻</string>
+	<string name="guonei_news">国内新闻</string>
+	<string name="nba_news">NBA新闻</string>
+	<string name="all_title">MVP+RxJava+Retrofit</string>
+
+	<string name="fen_ye_cache">分页缓存</string>
+	<string name="limit_time_cache">缓存限时</string>
+
+	<string name="add_header">AddHeader</string>
+	<string name="set_empty">EmptyView</string>
+
+	<string name="no_more_data">NoMoreData</string>
+	<string name="auto_refresh">AutoRefresh</string>
+</resources>

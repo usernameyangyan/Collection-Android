@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:orientation="vertical">
+
+	<include layout="@layout/common_toolbar"/>
+
+	<android.support.v4.widget.NestedScrollView
+		xmlns:android="http://schemas.android.com/apk/res/android"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent">
+
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:layout_marginLeft="5dp"
+			android:layout_marginRight="5dp"
+			android:orientation="vertical">
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_gravity="center"
+				android:lineSpacingExtra="5dp"
+				android:layout_marginTop="10dp"
+				android:textColor="@android:color/holo_red_dark"
+				android:textSize="20sp"
+				android:text="Base主要包括:IBaseAcitivty、IBaseFragment、StateView、MVP。"/>
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_gravity="center"
+				android:lineSpacingExtra="5dp"
+				android:textColor="@android:color/black"
+				android:layout_marginTop="10dp"
+				android:text="1.IBaseActivity：主要提供了一个页面的基本方法、处理了MVP之间的关联、使用者可以直接继承该类使用、也可以继承该类实现扩展。"
+				android:textSize="18sp"/>
+
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_gravity="center"
+				android:lineSpacingExtra="10dp"
+				android:textColor="@android:color/black"
+				android:layout_marginTop="5dp"
+				android:text="2.IBaseFragment：主要提供一个页面的基本方法，处理了MVP之间的关联，该类已经加入了懒人加载的控制方式、使用者可以直接继承该类使用、也可以继承该类实现扩展。"
+				android:textSize="18sp"/>
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_gravity="center"
+				android:lineSpacingExtra="10dp"
+				android:textColor="@android:color/black"
+				android:layout_marginTop="5dp"
+				android:text="3.StateView：页面状态显示View，封装了正在加载和空数据两种状态。"
+				android:textSize="18sp"/>
+
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_gravity="center"
+				android:lineSpacingExtra="10dp"
+				android:textColor="@android:color/black"
+				android:layout_marginTop="5dp"
+				android:text="4.MVP:BaseView、BasePresenter以及BaseModel已写好，它们之间的关联已经在IBaseActivity/IBaseFragment已经封装好，直接继承IBaseActivity/IBaseFragment就可以使用。"
+				android:textSize="18sp"
+				android:layout_marginBottom="10dp"/>
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_gravity="center"
+				android:lineSpacingExtra="10dp"
+				android:textColor="@android:color/black"
+				android:layout_marginTop="5dp"
+				android:text="5.权限请求管理，主要通过PermissionManager对权限进行管理，只需三步即可，简单方便。"
+				android:textSize="18sp"
+				android:layout_marginBottom="10dp"/>
+		</LinearLayout>
+	</android.support.v4.widget.NestedScrollView>
+
+</LinearLayout>

@@ -1,0 +1,136 @@
+apply plugin: 'com.android.library'
+apply plugin: 'com.jfrog.bintray'
+apply plugin: 'com.github.dcendents.android-maven'
+
+def siteUrl = "https://github.com/usernameyangyan/Collection-Android"   // 项目的主页
+def gitUrl = 'https://github.com/usernameyangyan/Collection-Android.git'   // Git仓库的url
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+android {
+    compileSdkVersion 26
+
+    defaultConfig {
+        minSdkVersion 19
+        targetSdkVersion 26
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'com.android.support.test:runner:1.0.1'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+
+    implementation supportDependencies.appCompat
+    implementation supportDependencies.recyclerview
+
+    /**
+     * 动画集合
+     * https://github.com/81813780/AVLoadingIndicatorView
+     */
+    implementation thirdDependencies.avi
+    /**
+     * retrofit和rxjava
+     */
+    compile thirdDependencies.rxjava
+    compile thirdDependencies.rxandroid
+    compile thirdDependencies.retrofit
+    compile thirdDependencies.gsonConverter
+    compile thirdDependencies.rxjavaAdapter
+    compile thirdDependencies.loggingInterceptor
+
+}
+
+version = "1.1.0"
+group = "com.youngman"
+
+bintray {
+    user = properties.getProperty("bintray.user")
+    key = properties.getProperty("bintray.apikey")
+    pkg {
+        repo = 'collection'//自己bintray创建仓库名字
+        name = 'Collection'//Library的名字
+        websiteUrl = siteUrl
+        vcsUrl = gitUrl
+        licenses = ['MIT']//不能随便写，只能是仓库创建时选择的license type
+        userOrg = 'youngmanopen' //自己bintray创建的organization名称
+        publish = true // 是否是公开项目。
+
+        version {
+            name = '1.1.0'
+            desc = '节约开发者时间，协助项目的快速搭建，框架中提供的模块能够满足一个项目的基本实现。'
+            released  = new Date()
+            vcsTag = 'v1.1.0'
+            attributes = ['gradle-plugin': 'com.use.less:com.use.less.gradle:gradle-useless-plugin']
+        }
+    }
+    configurations = ['archives']
+}
+
+
+install {
+    repositories.mavenInstaller {
+        // This generates POM.xml with proper parameters
+        pom {
+            project {
+                packaging 'aar'
+                // Add your description here
+                name 'Collecction-Android'
+                description '节约开发者时间，协助项目的快速搭建，框架中提供的模块能够满足一个项目的基本实现。'
+                url siteUrl
+                // Set your license
+                licenses {
+                    license {
+                        name 'MIT'
+                        url 'https://raw.githubusercontent.com/youngman/Collection-Android/master/LICENSE'
+                    }
+                }
+                developers {
+                    developer {
+                        id 'youngever'        //填写bintray或者github的用户名
+                        name 'youngman'         //姓名，可以是中文
+                        email 'youngman6627@gmail.com'
+                    }
+                }
+                scm {
+                    connection gitUrl
+                    developerConnection gitUrl
+                    url siteUrl
+                }
+            }
+        }
+    }
+}
+
+task sourcesJar(type: Jar) {
+    from android.sourceSets.main.java.srcDirs
+    classifier = 'sources'
+}
+task javadoc(type: Javadoc) {
+    failOnError false //必须添加以免出错
+    source = android.sourceSets.main.java.srcDirs
+    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+}
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+artifacts {
+    archives javadocJar
+    archives sourcesJar
+}

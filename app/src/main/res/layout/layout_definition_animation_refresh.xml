@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="bottom">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp">
+
+        <ImageView
+            android:id="@+id/iv_pull_bg_one"
+            android:src="@mipmap/pull_back"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <ImageView
+            android:id="@+id/iv_pull_bg_two"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:src="@mipmap/pull_back" />
+
+        <RelativeLayout
+            android:id="@+id/mainRl"
+            android:layout_centerHorizontal="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:layout_marginTop="22dp"
+                android:id="@+id/iv_rider"
+                android:background="@mipmap/pull_rider"
+                android:layout_width="40dp"
+                android:layout_height="40dp" />
+            <ImageView
+                android:id="@+id/ivWheelOne"
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="62dp"
+                android:background="@mipmap/pull_wheel"
+                android:layout_width="15dp"
+                android:layout_height="15dp" />
+            <ImageView
+                android:id="@+id/ivWheelTwo"
+                android:layout_marginLeft="33dp"
+                android:layout_marginTop="62dp"
+                android:background="@mipmap/pull_wheel"
+                android:layout_width="15dp"
+                android:layout_height="15dp" />
+        </RelativeLayout>
+        <ImageView
+            android:id="@+id/ivSun"
+            android:layout_marginTop="8dp"
+            android:layout_toRightOf="@+id/mainRl"
+            android:layout_marginLeft="10dp"
+            android:background="@mipmap/pull_sun"
+            android:layout_width="30dp"
+            android:layout_height="30dp" />
+
+    </RelativeLayout>
+
+
+</LinearLayout>

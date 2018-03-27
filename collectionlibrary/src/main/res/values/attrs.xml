@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+   <declare-styleable name="StateView">
+       <!--加载动画-->
+       <attr name="loadingViewAnimation" format="reference"/>
+       <!--加载提示-->
+       <attr name="loadingText" format="string"/>
+       <!--空布局显示图片-->
+       <attr name="emptyImage" format="reference"/>
+       <attr name="emptyText" format="string"/>
+       <!--断网显示图片-->
+       <attr name="disConnectImage" format="reference"/>
+       <attr name="disConnectText" format="string"/>
+       <!-- 文字大小 -->
+       <attr name="tipTextSize" format="dimension" />
+       <!-- 文字颜色 -->
+       <attr name="tipTextColor" format="color" />
+   </declare-styleable>
+
+    <attr name="styleStateView" format="reference" />
+
+    <style name="StateView">
+    </style>
+    <style name="StateView.Config">
+        <item name="loadingText">正在加载中...</item>
+        <item name="emptyImage">@mipmap/ic_bttom_loading_01</item>
+        <item name="emptyText">没有数据...</item>
+        <item name="disConnectImage">@mipmap/icon_disconnect</item>
+        <item name="disConnectText">发生错误，请点击重试...</item>
+
+        <item name="tipTextSize">14sp</item>
+        <item name="tipTextColor">#8a000000</item>
+    </style>
+</resources>
