@@ -21,10 +21,7 @@ public class PermissionActivity extends BaseActivity{
 	private static final String[] PERMISSIONS = new String[]{
 			Manifest.permission.READ_SMS,
 			Manifest.permission.RECEIVE_WAP_PUSH,
-	};
-	//非必要权限，就算禁止对项目也没有多大影响
-	private static final String[] PERMISSIONS1 = new String[]{
-			Manifest.permission.ACCESS_FINE_LOCATION
+			Manifest.permission.READ_CONTACTS
 	};
 
 	@Override
@@ -41,10 +38,7 @@ public class PermissionActivity extends BaseActivity{
 	@Override
 	public void requestData() {
 		permissionManager=PermissionManager.with(this).
-				//必须权限
 				setNecessaryPermissions(PERMISSIONS)
-				//非必须权限
-				.setNonEssentialPermissions(PERMISSIONS1)
 				.build();
 	}
 

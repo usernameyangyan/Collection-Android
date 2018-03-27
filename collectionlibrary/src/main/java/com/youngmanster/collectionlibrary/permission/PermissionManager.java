@@ -7,9 +7,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
-
-import com.youngmanster.collectionlibrary.utils.LogUtils;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,19 +22,15 @@ public class PermissionManager {
 	public static final int EXIST_NECESSARY_PERMISSIONS_PROHIBTED_NOT_REMIND = 1002;//存在必要权限永远不提示禁止
 	public static final int PERMISSION_REQUEST_CODE = 0; // 系统权限管理页面的参数
 	private static final String PACKAGE_URL_SCHEME = "package:";
-
 	private Activity mActivity;
 	private List<String> necessaryPermissions = new ArrayList<>();
-	private List<String> allNecessaryPermissions = new ArrayList<>();
-	private List<String> nonEssentialPermissions =new ArrayList<>();
 	private List<String> deniedPermissions = new ArrayList<>();
 
 
 	private PermissionManager() {
 		necessaryPermissions.clear();
-		allNecessaryPermissions.clear();
 		deniedPermissions.clear();
-		nonEssentialPermissions.clear();
+
 	}
 
 
@@ -58,22 +51,9 @@ public class PermissionManager {
 		for (String permission : permissions) {
 			necessaryPermissions.add(permission);
 		}
-
-		allNecessaryPermissions.addAll(necessaryPermissions);
 		return this;
 	}
 
-	/**
-	 * 非必须的权限，不会影响项目的正常运行
-	 */
-	public PermissionManager setNonEssentialPermissions(String... permissions) {
-		for (String permission : permissions) {
-			nonEssentialPermissions.add(permission);
-		}
-
-		allNecessaryPermissions.addAll(nonEssentialPermissions);
-		return this;
-	}
 
 	/**
 	 * 开始检测是否允许权限
@@ -90,20 +70,15 @@ public class PermissionManager {
 	 * @return
 	 */
 	public boolean isLackPermission(String permission) {
-		if(ActivityCompat.checkSelfPermission(mActivity, permission) == PackageManager.PERMISSION_DENIED){
+		if (ActivityCompat.checkSelfPermission(mActivity, permission) == PackageManager.PERMISSION_DENIED) {
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-				if(nonEssentialPermissions.contains(permission)&&
-						(mActivity.shouldShowRequestPermissionRationale(permission))){
-					return false;
-				}else{
-					return true;
-				}
-			}else{
+				return true;
+			} else {
 				return false;
 			}
+		} else {
+			return false;
 		}
-
-		return false;
 	}
 
 	/**
@@ -111,14 +86,14 @@ public class PermissionManager {
 	 */
 	public String[] getDeniedPermissions() {
 		String[] permissions;
-		for (String permission : allNecessaryPermissions) {
+		for (String permission : necessaryPermissions) {
 			if (isLackPermission(permission)) {
 				deniedPermissions.add(permission);
 			}
 		}
-		if(deniedPermissions.size()==0){
+		if (deniedPermissions.size() == 0) {
 			return null;
-		}else{
+		} else {
 			permissions = deniedPermissions.toArray(new String[deniedPermissions.size()]);
 			return permissions;
 		}
@@ -128,7 +103,7 @@ public class PermissionManager {
 	 * 权限请求
 	 */
 	public void requestPermissions() {
-		if(getDeniedPermissions()!=null){
+		if (getDeniedPermissions() != null) {
 			ActivityCompat.requestPermissions(mActivity, getDeniedPermissions(), PERMISSION_REQUEST_CODE);
 		}
 	}
@@ -154,7 +129,7 @@ public class PermissionManager {
 	/**
 	 * 装转到应用设置页面
 	 */
-	public void startAppSettings(){
+	public void startAppSettings() {
 		Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
 		intent.setData(Uri.parse(PACKAGE_URL_SCHEME + mActivity.getPackageName()));
 		mActivity.startActivity(intent);
