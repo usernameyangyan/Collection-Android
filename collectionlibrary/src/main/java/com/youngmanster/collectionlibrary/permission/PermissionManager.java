@@ -8,6 +8,8 @@ import android.os.Build;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 
+import com.youngmanster.collectionlibrary.utils.LogUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -91,8 +93,7 @@ public class PermissionManager {
 		if(ActivityCompat.checkSelfPermission(mActivity, permission) == PackageManager.PERMISSION_DENIED){
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 				if(nonEssentialPermissions.contains(permission)&&
-						(mActivity.shouldShowRequestPermissionRationale(permission)||
-								(mActivity.shouldShowRequestPermissionRationale(permission)))){
+						(mActivity.shouldShowRequestPermissionRationale(permission))){
 					return false;
 				}else{
 					return true;

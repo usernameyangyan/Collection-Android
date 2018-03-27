@@ -24,7 +24,7 @@ public class PermissionActivity extends BaseActivity{
 	};
 	//非必要权限，就算禁止对项目也没有多大影响
 	private static final String[] PERMISSIONS1 = new String[]{
-			Manifest.permission.RECORD_AUDIO
+			Manifest.permission.ACCESS_FINE_LOCATION
 	};
 
 	@Override
@@ -41,10 +41,11 @@ public class PermissionActivity extends BaseActivity{
 	@Override
 	public void requestData() {
 		permissionManager=PermissionManager.with(this).
+				setNonEssentialPermissions(PERMISSIONS1)
 				//必须权限
-				setNecessaryPermissions(PERMISSIONS)
+				.setNecessaryPermissions(PERMISSIONS)
 				//非必须权限
-				.setNonEssentialPermissions(PERMISSIONS1)
+
 				.build();
 	}
 
