@@ -88,14 +88,6 @@ public class FragmentChinaNewsDefinition extends BaseFragment<WeChatChinaNewsDef
     }
 
     @Override
-    public void onError(NetWorkCodeException.ResponseThrowable e) {
-        showToast(e.message);
-        if (mDatas.size() == 0) {
-            stateView.showViewByState(StateView.STATE_DISCONNECT);
-        }
-    }
-
-    @Override
     public void onItemClick(View view, int position) {
 
     }
@@ -106,6 +98,14 @@ public class FragmentChinaNewsDefinition extends BaseFragment<WeChatChinaNewsDef
         if (refreshRv != null) {
             refreshRv.destroy();
             refreshRv = null;
+        }
+    }
+
+    @Override
+    public void onError(String errorMsg) {
+        showToast(errorMsg);
+        if (mDatas.size() == 0) {
+            stateView.showViewByState(StateView.STATE_DISCONNECT);
         }
     }
 }

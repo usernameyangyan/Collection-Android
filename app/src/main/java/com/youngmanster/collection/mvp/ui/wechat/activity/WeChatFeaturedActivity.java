@@ -97,13 +97,6 @@ public class WeChatFeaturedActivity extends BaseActivity<WeChatFeaturedModel, We
 
 	}
 
-	@Override
-	public void onError(NetWorkCodeException.ResponseThrowable e) {
-		showToast(e.message);
-		if(mDatas.size()==0){
-			stateView.showViewByState(StateView.STATE_DISCONNECT);
-		}
-	}
 
 	@Override
 	public void onRecyclerViewRefresh() {
@@ -127,6 +120,14 @@ public class WeChatFeaturedActivity extends BaseActivity<WeChatFeaturedModel, We
 		if(refreshRv != null){
 			refreshRv.destroy();
 			refreshRv = null;
+		}
+	}
+
+	@Override
+	public void onError(String errorMsg) {
+		showToast(errorMsg);
+		if(mDatas.size()==0){
+			stateView.showViewByState(StateView.STATE_DISCONNECT);
 		}
 	}
 }

@@ -38,8 +38,9 @@ public class PermissionActivity extends BaseActivity{
 	@Override
 	public void requestData() {
 		permissionManager=PermissionManager.with(this).
-				setNecessaryPermissions(PERMISSIONS)
-				.build();
+				setNecessaryPermissions(PERMISSIONS);
+
+		permissionManager.requestPermissions();
 	}
 
 

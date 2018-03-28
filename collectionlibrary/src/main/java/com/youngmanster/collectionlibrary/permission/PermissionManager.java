@@ -55,16 +55,6 @@ public class PermissionManager {
 		return this;
 	}
 
-
-	/**
-	 * 开始检测是否允许权限
-	 */
-	public PermissionManager build() {
-		requestPermissions();
-		return this;
-	}
-
-
 	/**
 	 * 检查是否缺少权限
 	 *
@@ -78,6 +68,26 @@ public class PermissionManager {
 				return false;
 			}
 		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * 检查是否缺少权限
+	 *
+	 * @return
+	 */
+	public boolean isLackPermission() {
+
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+			for(String permission:necessaryPermissions){
+				if(ActivityCompat.checkSelfPermission(mActivity, permission) == PackageManager.PERMISSION_DENIED){
+					return true;
+				}
+			}
+
+			return false;
+		}else {
 			return false;
 		}
 	}

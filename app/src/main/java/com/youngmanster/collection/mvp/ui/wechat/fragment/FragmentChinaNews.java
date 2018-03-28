@@ -104,14 +104,6 @@ public class FragmentChinaNews extends BaseFragment<WeChatChinaNewsModel,WeChatC
 	}
 
 	@Override
-	public void onError(NetWorkCodeException.ResponseThrowable e) {
-		showToast(e.message);
-		if(mDatas.size()==0){
-			stateView.showViewByState(StateView.STATE_DISCONNECT);
-		}
-	}
-
-	@Override
 	public void onItemClick(View view, int position) {
 
 	}
@@ -134,6 +126,14 @@ public class FragmentChinaNews extends BaseFragment<WeChatChinaNewsModel,WeChatC
 		if(refreshRv != null){
 			refreshRv.destroy();
 			refreshRv = null;
+		}
+	}
+
+	@Override
+	public void onError(String errorMsg) {
+		showToast(errorMsg);
+		if(mDatas.size()==0){
+			stateView.showViewByState(StateView.STATE_DISCONNECT);
 		}
 	}
 }

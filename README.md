@@ -1,6 +1,6 @@
 ## Collection
 
-![Travis](https://img.shields.io/badge/release-1.1.4-green.svg)
+![Travis](https://img.shields.io/badge/release-1.1.5-green.svg)
 ![Travis](https://img.shields.io/badge/llicense-MIT-green.svg)
 ![Travis](https://img.shields.io/badge/build-passing-green.svg)
 
@@ -19,7 +19,7 @@ Collection聚合了项目搭建的一些基本模块，节约开发者时间，�
 
 **1.框架的引入**
 
->implementation 'com.youngman:collectionlibrary:1.1.3'
+>implementation 'com.youngman:collectionlibrary:1.1.5'
 
 >Error:Could not find com.android.support:appcompat-v7:27.0.2.
 因为library的Support Repository是27.0.2,可能跟项目有所冲突，如果sdk已经装了27还是会出现同样的错误。
@@ -598,20 +598,10 @@ destroy()是用来关掉改页面时把刷新View的一些动画等释放，防�
     	public void requestChinaNews(int page, int num) {
 
         	rxManager.addObserver(RequestManager.loadOnlyNetWork(mModel.loadChinaNews(page, num),
-                new RxObservableListener<Result<List<WeChatNews>>>() {
+                new RxObservableListener<Result<List<WeChatNews>>>(mView) {
                     @Override
                     public void onNext(Result<List<WeChatNews>> result) {
                         mView.refreshUI(result.getNewslist());
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-
-                    @Override
-                    public void onError(NetWorkCodeException.ResponseThrowable e) {
-                        mView.onError(e);
                     }
                 }));
     	}
@@ -647,25 +637,34 @@ destroy()是用来关掉改页面时把刷新View的一些动画等释放，防�
         	String fileName = "limttime.t";
 
         	rxManager.addObserver(RequestManager.loadFormDiskResultListLimitTime(
-                mModel.loadChinaNews(page, num), new RxObservableListener<Result<List<WeChatNews>>>() {
+                mModel.loadChinaNews(page, num), new RxObservableListener<Result<List<WeChatNews>>>(mView) {
                     @Override
                     public void onNext(Result<List<WeChatNews>> result) {
                         mView.refreshUI(result.getNewslist());
-                    }
-
-                    @Override
-                    public void onComplete() {
-                    }
-
-                    @Override
-                    public void onError(NetWorkCodeException.ResponseThrowable e) {
-                        mView.onError(e);
                     }
                 }, WeChatNews.class, 1, filePath, fileName));
     	}
 	}
 
-#####  注意：通过RequestManager提供的几种请求方式返回来一个DisposableObserver，需要把它通过rxManager.addObserver()添加进CompositeDisposable才能正常执行。
+#####  注意：
+######  ①通过RequestManager提供的几种请求方式返回来一个DisposableObserver，需要把它通过rxManager.addObserver()添加进CompositeDisposable才能正常执行。
+######  ②RxObservableListener有三个回调方法
+    void onNext(T result);
+    void onComplete();
+    void onError(NetWorkCodeException.ResponseThrowable e);
+######  只会重写onNext方法，其它两个方法可以自行选择重写。
+######  ③RxObservableListener提供两个构造函数
+    protected RxObservableListener(BaseView view){
+	this.mView = view;
+    }
+
+    protected RxObservableListener(BaseView view, String errorMsg){
+	 this.mView = view;
+         this.mErrorMsg = errorMsg;
+    }
+
+###### 这两个构造函数主要主要是为了统一处理onError的，如果要自定义错误提醒，则可以选择第二个构造函数。
+
 
 ### 六、 Base的使用
 
@@ -799,6 +798,7 @@ destroy()是用来关掉改页面时把刷新View的一些动画等释放，防�
  - getLayoutId()设置布局、init()数据初始化、requestData()请求数据，执行顺序已经在IBaseFragment做好处理。
  - 可以继承IBaseFragment进行扩展。
 
+
 		public abstract class BaseFragment<T extends BaseModel,E extends BasePresenter> extends IBaseFragment {
 
     		private Unbinder unbinder;
@@ -890,13 +890,13 @@ destroy()是用来关掉改页面时把刷新View的一些动画等释放，防�
 	};
 
 
-##### （2）权限通过PermissionManager管理
+#####（2）权限通过PermissionManager管理
 
 	PermissionManager permissionManager=PermissionManager.with(this).
 				//必须权限
-				setNecessaryPermissions(PERMISSIONS)
-				.build();
-
+				setNecessaryPermissions(PERMISSIONS);
+    //通过以下语句进行请求
+    permissionManager.requestPermissions();
 
 ##### （3）重写页面onRequestPermissionsResult
 
@@ -914,6 +914,9 @@ destroy()是用来关掉改页面时把刷新View的一些动画等释放，防�
 			}
 		}
 	}
+
+
+######  注意：如果有需求先判断是否所有权限都已经允许之后再进入主页面可以通过permissionManager.isLackPermission()进行判断，如果返回true则进行权限请求，如果返回false则进入主页面。
 
 
 

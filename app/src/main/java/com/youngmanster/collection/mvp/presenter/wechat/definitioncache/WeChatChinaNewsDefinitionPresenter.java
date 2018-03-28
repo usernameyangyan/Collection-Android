@@ -22,19 +22,10 @@ public class WeChatChinaNewsDefinitionPresenter extends WeChatChinaNewsContract.
         String fileName = "limttime.t";
 
         rxManager.addObserver(RequestManager.loadFormDiskResultListLimitTime(
-                mModel.loadChinaNews(page, num), new RxObservableListener<Result<List<WeChatNews>>>() {
+                mModel.loadChinaNews(page, num), new RxObservableListener<Result<List<WeChatNews>>>(mView) {
                     @Override
                     public void onNext(Result<List<WeChatNews>> result) {
                         mView.refreshUI(result.getNewslist());
-                    }
-
-                    @Override
-                    public void onComplete() {
-                    }
-
-                    @Override
-                    public void onError(NetWorkCodeException.ResponseThrowable e) {
-                        mView.onError(e);
                     }
                 }, WeChatNews.class, 1, filePath, fileName));
     }

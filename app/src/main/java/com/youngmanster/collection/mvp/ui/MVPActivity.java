@@ -52,8 +52,8 @@ public class MVPActivity extends BaseActivity implements BaseRecyclerViewAdapter
 		showHomeAsUp(R.mipmap.ic_back_btn);
 
 		permissionManager=PermissionManager.with(this)
-				.setNecessaryPermissions(PERMISSIONS)
-				.build();
+				.setNecessaryPermissions(PERMISSIONS);
+		permissionManager.requestPermissions();
 
 		LinearLayoutManager linearLayoutManager=new LinearLayoutManager(this);
 		linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);

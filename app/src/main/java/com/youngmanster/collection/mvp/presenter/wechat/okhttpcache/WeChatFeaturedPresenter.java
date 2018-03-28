@@ -20,20 +20,10 @@ public class WeChatFeaturedPresenter extends WeChatFeaturedContract.Presenter {
 	@Override
 	public void requestFeaturedNews(int page, int num) {
 		rxManager.addObserver(RequestManager.loadOnlyNetWork(mModel.loadFeaturedNews(page, num),
-				new RxObservableListener<Result<List<WeChatNews>>>() {
+				new RxObservableListener<Result<List<WeChatNews>>>(mView) {
 					@Override
 					public void onNext(Result<List<WeChatNews>> result) {
 						mView.refreshUI(result.getNewslist());
-					}
-
-					@Override
-					public void onComplete() {
-
-					}
-
-					@Override
-					public void onError(NetWorkCodeException.ResponseThrowable e) {
-						mView.onError(e);
 					}
 				}));
 	}

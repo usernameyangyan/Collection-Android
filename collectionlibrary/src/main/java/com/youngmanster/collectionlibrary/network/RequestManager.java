@@ -8,6 +8,7 @@ import com.youngmanster.collectionlibrary.network.rx.RxObservableListener;
 import com.youngmanster.collectionlibrary.network.rx.RxSchedulers;
 import com.youngmanster.collectionlibrary.network.rx.RxSubscriber;
 import com.youngmanster.collectionlibrary.utils.FileUtils;
+import com.youngmanster.collectionlibrary.utils.LogUtils;
 import com.youngmanster.collectionlibrary.utils.NetworkUtils;
 
 import java.io.IOException;
@@ -182,11 +183,11 @@ public class RequestManager {
 		final Observable<T> observable = Observable.create(new ObservableOnSubscribe<T>() {
 			@Override
 			public void subscribe(ObservableEmitter<T> emitter) throws Exception {
+				LogUtils.info("1000","没有网络的");
 				String json = FileUtils.ReadTxtFile(filePath + "/" + fileName);
 				if (!TextUtils.isEmpty(json) && !json.equals("")) {
 					T a = GsonUtils.fromJsonArray(json, cls);
 					emitter.onNext(a);//返回数据不继续执行
-					emitter.onComplete();
 				} else {
 					NetWorkCodeException.ResponseThrowable e = new NetWorkCodeException.ResponseThrowable();
 					e.code = NetWorkCodeException.NETWORD_ERROR;
@@ -196,15 +197,20 @@ public class RequestManager {
 			}
 		});
 
-		DisposableObserver<T> observer = netWorkObservable.filter(new Predicate<T>() {
-			@Override
-			public boolean test(T t) throws Exception {
-				if (t != null) {
-					FileUtils.WriterTxtFile(filePath, fileName, GsonUtils.getJson(t), false);
-				}
-				return true;
-			}
-		}).compose(RxSchedulers.<T>io_main())
+
+		Observable.concat(observable,netWorkObservable);
+
+		DisposableObserver<T> observer = netWorkObservable
+				.doOnNext(new Consumer<T>() {
+					@Override
+					public void accept(T t) throws Exception {
+
+						LogUtils.info("1000","网络的");
+						if (t != null) {
+							FileUtils.WriterTxtFile(filePath, fileName, GsonUtils.getJson(t), false);
+						}
+					}
+				}).compose(RxSchedulers.<T>io_main())
 				.subscribeWith(new RxSubscriber<T>() {
 					@Override
 					public void _onNext(T t) {
@@ -226,7 +232,6 @@ public class RequestManager {
 						rxObservableListener.onComplete();
 					}
 				});
-
 
 		return observer;
 	}
@@ -249,7 +254,6 @@ public class RequestManager {
 				if (!TextUtils.isEmpty(json) && !json.equals("")) {
 					T a = GsonUtils.fromJsonObject(json, cls);
 					emitter.onNext(a);//返回数据不继续执行
-					emitter.onComplete();
 				} else {
 					NetWorkCodeException.ResponseThrowable e = new NetWorkCodeException.ResponseThrowable();
 					e.code = NetWorkCodeException.NETWORD_ERROR;
@@ -259,38 +263,34 @@ public class RequestManager {
 			}
 		});
 
-		DisposableObserver<T> observer = netWorkObservable.filter(new Predicate<T>() {
+		DisposableObserver<T> observer = netWorkObservable.doOnNext(new Consumer<T>() {
 			@Override
-			public boolean test(T t) throws Exception {
+			public void accept(T t) throws Exception {
 				if (t != null) {
 					FileUtils.WriterTxtFile(filePath, fileName, GsonUtils.getJson(t), false);
 				}
-				return true;
 			}
-		}).compose(RxSchedulers.<T>io_main())
-				.subscribeWith(new RxSubscriber<T>() {
+		}).compose(RxSchedulers.<T>io_main()).subscribeWith(new RxSubscriber<T>() {
+			@Override
+			public void _onNext(T t) {
+				rxObservableListener.onNext(t);
+			}
+
+			@Override
+			public void _onError(NetWorkCodeException.ResponseThrowable e) {
+				observable.subscribe(new Consumer<T>() {
 					@Override
-					public void _onNext(T t) {
+					public void accept(T t) throws Exception {
 						rxObservableListener.onNext(t);
-
-					}
-
-					@Override
-					public void _onError(NetWorkCodeException.ResponseThrowable e) {
-						observable.subscribe(new Consumer<T>() {
-							@Override
-							public void accept(T t) throws Exception {
-								rxObservableListener.onNext(t);
-							}
-						});
-					}
-
-					@Override
-					public void _onComplete() {
-						rxObservableListener.onComplete();
 					}
 				});
+			}
 
+			@Override
+			public void _onComplete() {
+				rxObservableListener.onComplete();
+			}
+		});
 		return observer;
 	}
 

@@ -23,22 +23,12 @@ public class WeChatWorldNewsDefinitionPresenter extends WeChatWorldNewsContract.
         String fileName=page+".t";
 
         rxManager.addObserver(RequestManager.loadNoNetWorkWithCacheResultList(mModel.loadWorldNews(page, num),
-                new RxObservableListener<Result<List<WeChatNews>>>() {
+                new RxObservableListener<Result<List<WeChatNews>>>(mView) {
                     @Override
                     public void onNext(Result<List<WeChatNews>> result) {
-                        LogUtils.info("1000","wechatWordNews");
                         mView.refreshUI(result.getNewslist());
                     }
 
-                    @Override
-                    public void onComplete() {
-
-                    }
-
-                    @Override
-                    public void onError(NetWorkCodeException.ResponseThrowable e) {
-                        mView.onError(e);
-                    }
                 },WeChatNews.class,filePath,fileName));
     }
 }

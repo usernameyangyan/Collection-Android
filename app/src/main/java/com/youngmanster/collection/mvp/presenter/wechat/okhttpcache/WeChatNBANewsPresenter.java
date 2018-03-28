@@ -20,20 +20,10 @@ public class WeChatNBANewsPresenter extends WeChatNBANewsContract.Presenter {
     @Override
     public void requestNBANews(int page, int num) {
         rxManager.addObserver(RequestManager.loadOnlyNetWork(mModel.loadNBANews(page, num),
-                new RxObservableListener<Result<List<WeChatNews>>>() {
+                new RxObservableListener<Result<List<WeChatNews>>>(mView) {
                     @Override
                     public void onNext(Result<List<WeChatNews>> result) {
                         mView.refreshUI(result.getNewslist());
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-
-                    @Override
-                    public void onError(NetWorkCodeException.ResponseThrowable e) {
-                        mView.onError(e);
                     }
                 }));
     }
