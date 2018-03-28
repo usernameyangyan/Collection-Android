@@ -655,11 +655,11 @@ destroy()是用来关掉改页面时把刷新View的一些动画等释放，防�
 ######  只会重写onNext方法，其它两个方法可以自行选择重写。
 ######  ③RxObservableListener提供两个构造函数
     protected RxObservableListener(BaseView view){
-	this.mView = view;
+		this.mView = view;
     }
 
     protected RxObservableListener(BaseView view, String errorMsg){
-	 this.mView = view;
+	 	 this.mView = view;
          this.mErrorMsg = errorMsg;
     }
 
@@ -691,7 +691,7 @@ destroy()是用来关掉改页面时把刷新View的一些动画等释放，防�
 		}
 
 		abstract class Presenter extends BasePresenter<Model,View>{
-				public abstract void requestChinaNews(int page,int num);
+			public abstract void requestChinaNews(int page,int num);
 		}
 	}
 
@@ -703,20 +703,10 @@ destroy()是用来关掉改页面时把刷新View的一些动画等释放，防�
     	public void requestChinaNews(int page, int num) {
 
  			rxManager.addObserver(RequestManager.loadOnlyNetWork(mModel.loadChinaNews(page, num),
-                new RxObservableListener<Result<List<WeChatNews>>>() {
+                new RxObservableListener<Result<List<WeChatNews>>>(mView) {
                     @Override
                     public void onNext(Result<List<WeChatNews>> result) {
                         mView.refreshUI(result.getNewslist());
-                    }
-
-                    @Override
-                    public void onComplete() {
-
-                    }
-
-                    @Override
-                    public void onError(NetWorkCodeException.ResponseThrowable e) {
-                        mView.onError(e);
                     }
                 }));
 
@@ -757,7 +747,7 @@ destroy()是用来关掉改页面时把刷新View的一些动画等释放，防�
 		}
 
 		@Override
-		public void onError(NetWorkCodeException.ResponseThrowable e) {
+		public void onError(String errorMsg) {
 		}
 	}
 
@@ -890,7 +880,7 @@ destroy()是用来关掉改页面时把刷新View的一些动画等释放，防�
 	};
 
 
-#####（2）权限通过PermissionManager管理
+##### （2）权限通过PermissionManager管理
 
 	PermissionManager permissionManager=PermissionManager.with(this).
 				//必须权限
