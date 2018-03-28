@@ -21,6 +21,10 @@ Collection聚合了项目搭建的一些基本模块，节约开发者时间，�
 
 >implementation 'com.youngman:collectionlibrary:1.1.3'
 
+>Error:Could not find com.android.support:appcompat-v7:27.0.2.
+因为library的Support Repository是27.0.2,可能跟项目有所冲突，如果sdk已经装了27还是会出现同样的错误。
+解决办法：在项目根build.gradle中加入  maven { url "https://maven.google.com" }
+
 **2.PullToRefreshRecyclerView的使用** 
 
 - 框架默认下拉刷新、上拉加载更多样式  
