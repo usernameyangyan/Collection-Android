@@ -100,11 +100,11 @@ public class StateView extends LinearLayout {
 	private void setLoadingView() {
 
 		if(mLoadingView==null){
-			mLoadingView = mInflater.inflate(R.layout.view_loading, null);
-			LinearLayout loadMore_Ll = mLoadingView.findViewById(R.id.loadMore_Ll);
-			ProgressBar loadingBar = mLoadingView.findViewById(R.id.loadingBar);
-			ImageView loadingIv = mLoadingView.findViewById(R.id.loadingIv);
-			TextView loadingTv = mLoadingView.findViewById(R.id.loadingTv);
+			mLoadingView = mInflater.inflate(R.layout.library_view_loading, null);
+			LinearLayout loadMore_Ll = mLoadingView.findViewById(R.id.library_loadMore_Ll);
+			ProgressBar loadingBar = mLoadingView.findViewById(R.id.library_loadingBar);
+			ImageView loadingIv = mLoadingView.findViewById(R.id.library_loadingIv);
+			TextView loadingTv = mLoadingView.findViewById(R.id.library_loadingTv);
 
 			if (loadingViewDrawable != NO_ID) {
 				loadingIv.setImageResource(loadingViewDrawable);
@@ -131,9 +131,9 @@ public class StateView extends LinearLayout {
 	 */
 	private void setEmptyView() {
 		if(mEmptyView==null){
-			mEmptyView = mInflater.inflate(R.layout.view_empty, null);
-			ImageView emptyImage = mEmptyView.findViewById(R.id.empty_image);
-			TextView emptyText = mEmptyView.findViewById(R.id.empty_text);
+			mEmptyView = mInflater.inflate(R.layout.library_view_empty, null);
+			ImageView emptyImage = mEmptyView.findViewById(R.id.library_empty_image);
+			TextView emptyText = mEmptyView.findViewById(R.id.library_empty_text);
 			if (null != emptyImage && mEmptyImageId != NO_ID) {
 				emptyImage.setImageResource(mEmptyImageId);
 			}
@@ -163,9 +163,9 @@ public class StateView extends LinearLayout {
 	 */
 	private void setDisConnectView() {
 		if(mDisConnectView==null){
-			mDisConnectView = mInflater.inflate(R.layout.view_disconnect, null);
-			ImageView disConnectImage = mDisConnectView.findViewById(R.id.disconnect_image);
-			TextView disConnectText = mDisConnectView.findViewById(R.id.disconnect_text);
+			mDisConnectView = mInflater.inflate(R.layout.library_view_disconnect, null);
+			ImageView disConnectImage = mDisConnectView.findViewById(R.id.library_disconnect_image);
+			TextView disConnectText = mDisConnectView.findViewById(R.id.library_disconnect_text);
 			if (null != disConnectImage && mDisConnectImageId != NO_ID) {
 				disConnectImage.setImageResource(mDisConnectImageId);
 			}
