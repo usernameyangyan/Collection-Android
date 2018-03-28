@@ -248,8 +248,7 @@ destroy()是用来关掉改页面时把刷新View的一些动画等释放，防�
     swl_Refresh.setOnRefreshListener(this);
 
 ##### (3)注意的问题
-
-	由于PullToRefreshRecyclerView的下拉刷新和下拉加载更多完成时会自动刷新Adapter,而SwipeRefreshLayout刷新完成时需要手动进行notifyDataSetChanged刷新适配器。
+>由于PullToRefreshRecyclerView的下拉刷新和下拉加载更多完成时会自动刷新Adapter,而SwipeRefreshLayout刷新完成时需要手动进行notifyDataSetChanged刷新适配器。
 
 ### 4、RecyclerView添加头部、空布局
 
