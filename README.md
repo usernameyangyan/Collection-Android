@@ -11,8 +11,8 @@ Collection聚合了项目搭建的一些基本模块，节约开发者时间，�
 ![](https://upload-images.jianshu.io/upload_images/4361802-88c89753c38ddf70.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 
->###### 简书地址：
->###### 掘金地址：
+>###### 简书地址：https://www.jianshu.com/p/0a8c27bc8457
+>###### 掘金地址：https://juejin.im/post/5ab9987451882555635e5401
 
 ## 框架的引入
 
