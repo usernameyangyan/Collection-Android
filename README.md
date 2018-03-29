@@ -14,10 +14,7 @@ Collection聚合了项目搭建的一些基本模块，节约开发者时间，�
 >###### 简书地址：
 >###### 掘金地址：
 
-## 项目介绍
-### 文章目录
-
-**1.框架的引入**
+## 框架的引入
 
 >implementation 'com.youngman:collectionlibrary:1.1.5'   
 compile 'com.youngman:collectionlibrary:1.1.5'
@@ -26,7 +23,11 @@ compile 'com.youngman:collectionlibrary:1.1.5'
 因为library的Support Repository是27.0.2,可能跟项目有所冲突，如果sdk已经装了27还是会出现同样的错误。
 解决办法：在项目根build.gradle中加入  maven { url "https://maven.google.com" }
 
-**2.PullToRefreshRecyclerView的使用** 
+
+## 项目介绍
+### 文章目录
+
+**1.PullToRefreshRecyclerView的使用** 
 
 - 框架默认下拉刷新、上拉加载更多样式  
 - 自定义下拉刷新、上拉加载更多样式  
@@ -35,7 +36,7 @@ compile 'com.youngman:collectionlibrary:1.1.5'
 - 上拉加载更多实现NoMoreData、自动刷新   
  
   
-**3.BaseRecyclerViewAdapter的使用**
+**2.BaseRecyclerViewAdapter的使用**
 
 - BaseRecyclerViewAdapter比原始Adapter代码量减少
 - 添加Item的点击事件  
@@ -43,14 +44,14 @@ compile 'com.youngman:collectionlibrary:1.1.5'
 - 多布局的使用  
 - 添加拖拽、滑动删除  
 
-**4.MVP+RxJava+Retrofit的封装使用**  
+**3.MVP+RxJava+Retrofit的封装使用**  
 
 - 框架中的Retrofit+RxJava封装的了解
 - 使用框架在项目需要做的操作
 - MVP+RxJava+Retrofit+OkHttp的缓存机制 
 - MVP+RxJava+Retrofit+自定义磁盘缓存机制  
 
-**5.Base的使用**   
+**4.Base的使用**   
 
 - Base封装了MVP和项目的基类   
 - UI状态控制StateView的使用  
