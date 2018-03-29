@@ -558,6 +558,8 @@ destroy()是用来关掉改页面时把刷新View的一些动画等释放，防�
 			this.newslist = newslist;
 		}
 	}
+	
+###### 温馨提醒：由于每个项目返回来的json数据格式有所不同，如果Result中代表的字段例如newslist没有内容返回来的时候这个字段需要后台控制不返回，如果不做处理会报解析错误。
 
 ###### 定义一个ApiService类
 
