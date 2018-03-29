@@ -81,7 +81,7 @@ compile 'com.youngman:collectionlibrary:1.1.5'
 	mRecyclerView.setLoadMoreEnabled(true);
 
 ####  2、自定义下拉刷新、上拉加载更多样式
-![](https://upload-images.jianshu.io/upload_images/4361802-310aaa634f712429.gif?imageMogr2/auto-orient/strip)
+![](https://upload-images.jianshu.io/upload_images/4361802-af42500b827165f8.gif?imageMogr2/auto-orient/strip)
 
 ##### （1）代码设置
 
