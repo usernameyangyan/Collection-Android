@@ -1,5 +1,6 @@
 apply plugin: 'com.android.library'
 apply from : "config.gradle"
+apply plugin: 'realm-android'
 apply plugin: 'com.jfrog.bintray'
 apply plugin: 'com.github.dcendents.android-maven'
 
@@ -57,7 +58,7 @@ dependencies {
 
 }
 
-version = "1.1.5"
+version = "1.2.4"
 group = "com.youngman"
 
 bintray {
@@ -73,10 +74,10 @@ bintray {
         publish = true // 是否是公开项目。
 
         version {
-            name = '1.1.5'
+            name = '1.2.4'
             desc = 'Collection aggregates some of the basic modules of the project, saving developer time.'
             released  = new Date()
-            vcsTag = 'v1.1.5'
+            vcsTag = 'v1.2.4'
             attributes = ['gradle-plugin': 'com.use.less:com.use.less.gradle:gradle-useless-plugin']
         }
     }

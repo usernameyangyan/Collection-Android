@@ -37,4 +37,11 @@
 
 	<string name="no_more_data">NoMoreData</string>
 	<string name="auto_refresh">AutoRefresh</string>
+
+	<string name="data_manager_title">DataManager</string>
+
+	<string name="retrofit_manager">Retrofit</string>
+	<string name="sharePreference_manager">SharePreference</string>
+	<string name="realm_manager">Realm</string>
+	<string name="sharepreference_tip">这里只提供一个事例，具体的使用文档有详细说明</string>
 </resources>

@@ -7,11 +7,9 @@ import com.youngmanster.collection.R;
 import com.youngmanster.collection.base.BaseFragment;
 import com.youngmanster.collection.been.wechat.WeChatNews;
 import com.youngmanster.collection.mvp.contract.wechat.okhttpcache.WeChatChinaNewsContract;
-import com.youngmanster.collection.mvp.model.wechat.defintioncache.WeChatChinaNewsDefinitionModel;
 import com.youngmanster.collection.mvp.presenter.wechat.definitioncache.WeChatChinaNewsDefinitionPresenter;
 import com.youngmanster.collection.mvp.ui.wechat.adapter.WeChatFeaturedAdapter;
 import com.youngmanster.collectionlibrary.base.StateView;
-import com.youngmanster.collectionlibrary.network.NetWorkCodeException;
 import com.youngmanster.collectionlibrary.refreshrecyclerview.base.adapter.BaseRecyclerViewAdapter;
 import com.youngmanster.collectionlibrary.refreshrecyclerview.pulltorefresh.PullToRefreshRecyclerView;
 
@@ -25,12 +23,12 @@ import butterknife.BindView;
  * on 2018/3/21.
  */
 
-public class FragmentChinaNewsDefinition extends BaseFragment<WeChatChinaNewsDefinitionModel, WeChatChinaNewsDefinitionPresenter> implements
+public class FragmentChinaNewsDefinition extends BaseFragment<WeChatChinaNewsDefinitionPresenter> implements
         WeChatChinaNewsContract.View, BaseRecyclerViewAdapter.OnItemClickListener {
     @BindView(R.id.refreshRv)
-    PullToRefreshRecyclerView refreshRv;
+	PullToRefreshRecyclerView refreshRv;
     @BindView(R.id.state_view)
-    StateView stateView;
+	StateView stateView;
 
     private static final int PAGE_SIZE = 15;
     private int pageSize = 1;

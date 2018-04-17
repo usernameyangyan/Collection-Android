@@ -7,11 +7,9 @@ import com.youngmanster.collection.R;
 import com.youngmanster.collection.base.BaseActivity;
 import com.youngmanster.collection.been.wechat.WeChatNews;
 import com.youngmanster.collection.mvp.contract.wechat.okhttpcache.WeChatFeaturedContract;
-import com.youngmanster.collection.mvp.model.wechat.okhttpcache.WeChatFeaturedModel;
 import com.youngmanster.collection.mvp.presenter.wechat.okhttpcache.WeChatFeaturedPresenter;
 import com.youngmanster.collection.mvp.ui.wechat.adapter.WeChatFeaturedAdapter;
 import com.youngmanster.collectionlibrary.base.StateView;
-import com.youngmanster.collectionlibrary.network.NetWorkCodeException;
 import com.youngmanster.collectionlibrary.refreshrecyclerview.base.adapter.BaseRecyclerViewAdapter;
 import com.youngmanster.collectionlibrary.refreshrecyclerview.pulltorefresh.PullToRefreshRecyclerView;
 
@@ -25,7 +23,7 @@ import butterknife.BindView;
  * on 2018/3/21.
  */
 
-public class WeChatFeaturedActivity extends BaseActivity<WeChatFeaturedModel, WeChatFeaturedPresenter> implements
+public class WeChatFeaturedActivity extends BaseActivity<WeChatFeaturedPresenter> implements
 		WeChatFeaturedContract.View, PullToRefreshRecyclerView.OnRefreshAndLoadMoreListener, BaseRecyclerViewAdapter.OnItemClickListener {
 
 	@BindView(R.id.refreshRv)

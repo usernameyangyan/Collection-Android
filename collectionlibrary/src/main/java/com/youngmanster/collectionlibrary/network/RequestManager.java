@@ -3,12 +3,11 @@ package com.youngmanster.collectionlibrary.network;
 import android.text.TextUtils;
 
 import com.youngmanster.collectionlibrary.config.Config;
+import com.youngmanster.collectionlibrary.db.impl.DataManagerImpl;
 import com.youngmanster.collectionlibrary.network.gson.GsonUtils;
-import com.youngmanster.collectionlibrary.network.rx.RxObservableListener;
 import com.youngmanster.collectionlibrary.network.rx.RxSchedulers;
 import com.youngmanster.collectionlibrary.network.rx.RxSubscriber;
 import com.youngmanster.collectionlibrary.utils.FileUtils;
-import com.youngmanster.collectionlibrary.utils.LogUtils;
 import com.youngmanster.collectionlibrary.utils.NetworkUtils;
 
 import java.io.IOException;
@@ -18,12 +17,12 @@ import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Predicate;
 import io.reactivex.observers.DisposableObserver;
 import okhttp3.CacheControl;
 import okhttp3.Interceptor;
 import okhttp3.Request;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 /**
  * 请求管理
@@ -31,7 +30,71 @@ import okhttp3.Response;
  * on 2018/3/23.
  */
 
-public class RequestManager {
+public class RequestManager extends DataManagerImpl {
+
+
+	public <T> DisposableObserver<ResponseBody> request(RequestBuilder<T> builder) {
+
+		if (builder.getReqType() == RequestBuilder.ReqType.NO_CACHE_MODEL) {
+			Observable<ResponseBody> observable = getRetrofit(builder, false);
+			return loadOnlyNetWorkModel(builder, observable);
+		} else if (builder.getReqType() == RequestBuilder.ReqType.No_CACHE_LIST) {
+			Observable<ResponseBody> observable = getRetrofit(builder, false);
+			return loadOnlyNetWorkList(builder, observable);
+		} else if (builder.getReqType() == RequestBuilder.ReqType.DEFAULT_CACHE_MODEL) {
+			Observable<ResponseBody> observable = getRetrofit(builder, true);
+			return loadOnlyNetWorkModel(builder, observable);
+		} else if (builder.getReqType() == RequestBuilder.ReqType.DEFAULT_CACHE_LIST) {
+			Observable<ResponseBody> observable = getRetrofit(builder, true);
+			return loadOnlyNetWorkList(builder, observable);
+		} else if (builder.getReqType() == RequestBuilder.ReqType.DISK_CACHE_LIST_LIMIT_TIME) {
+			Observable<ResponseBody> observable = getRetrofit(builder, false);
+			return loadFormDiskResultListLimitTime(builder, observable);
+		} else if (builder.getReqType() == RequestBuilder.ReqType.DISK_CACHE_MODEL_LIMIT_TIME) {
+			Observable<ResponseBody> observable = getRetrofit(builder, false);
+			return loadFormDiskModeLimitTime(builder, observable);
+		} else if (builder.getReqType() == RequestBuilder.ReqType.DISK_CACHE_NO_NETWORK_LIST) {
+			Observable<ResponseBody> observable = getRetrofit(builder, false);
+			return loadNoNetWorkWithCacheResultList(builder, observable);
+		} else if (builder.getReqType() == RequestBuilder.ReqType.DISK_CACHE_NO_NETWORK_MODEL) {
+			Observable<ResponseBody> observable = getRetrofit(builder, false);
+			return loadNoNetWorkWithCacheModel(builder, observable);
+		} else if (builder.getReqType() == RequestBuilder.ReqType.DISK_CACHE_NETWORK_SAVE_RETURN_MODEL) {
+			Observable<ResponseBody> observable = getRetrofit(builder, false);
+			return loadOnlyNetWorkSaveModel(builder, observable);
+		} else if (builder.getReqType() == RequestBuilder.ReqType.DISK_CACHE_NETWORK_SAVE_RETURN_LIST) {
+			Observable<ResponseBody> observable = getRetrofit(builder, false);
+			return loadOnlyNetWorkSaveList(builder, observable);
+		}
+
+		return null;
+	}
+
+	private <T> Observable<ResponseBody> getRetrofit(RequestBuilder<T> builder, boolean isCache) {
+		if (builder.getHttpType() == RequestBuilder.HttpType.DEFAULT_GET) {
+			if (isCache) {
+				return RetrofitManager.getApiService(RequestService.class).getObservableWithQueryMap(builder.getUrl(), builder.getRequestParam());
+			} else {
+				return RetrofitManager.getNoCacheApiService(RequestService.class).getObservableWithQueryMap(builder.getUrl(), builder.getRequestParam());
+			}
+		} else if (builder.getHttpType() == RequestBuilder.HttpType.DEFAULT_POST) {
+			if (isCache) {
+				return RetrofitManager.getApiService(RequestService.class).getObservableWithQueryMap(builder.getUrl(), builder.getRequestParam());
+			} else {
+				return RetrofitManager.getNoCacheApiService(RequestService.class).getObservableWithQueryMap(builder.getUrl(), builder.getRequestParam());
+			}
+		} else if (builder.getHttpType() == RequestBuilder.HttpType.FIELDMAP_POST) {
+			if (isCache) {
+				return RetrofitManager.getApiService(RequestService.class).getObservableWithFieldMap(builder.getUrl(), builder.getRequestParam());
+			} else {
+				return RetrofitManager.getNoCacheApiService(RequestService.class).getObservableWithFieldMap(builder.getUrl(), builder.getRequestParam());
+			}
+		}else if(builder.getHttpType() == RequestBuilder.HttpType.ONE_MULTIPART_POST){
+			return RetrofitManager.getApiService(RequestService.class).getObservableWithImage(builder.getUrl(), builder.getRequestParam(),builder.getPart());
+		}
+		return null;
+	}
+
 
 	/**
 	 * ============================自定义的缓存机制网络+本地json缓存===========================================
@@ -41,22 +104,17 @@ public class RequestManager {
 	 * 设置缓存时间，没超过设置的时间不请求网络，只返回缓存数据
 	 * 返回List
 	 */
-	public static <T> DisposableObserver<T> loadFormDiskResultListLimitTime(final Observable<T> netWorkObservable,
-																			final RxObservableListener<T> rxObservableListener,
-																			final Class cls,
-																			final int hours,
-																			final String filePath,
-																			final String fileName) {
+	public <T> DisposableObserver<ResponseBody> loadFormDiskResultListLimitTime(final RequestBuilder<T> builder, Observable<ResponseBody> observable) {
 
 
-		if (!FileUtils.isCacheDataFailure(filePath + "/" + fileName, hours)) {
+		if (!FileUtils.isCacheDataFailure(builder.getFilePath() + "/" + builder.getFileName(), builder.getLimtHours())) {
 
 			Observable.create(new ObservableOnSubscribe<T>() {
 				@Override
 				public void subscribe(ObservableEmitter<T> emitter) throws Exception {
-					String json = FileUtils.ReadTxtFile(filePath + "/" + fileName);
-					T a = GsonUtils.fromJsonArray(json, cls);
-					rxObservableListener.onNext(a);
+					String json = FileUtils.ReadTxtFile(builder.getFilePath() + "/" + builder.getFileName());
+					T a = GsonUtils.fromJsonArray(json, builder.getTransformClass());
+					builder.getRxObservableListener().onNext(a);
 				}
 			}).subscribe(new Consumer<T>() {
 				@Override
@@ -68,35 +126,32 @@ public class RequestManager {
 			return null;
 		}
 
-		DisposableObserver<T> observer = netWorkObservable.compose(RxSchedulers.<T>io_main())
-				.subscribeWith(new RxSubscriber<T>() {
+		final String[] json = new String[1];
+		DisposableObserver<ResponseBody> observer = observable.compose(RxSchedulers.<ResponseBody>io_main())
+				.doOnNext(new Consumer<ResponseBody>() {
 					@Override
-					public void _onNext(final T t) {
-						rxObservableListener.onNext(t);
-						if (t != null) {
-							Observable.create(new ObservableOnSubscribe<T>() {
-								@Override
-								public void subscribe(ObservableEmitter<T> emitter) throws Exception {
-									FileUtils.WriterTxtFile(filePath, fileName, GsonUtils.getJson(t), false);
-								}
-							}).subscribe(new Consumer<T>() {
-								@Override
-								public void accept(T t) throws Exception {
-
-								}
-							});
-
+					public void accept(ResponseBody responseBody) throws Exception {
+						json[0]=responseBody.string();
+						if(!TextUtils.isEmpty(json[0])&&!json[0].equals("")){
+							FileUtils.WriterTxtFile(builder.getFilePath(), builder.getFileName(), json[0], false);
 						}
+					}
+				})
+				.subscribeWith(new RxSubscriber<ResponseBody>() {
+					@Override
+					public void _onNext(final ResponseBody t) {
+						T a = GsonUtils.fromJsonArray(json[0], builder.getTransformClass());
+						builder.getRxObservableListener().onNext(a);
 					}
 
 					@Override
 					public void _onError(NetWorkCodeException.ResponseThrowable e) {
-						rxObservableListener.onError(e);
+						builder.getRxObservableListener().onError(e);
 					}
 
 					@Override
 					public void _onComplete() {
-						rxObservableListener.onComplete();
+						builder.getRxObservableListener().onComplete();
 					}
 				});
 
@@ -107,21 +162,16 @@ public class RequestManager {
 	 * 设置缓存时间，没超过设置的时间不请求网络，只返回缓存数据
 	 * 返回Model
 	 */
-	public static <T> DisposableObserver<T> loadFormDiskModeLimitTime(final Observable<T> netWorkObservable,
-																	  final RxObservableListener<T> rxObservableListener,
-																	  final Class cls,
-																	  final int hours,
-																	  final String filePath,
-																	  final String fileName) {
+	public <T> DisposableObserver<ResponseBody> loadFormDiskModeLimitTime(final RequestBuilder<T> builder, Observable<ResponseBody> observable) {
 
-		if (!FileUtils.isCacheDataFailure(filePath + "/" + fileName, hours)) {
+		if (!FileUtils.isCacheDataFailure(builder.getFilePath() + "/" + builder.getFileName(), builder.getLimtHours())) {
 
 			Observable.create(new ObservableOnSubscribe<T>() {
 				@Override
 				public void subscribe(ObservableEmitter<T> emitter) throws Exception {
-					String json = FileUtils.ReadTxtFile(filePath + "/" + fileName);
-					T a = GsonUtils.fromJsonObject(json, cls);
-					rxObservableListener.onNext(a);
+					String json = FileUtils.ReadTxtFile(builder.getFilePath() + "/" + builder.getFileName());
+					T a = GsonUtils.fromJsonObject(json, builder.getTransformClass());
+					builder.getRxObservableListener().onNext(a);
 				}
 			}).subscribe(new Consumer<T>() {
 				@Override
@@ -133,36 +183,32 @@ public class RequestManager {
 			return null;
 		}
 
-
-		DisposableObserver<T> observer = netWorkObservable.compose(RxSchedulers.<T>io_main())
-				.subscribeWith(new RxSubscriber<T>() {
+		final String[] json = new String[1];
+		DisposableObserver<ResponseBody> observer = observable.compose(RxSchedulers.<ResponseBody>io_main())
+				.doOnNext(new Consumer<ResponseBody>() {
 					@Override
-					public void _onNext(final T t) {
-						rxObservableListener.onNext(t);
-						if (t != null) {
-							Observable.create(new ObservableOnSubscribe<T>() {
-								@Override
-								public void subscribe(ObservableEmitter<T> emitter) throws Exception {
-									FileUtils.WriterTxtFile(filePath, fileName, GsonUtils.getJson(t), false);
-								}
-							}).subscribe(new Consumer<T>() {
-								@Override
-								public void accept(T t) throws Exception {
-
-								}
-							});
-
+					public void accept(ResponseBody responseBody) throws Exception {
+						json[0]=responseBody.string();
+						if(!TextUtils.isEmpty(json[0])&&!json[0].equals("")){
+							FileUtils.WriterTxtFile(builder.getFilePath(), builder.getFileName(), json[0], false);
 						}
+					}
+				})
+				.subscribeWith(new RxSubscriber<ResponseBody>() {
+					@Override
+					public void _onNext(final ResponseBody t) {
+						T a = GsonUtils.fromJsonObject(json[0], builder.getTransformClass());
+						builder.getRxObservableListener().onNext(a);
 					}
 
 					@Override
 					public void _onError(NetWorkCodeException.ResponseThrowable e) {
-						rxObservableListener.onError(e);
+						builder.getRxObservableListener().onError(e);
 					}
 
 					@Override
 					public void _onComplete() {
-						rxObservableListener.onComplete();
+						builder.getRxObservableListener().onComplete();
 					}
 				});
 
@@ -173,63 +219,57 @@ public class RequestManager {
 	 * 没有网络再请求缓存
 	 * 返回List
 	 */
-	public static <T> DisposableObserver<T> loadNoNetWorkWithCacheResultList(final Observable<T> netWorkObservable,
-																			 final RxObservableListener<T> rxObservableListener,
-																			 final Class cls,
-																			 final String filePath,
-																			 final String fileName) {
+	private <T> DisposableObserver<ResponseBody> loadNoNetWorkWithCacheResultList(final RequestBuilder<T> builder, Observable<ResponseBody> observable) {
 
 
-		final Observable<T> observable = Observable.create(new ObservableOnSubscribe<T>() {
+		final Observable<T> observableC = Observable.create(new ObservableOnSubscribe<T>() {
 			@Override
 			public void subscribe(ObservableEmitter<T> emitter) throws Exception {
-				LogUtils.info("1000","没有网络的");
-				String json = FileUtils.ReadTxtFile(filePath + "/" + fileName);
+				String json = FileUtils.ReadTxtFile(builder.getFilePath() + "/" + builder.getFileName());
 				if (!TextUtils.isEmpty(json) && !json.equals("")) {
-					T a = GsonUtils.fromJsonArray(json, cls);
+					T a = GsonUtils.fromJsonArray(json, builder.getTransformClass());
 					emitter.onNext(a);//返回数据不继续执行
 				} else {
 					NetWorkCodeException.ResponseThrowable e = new NetWorkCodeException.ResponseThrowable();
 					e.code = NetWorkCodeException.NETWORD_ERROR;
 					e.message = "网络错误";
-					rxObservableListener.onError(e);
+					builder.getRxObservableListener().onError(e);
 				}
 			}
 		});
 
-
-		Observable.concat(observable,netWorkObservable);
-
-		DisposableObserver<T> observer = netWorkObservable
-				.doOnNext(new Consumer<T>() {
+		final String[] json = new String[1];
+		DisposableObserver<ResponseBody> observer = observable
+				.doOnNext(new Consumer<ResponseBody>() {
 					@Override
-					public void accept(T t) throws Exception {
-
-						LogUtils.info("1000","网络的");
-						if (t != null) {
-							FileUtils.WriterTxtFile(filePath, fileName, GsonUtils.getJson(t), false);
+					public void accept(ResponseBody responseBody) throws Exception {
+						json[0] =responseBody.string();
+						if(!TextUtils.isEmpty(json[0])&&!json[0].equals("")){
+							FileUtils.WriterTxtFile(builder.getFilePath(), builder.getFileName(), json[0], false);
 						}
 					}
-				}).compose(RxSchedulers.<T>io_main())
-				.subscribeWith(new RxSubscriber<T>() {
+				})
+				.compose(RxSchedulers.<ResponseBody>io_main())
+				.subscribeWith(new RxSubscriber<ResponseBody>() {
 					@Override
-					public void _onNext(T t) {
-						rxObservableListener.onNext(t);
+					public void _onNext(ResponseBody t) {
+						T a = GsonUtils.fromJsonArray(json[0], builder.getTransformClass());
+						builder.getRxObservableListener().onNext(a);
 					}
 
 					@Override
 					public void _onError(NetWorkCodeException.ResponseThrowable e) {
-						observable.subscribe(new Consumer<T>() {
+						observableC.subscribe(new Consumer<T>() {
 							@Override
 							public void accept(T t) throws Exception {
-								rxObservableListener.onNext(t);
+								builder.getRxObservableListener().onNext(t);
 							}
 						});
 					}
 
 					@Override
 					public void _onComplete() {
-						rxObservableListener.onComplete();
+						builder.getRxObservableListener().onComplete();
 					}
 				});
 
@@ -241,134 +281,212 @@ public class RequestManager {
 	 * 没有网络再请求缓存
 	 * 返回Model
 	 */
-	public static <T> DisposableObserver<T> loadNoNetWorkWithCacheModel(final Observable<T> netWorkObservable,
-																		final RxObservableListener<T> rxObservableListener,
-																		final Class cls,
-																		final String filePath,
-																		final String fileName) {
+	private <T> DisposableObserver<ResponseBody> loadNoNetWorkWithCacheModel(final RequestBuilder<T> builder, Observable<ResponseBody> observable) {
 
-		final Observable<T> observable = Observable.create(new ObservableOnSubscribe<T>() {
+		final Observable<T> observableC = Observable.create(new ObservableOnSubscribe<T>() {
 			@Override
 			public void subscribe(ObservableEmitter<T> emitter) throws Exception {
-				String json = FileUtils.ReadTxtFile(filePath + "/" + fileName);
+				String json = FileUtils.ReadTxtFile(builder.getFilePath() + "/" + builder.getFileName());
 				if (!TextUtils.isEmpty(json) && !json.equals("")) {
-					T a = GsonUtils.fromJsonObject(json, cls);
+					T a = GsonUtils.fromJsonObject(json, builder.getTransformClass());
 					emitter.onNext(a);//返回数据不继续执行
 				} else {
 					NetWorkCodeException.ResponseThrowable e = new NetWorkCodeException.ResponseThrowable();
 					e.code = NetWorkCodeException.NETWORD_ERROR;
 					e.message = "网络错误";
-					rxObservableListener.onError(e);
+					builder.getRxObservableListener().onError(e);
 				}
 			}
 		});
 
-		DisposableObserver<T> observer = netWorkObservable.doOnNext(new Consumer<T>() {
+		final String[] json = new String[1];
+
+		DisposableObserver<ResponseBody> observer = observable.doOnNext(new Consumer<ResponseBody>() {
 			@Override
-			public void accept(T t) throws Exception {
-				if (t != null) {
-					FileUtils.WriterTxtFile(filePath, fileName, GsonUtils.getJson(t), false);
+			public void accept(ResponseBody t) throws Exception {
+				json[0]=t.string();
+				if(!TextUtils.isEmpty(json[0])&&!json[0].equals("")){
+					FileUtils.WriterTxtFile(builder.getFilePath(), builder.getFileName(), json[0], false);
 				}
 			}
-		}).compose(RxSchedulers.<T>io_main()).subscribeWith(new RxSubscriber<T>() {
+		}).compose(RxSchedulers.<ResponseBody>io_main()).subscribeWith(new RxSubscriber<ResponseBody>() {
 			@Override
-			public void _onNext(T t) {
-				rxObservableListener.onNext(t);
+			public void _onNext(ResponseBody t) {
+				T a = GsonUtils.fromJsonObject(json[0], builder.getTransformClass());
+				builder.getRxObservableListener().onNext(a);
 			}
 
 			@Override
 			public void _onError(NetWorkCodeException.ResponseThrowable e) {
-				observable.subscribe(new Consumer<T>() {
+				observableC.subscribe(new Consumer<T>() {
 					@Override
 					public void accept(T t) throws Exception {
-						rxObservableListener.onNext(t);
+						builder.getRxObservableListener().onNext(t);
 					}
 				});
 			}
 
 			@Override
 			public void _onComplete() {
-				rxObservableListener.onComplete();
+				builder.getRxObservableListener().onComplete();
 			}
 		});
+
 		return observer;
 	}
 
 	/**
 	 * 把结果保存到本地，根据标志是否返回数据，如果本地存在则不需要下载
 	 */
-	public static <T> DisposableObserver<T> loadOnlyNetWorkSaveResult(final Observable<T> netWorkObservable,
-																	  final RxObservableListener<T> rxObservableListener,
-																	  final String saveFilePath,
-																	  final String fileName,
-																	  final boolean isReturn) {
+	private <T> DisposableObserver<ResponseBody> loadOnlyNetWorkSaveList(final RequestBuilder<T> builder, Observable<ResponseBody> observable) {
 
-		if (FileUtils.checkFileExists(saveFilePath)) { // 已经在SD卡中存在
+		if (FileUtils.checkFileExists(builder.getFilePath() + "/" + builder.getFileName())) { // 已经在SD卡中存在
+			builder.getRxObservableListener().onNext(null);
 			return null;
 		}
 
-		DisposableObserver<T> observer = netWorkObservable.filter(new Predicate<T>() {
+		final String[] json = new String[1];
+		DisposableObserver<ResponseBody> observer = observable.doOnNext(new Consumer<ResponseBody>() {
 			@Override
-			public boolean test(T t) throws Exception {
-				if (t != null) {
-					FileUtils.WriterTxtFile(saveFilePath, fileName, GsonUtils.getJson(t), false);
+			public void accept(ResponseBody t) throws Exception {
+				json[0]=t.string();
+				if(!TextUtils.isEmpty(json[0])&&!json[0].equals("")){
+					FileUtils.WriterTxtFile(builder.getFilePath(), builder.getFileName(), json[0], false);
 				}
-				return true;
 			}
-		}).compose(RxSchedulers.<T>io_main())
-				.subscribeWith(new RxSubscriber<T>() {
+		}).compose(RxSchedulers.<ResponseBody>io_main())
+				.subscribeWith(new RxSubscriber<ResponseBody>() {
 					@Override
-					public void _onNext(T t) {
-						if (isReturn == true) {
-							rxObservableListener.onNext(t);
+					public void _onNext(ResponseBody t) {
+						if (builder.isDiskCacheNetworkSaveReturn() == true) {
+							T a = GsonUtils.fromJsonArray(json[0], builder.getTransformClass());
+							builder.getRxObservableListener().onNext(a);
 						}
-
 					}
 
 					@Override
 					public void _onError(NetWorkCodeException.ResponseThrowable e) {
-						if (isReturn == true) {
-							rxObservableListener.onError(e);
+						if (builder.isDiskCacheNetworkSaveReturn() == true) {
+							builder.getRxObservableListener().onError(e);
 						}
 					}
 
 					@Override
 					public void _onComplete() {
-						if (isReturn == true) {
-							rxObservableListener.onComplete();
+						if (builder.isDiskCacheNetworkSaveReturn() == true) {
+							builder.getRxObservableListener().onComplete();
 						}
 					}
 				});
+		return observer;
+	}
 
+
+	/**
+	 * 把结果保存到本地，根据标志是否返回数据，如果本地存在则不需要下载,返回Model
+	 */
+	private <T> DisposableObserver<ResponseBody> loadOnlyNetWorkSaveModel(final RequestBuilder<T> builder, Observable<ResponseBody> observable) {
+
+		if (FileUtils.checkFileExists(builder.getFilePath() + "/" + builder.getFileName())) { // 已经在SD卡中存在
+			builder.getRxObservableListener().onNext(null);
+			return null;
+		}
+
+		final String[] json = new String[1];
+		DisposableObserver<ResponseBody> observer = observable.doOnNext(new Consumer<ResponseBody>() {
+			@Override
+			public void accept(ResponseBody t) throws Exception {
+				json[0]=t.string();
+				if(!TextUtils.isEmpty(json[0])&&!json[0].equals("")){
+					FileUtils.WriterTxtFile(builder.getFilePath(), builder.getFileName(), json[0], false);
+				}
+			}
+		}).compose(RxSchedulers.<ResponseBody>io_main())
+				.subscribeWith(new RxSubscriber<ResponseBody>() {
+					@Override
+					public void _onNext(ResponseBody t) {
+						if (builder.isDiskCacheNetworkSaveReturn() == true) {
+							T a = GsonUtils.fromJsonObject(json[0], builder.getTransformClass());
+							builder.getRxObservableListener().onNext(a);
+						}
+					}
+
+					@Override
+					public void _onError(NetWorkCodeException.ResponseThrowable e) {
+						if (builder.isDiskCacheNetworkSaveReturn() == true) {
+							builder.getRxObservableListener().onError(e);
+						}
+					}
+
+					@Override
+					public void _onComplete() {
+						if (builder.isDiskCacheNetworkSaveReturn() == true) {
+							builder.getRxObservableListener().onComplete();
+						}
+					}
+				});
 		return observer;
 	}
 
 	/**
-	 * 只通过网络返回数据
+	 * 只通过网络返回数据，返回list
 	 */
-	public static <T> DisposableObserver<T> loadOnlyNetWork(final Observable<T> netWorkObservable,
-															final RxObservableListener<T> rxObservableListener) {
-
-		DisposableObserver<T> observer = netWorkObservable.compose(RxSchedulers.<T>io_main())
-				.subscribeWith(new RxSubscriber<T>() {
+	private <T> DisposableObserver<ResponseBody> loadOnlyNetWorkList(final RequestBuilder<T> builder, Observable<ResponseBody> observable) {
+		DisposableObserver<ResponseBody> observer = observable.compose(RxSchedulers.<ResponseBody>io_main())
+				.subscribeWith(new RxSubscriber<ResponseBody>() {
 					@Override
-					public void _onNext(T t) {
-						rxObservableListener.onNext(t);
+					public void _onNext(ResponseBody t) {
+						try {
+							T a = GsonUtils.fromJsonArray(t.string(), builder.getTransformClass());
+							builder.getRxObservableListener().onNext(a);
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
 					}
 
 					@Override
 					public void _onError(NetWorkCodeException.ResponseThrowable e) {
-						rxObservableListener.onError(e);
+						builder.getRxObservableListener().onError(e);
 					}
 
 					@Override
 					public void _onComplete() {
-						rxObservableListener.onComplete();
+						builder.getRxObservableListener().onComplete();
 					}
 				});
-
 		return observer;
 	}
+
+
+	/**
+	 * 只通过网络返回数据，返回Model
+	 */
+	private <T> DisposableObserver<ResponseBody> loadOnlyNetWorkModel(final RequestBuilder<T> builder, Observable<ResponseBody> observable) {
+		DisposableObserver<ResponseBody> observer = observable.compose(RxSchedulers.<ResponseBody>io_main())
+				.subscribeWith(new RxSubscriber<ResponseBody>() {
+					@Override
+					public void _onNext(ResponseBody t) {
+						try {
+							T a = GsonUtils.fromJsonObject(t.string(), builder.getTransformClass());
+							builder.getRxObservableListener().onNext(a);
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+
+					@Override
+					public void _onError(NetWorkCodeException.ResponseThrowable e) {
+						builder.getRxObservableListener().onError(e);
+					}
+
+					@Override
+					public void _onComplete() {
+						builder.getRxObservableListener().onComplete();
+					}
+				});
+		return observer;
+	}
+
 
 	/**
 	 * ===============================Retrofit+OkHttp的缓存机制=========================================
@@ -408,5 +526,10 @@ public class RequestManager {
 		};
 
 		return interceptor;
+	}
+
+	@Override
+	public <T> DisposableObserver<ResponseBody> httpRequest(RequestBuilder<T> requestBuilder) {
+		return request(requestBuilder);
 	}
 }

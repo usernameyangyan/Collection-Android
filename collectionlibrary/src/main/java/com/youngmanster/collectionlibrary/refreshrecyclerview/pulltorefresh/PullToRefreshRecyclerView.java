@@ -17,6 +17,7 @@ import com.youngmanster.collectionlibrary.refreshrecyclerview.base.refreshview.B
 import com.youngmanster.collectionlibrary.refreshrecyclerview.base.refreshview.BasePullToRefreshView;
 import com.youngmanster.collectionlibrary.refreshrecyclerview.defaultview.DefaultArrowRefreshHeaderView;
 import com.youngmanster.collectionlibrary.refreshrecyclerview.defaultview.DefaultLoadMoreView;
+import com.youngmanster.collectionlibrary.utils.LogUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +41,7 @@ public class PullToRefreshRecyclerView extends RecyclerView {
 	private boolean isNoMoreDate = false;
 	//是否为空布局
 	private boolean isEmptyView = false;
+
 	//头部布局列表
 	private ArrayList<View> mHeaderViews = new ArrayList<>();
 	//每个header必须有不同的type,不然滚动的时候顺序会变化
@@ -479,19 +481,8 @@ public class PullToRefreshRecyclerView extends RecyclerView {
 	}
 
 	private void isShowEmptyView() {
-		int emptyCount;
-		if (isAllowRefresh) {
-			emptyCount = 1 + getHeadersCount();
-		} else {
-			emptyCount = getHeadersCount();
-		}
-
-		if (isAllowLoadMore) {
-			emptyCount++;
-		}
-
 		if(emptyView!=null){
-			if (mHeaderAndFooterAdapter.getItemCount() == emptyCount) {
+			if (insideAdapter.getItemCount() == 0) {
 				emptyView.setVisibility(VISIBLE);
 				isEmptyView = true;
 			} else {
@@ -614,13 +605,10 @@ public class PullToRefreshRecyclerView extends RecyclerView {
 
 		@Override
 		public int getItemCount() {
-			//这里是为了解决空布局的显示和点击事件，逻辑有点乱，需要重新考虑
-			if ((!isAllowRefresh && !isAllowLoadMore && isEmptyView)) {
-				return 1;
-			} else if ((isAllowRefresh && isAllowLoadMore && isEmptyView)) {
+
+			if(isEmptyView){
 				return 1;
 			}
-
 
 			int adjLen;
 			if (isAllowRefresh) {

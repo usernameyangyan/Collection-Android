@@ -1,8 +1,12 @@
 package com.youngmanster.collectionlibrary.network;
+
 import android.text.TextUtils;
+
 import com.youngmanster.collectionlibrary.config.Config;
 import com.youngmanster.collectionlibrary.utils.LogUtils;
+
 import java.io.File;
+
 import okhttp3.Cache;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -46,7 +50,6 @@ public class RetrofitManager {
             OkHttpClient okHttpClient = builder.build();
             mRetrofit = new Retrofit.Builder()
                     .baseUrl(Config.URL_DOMAIN)
-                    .addConverterFactory(GsonConverterFactory.create())
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .client(okHttpClient)
                     .build();

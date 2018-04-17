@@ -11,6 +11,7 @@ import com.youngmanster.collection.activity.baseadapter.BaseAdapterActivity;
 import com.youngmanster.collection.activity.recyclerview.RecyclerViewActivity;
 import com.youngmanster.collection.adapter.MainViewAdapter;
 import com.youngmanster.collection.base.BaseActivity;
+import com.youngmanster.collection.db.activity.DataManagerActivity;
 import com.youngmanster.collection.mvp.ui.MVPActivity;
 import com.youngmanster.collectionlibrary.refreshrecyclerview.base.adapter.BaseRecyclerViewAdapter;
 import com.youngmanster.collectionlibrary.refreshrecyclerview.pulltorefresh.PullToRefreshRecyclerView;
@@ -55,6 +56,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerViewAdapte
 		listData.add("RecyclerView");
 		listData.add("BaseAdapter");
 		listData.add("MVP+RxJava+Retrofit");
+		listData.add("DataManager(Retrofit/SharePreference/Realm)");
 		listData.add("Base");
 		refreshUI();
 	}
@@ -106,6 +108,10 @@ public class MainActivity extends BaseActivity implements BaseRecyclerViewAdapte
 				startActivity(intent);
 				break;
 			case 3:
+				intent = new Intent(this, DataManagerActivity.class);
+				startActivity(intent);
+				break;
+			case 4:
 				intent = new Intent(this, BaseUiActivity.class);
 				startActivity(intent);
 				break;

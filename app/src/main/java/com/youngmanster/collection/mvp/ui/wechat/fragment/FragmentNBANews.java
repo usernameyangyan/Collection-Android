@@ -7,11 +7,9 @@ import com.youngmanster.collection.R;
 import com.youngmanster.collection.base.BaseFragment;
 import com.youngmanster.collection.been.wechat.WeChatNews;
 import com.youngmanster.collection.mvp.contract.wechat.okhttpcache.WeChatNBANewsContract;
-import com.youngmanster.collection.mvp.model.wechat.okhttpcache.WeChatNBANewsModel;
 import com.youngmanster.collection.mvp.presenter.wechat.okhttpcache.WeChatNBANewsPresenter;
 import com.youngmanster.collection.mvp.ui.wechat.adapter.WeChatFeaturedAdapter;
 import com.youngmanster.collectionlibrary.base.StateView;
-import com.youngmanster.collectionlibrary.network.NetWorkCodeException;
 import com.youngmanster.collectionlibrary.refreshrecyclerview.base.adapter.BaseRecyclerViewAdapter;
 import com.youngmanster.collectionlibrary.refreshrecyclerview.pulltorefresh.PullToRefreshRecyclerView;
 
@@ -25,7 +23,7 @@ import butterknife.BindView;
  * on 2018/3/21.
  */
 
-public class FragmentNBANews extends BaseFragment<WeChatNBANewsModel,WeChatNBANewsPresenter> implements
+public class FragmentNBANews extends BaseFragment<WeChatNBANewsPresenter> implements
 		WeChatNBANewsContract.View, PullToRefreshRecyclerView.OnRefreshAndLoadMoreListener, BaseRecyclerViewAdapter.OnItemClickListener{
 
 	@BindView(R.id.refreshRv)

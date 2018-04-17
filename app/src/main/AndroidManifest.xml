@@ -106,5 +106,9 @@
 			android:screenOrientation="portrait"
 			android:theme="@style/AppTheme.NoActionBar"/>
 
+		<activity android:name=".db.activity.DataManagerActivity"
+				  android:screenOrientation="portrait"
+				  android:theme="@style/AppTheme.NoActionBar"/>
+
 	</application>
 </manifest>
