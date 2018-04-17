@@ -1,7 +1,6 @@
 package com.youngmanster.collectionlibrary.network.rx;
 
 import com.youngmanster.collectionlibrary.network.NetWorkCodeException;
-import com.youngmanster.collectionlibrary.utils.LogUtils;
 
 import io.reactivex.observers.DisposableObserver;
 

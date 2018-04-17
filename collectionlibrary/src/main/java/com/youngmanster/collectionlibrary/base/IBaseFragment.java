@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.youngmanster.collectionlibrary.mvp.BaseModel;
 import com.youngmanster.collectionlibrary.mvp.BasePresenter;
 import com.youngmanster.collectionlibrary.mvp.ClassGetUtil;
 
@@ -16,15 +15,14 @@ import com.youngmanster.collectionlibrary.mvp.ClassGetUtil;
  * on 2018/3/18.
  */
 
-public abstract class IBaseFragment<T extends BaseModel,E extends BasePresenter> extends Fragment implements FragmentUserVisibleController.UserVisibleCallback{
+public abstract class IBaseFragment<T extends BasePresenter> extends Fragment implements FragmentUserVisibleController.UserVisibleCallback{
 
     private boolean isInit; // 是否可以开始加载数据
     private boolean isCreated;
 
     private FragmentUserVisibleController userVisibleController;
     public View mainView;
-    public T mModel;
-    public E mPresenter;
+    public T mPresenter;
 
     public IBaseFragment() {
         userVisibleController = new FragmentUserVisibleController(this, this);
@@ -40,11 +38,10 @@ public abstract class IBaseFragment<T extends BaseModel,E extends BasePresenter>
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mainView=inflater.inflate(getLayoutId(), container, false);
-        mModel= ClassGetUtil.getClass(this,0);
-        mPresenter=ClassGetUtil.getClass(this,1);
+        mPresenter=ClassGetUtil.getClass(this,0);
 
-        if(mModel!=null&&mPresenter!=null){
-            mPresenter.setMV(mModel,this);
+        if(mPresenter!=null){
+            mPresenter.setV(this);
         }
 
         return mainView;

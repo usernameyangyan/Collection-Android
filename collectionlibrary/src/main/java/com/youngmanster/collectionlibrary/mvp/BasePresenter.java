@@ -7,14 +7,12 @@ import com.youngmanster.collectionlibrary.network.rx.RxManager;
  * on 2018/3/18.
  */
 
-public abstract class BasePresenter<T,E> {
-    public T mModel;
-    public E mView;
+public abstract class BasePresenter<T> {
+    public T mView;
 
     public RxManager rxManager=new RxManager();
 
-    public void setMV(T m,E v){
-        this.mModel=m;
+    public void setV(T v){
         this.mView=v;
     }
 

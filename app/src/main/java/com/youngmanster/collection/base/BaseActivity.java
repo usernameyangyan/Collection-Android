@@ -12,7 +12,6 @@ import android.widget.Toast;
 
 import com.youngmanster.collection.R;
 import com.youngmanster.collectionlibrary.base.IBaseActivity;
-import com.youngmanster.collectionlibrary.mvp.BaseModel;
 import com.youngmanster.collectionlibrary.mvp.BasePresenter;
 
 import butterknife.ButterKnife;
@@ -23,7 +22,7 @@ import butterknife.Unbinder;
  * on 2018/3/18.
  */
 
-public abstract class BaseActivity<T extends BaseModel,E extends BasePresenter> extends IBaseActivity{
+public abstract class BaseActivity<T extends BasePresenter> extends IBaseActivity{
     private Unbinder unbinder;
     private Toast toast = null;
     public Toolbar mCommonToolbar;

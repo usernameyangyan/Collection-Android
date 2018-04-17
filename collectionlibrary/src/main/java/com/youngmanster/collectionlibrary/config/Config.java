@@ -23,5 +23,7 @@ public class Config {
     public static long MAX_MEMORY_SIZE=10 * 1024 * 1024;
     //设置网络请求json通用解析类
     public static Class MClASS;
+    //SharePreference的配置文件名
+    public static String USER_CONFIG;
 
 }

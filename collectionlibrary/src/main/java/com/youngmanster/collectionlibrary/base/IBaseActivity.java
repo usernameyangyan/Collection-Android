@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
-import com.youngmanster.collectionlibrary.mvp.BaseModel;
 import com.youngmanster.collectionlibrary.mvp.BasePresenter;
 import com.youngmanster.collectionlibrary.mvp.ClassGetUtil;
 
@@ -13,10 +12,8 @@ import com.youngmanster.collectionlibrary.mvp.ClassGetUtil;
  * on 2018/3/18.
  */
 
-public abstract class IBaseActivity<T extends BaseModel, E extends BasePresenter> extends AppCompatActivity {
-
-    public T mModel;
-    public E mPresenter;
+public abstract class IBaseActivity<T extends BasePresenter> extends AppCompatActivity {
+    public T mPresenter;
 
     private boolean isFirst = false;
 
@@ -24,12 +21,10 @@ public abstract class IBaseActivity<T extends BaseModel, E extends BasePresenter
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(getLayoutId());
+        mPresenter = ClassGetUtil.getClass(this, 0);
 
-        mModel = ClassGetUtil.getClass(this, 0);
-        mPresenter = ClassGetUtil.getClass(this, 1);
-
-        if (mModel != null && mPresenter != null) {
-			mPresenter.setMV(mModel, this);
+        if (mPresenter != null) {
+			mPresenter.setV(this);
         }
     }
 
