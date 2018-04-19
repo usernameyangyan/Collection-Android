@@ -26,7 +26,7 @@ compile 'com.youngman:collectionlibrary:1.2.4'
 
 
 ### 更新说明
-####  v1.2.5
+####  v1.2.4
 > 1.增加DataManager用来统一管理数据请求，包括Retrofit的请求、SharePreference以及Realm的数据请求。   
 >2.Retrofit的请求的整合。
 >3.PullToRefreshRecyclerView的空布局bug修改。
