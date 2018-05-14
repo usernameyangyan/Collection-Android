@@ -1,6 +1,6 @@
 ## Collection
 
-![Travis](https://img.shields.io/badge/release-1.2.4-green.svg)
+![Travis](https://img.shields.io/badge/release-1.2.5-green.svg)
 ![Travis](https://img.shields.io/badge/llicense-MIT-green.svg)
 ![Travis](https://img.shields.io/badge/build-passing-green.svg)
 
@@ -17,19 +17,26 @@ Collection聚合了项目搭建的一些基本模块，节约开发者时间，�
 
 ## 框架的引入
 
->implementation 'com.youngman:collectionlibrary:1.2.4'   
-compile 'com.youngman:collectionlibrary:1.2.4'
+>implementation 'com.youngman:collectionlibrary:1.2.5'   
+compile 'com.youngman:collectionlibrary:1.2.5'
 
->Error:Could not find com.android.support:appcompat-v7:27.0.2.
-因为library的Support Repository是27.0.2,可能跟项目有所冲突，如果sdk已经装了27还是会出现同样的错误。
+>Error:Could not find com.android.support:appcompat-v7:27.x.x.
+因为library的Support Repository是27.x.x,可能跟项目有所冲突，如果sdk已经装了27还是会出现同样的错误。
 解决办法：在项目根build.gradle中加入  maven { url "https://maven.google.com" }
 
 
 ### 更新说明
+####  v1.2.5
+> 1.修正Retrofit DEFAULT_POST请求方式指向错误。   
+> 2.Retrofit 数据解析兼容没有公用been类，可以指定公用been类和不指定公用been类、或者混合使用。
+> 3.Realm增加数据迁移（数据库字段增加或移除）。
+> 4.增加几种通用的Dialog弹窗，提供方法自定义。
+> 5.提供几种比较常用的Utils工具类。
+
 ####  v1.2.4
 > 1.增加DataManager用来统一管理数据请求，包括Retrofit的请求、SharePreference以及Realm的数据请求。   
->2.Retrofit的请求的整合。
->3.PullToRefreshRecyclerView的空布局bug修改。
+> 2.Retrofit的请求的整合。
+> 3.PullToRefreshRecyclerView的空布局bug修改。
 
 
 ## 项目介绍
@@ -71,6 +78,8 @@ compile 'com.youngman:collectionlibrary:1.2.4'
 - Base封装了MVP和项目的基类   
 - UI状态控制StateView的使用  
 - 三步实现Permission(权限)设置
+- 提供几种比较常用的Dialog弹框
+- 提供几种比较常用的Utils工具类
 
 
 
@@ -521,7 +530,7 @@ destroy()是用来关掉改页面时把刷新View的一些动画等释放，防�
 		Config.DEBUG= BuildConfig.DEBUG;//这个如果是测试时，日志输出，网络请求相关信息输出
 		Config.URL_CACHE=AppConfig.URL_CACHE;//OkHttp缓存地址
 		Config.CONTEXT=this;//这个是必传
-		Config.MClASS= Result.class;//主要是网络请求通用数据实体类，自定义磁盘缓存需要用到
+		Config.MClASS= Result.class;//如果项目的json数据格式统一可以设置一个统一的been类
 		Config.URL_DOMAIN="http://api.tianapi.com/";//网络请求域名
 	}
 
@@ -694,8 +703,75 @@ destroy()是用来关掉改页面时把刷新View的一些动画等释放，防�
 		Config.CONTEXT=this;
 		//Retrofit配置
 		Config.URL_CACHE=AppConfig.URL_CACHE;
-		Config.MClASS= Result.class;
-		Config.URL_DOMAIN="http://api.tianapi.com/";
+		Config.MClASS= Result.class;//如果项目的json数据格式统一可以设置一个统一的been类
+		Config.URL_DOMAIN="http://api.tianapi.com/";	
+
+
+
+##### （2）使用统一解析类、不使用统一解析类、混合使用
+
+![](https://user-gold-cdn.xitu.io/2018/5/14/1635d7e3a50ad4b2?w=368&h=654&f=gif&s=1584805)
+
+###### ① 如果项目如果项目的json数据格式统一可以设置一个统一的been类，例如上面的例子的Result类,同时要在Config类设置（下面例子都是有统一解析类）：
+
+    RequestBuilder<Result<List<WeChatNews>>> resultRequestBuilder = new RequestBuilder<>(new RxObservableListener<Result<List<WeChatNews>>>(mView) {
+			@Override
+			public void onNext(Result<List<WeChatNews>> result) {
+				mView.refreshUI(result.getNewslist());
+			}
+		});
+
+		resultRequestBuilder
+				.setUrl(ApiUrl.URL_WETCHAT_FEATURED)
+				.setTransformClass(WeChatNews.class)
+				.setRequestParam(ApiClient.getRequiredBaseParam())
+				.setParam("page",page)
+				.setParam("num",num);
+
+		rxManager.addObserver(DataManager.getInstance(DataManager.DataType.RETROFIT).httpRequest(resultRequestBuilder));
+
+
+######  ②如果项目没有统一的解析been类，那么Config类就不用设置了，在Retrofit请求的时候直接指定一个解析类就可以了：
+
+     RequestBuilder<WeChatNewsResult> resultRequestBuilder = new RequestBuilder<>(new RxObservableListener<WeChatNewsResult>(mView) {
+			@Override
+			public void onNext(WeChatNewsResult result) {
+				mView.refreshUI(result.getNewslist());
+			}
+		});
+
+		resultRequestBuilder
+				.setUrl(ApiUrl.URL_WETCHAT_FEATURED)
+                            .setTransformClass(WeChatNewsResult.class)
+				.setRequestParam(ApiClient.getRequiredBaseParam())
+				.setParam("page",page)
+				.setParam("num",num);
+
+		rxManager.addObserver(DataManager.getInstance(DataManager.DataType.RETROFIT).httpRequest(resultRequestBuilder));
+
+
+######  ③如果项目想两种方式共存，那么在请求的时候需要通过setUserCommonClass（false）设置才能不使用统一解析类进行解析：
+
+    RequestBuilder<WeChatNewsResult> resultRequestBuilder = new RequestBuilder<>(new RxObservableListener<WeChatNewsResult>(mView) {
+			@Override
+			public void onNext(WeChatNewsResult result) {
+				mView.refreshUI(result.getNewslist());
+			}
+		});
+
+		resultRequestBuilder
+				.setUrl(ApiUrl.URL_WETCHAT_FEATURED)
+                            .setTransformClass(WeChatNewsResult.class)
+				.setUserCommonClass(false)
+				.setRequestParam(ApiClient.getRequiredBaseParam())
+				.setParam("page",page)
+				.setParam("num",num);
+
+		rxManager.addObserver(DataManager.getInstance(DataManager.DataType.RETROFIT).httpRequest(resultRequestBuilder));
+
+
+##### 注意：DISK_CACHE_LIST_LIMIT_TIME和DISK_CACHE_MODEL_LIMIT_TIME这两种限时使用缓存的请求方式不统一一种解析方式会出现页面没有数据显示，因为在限定的时间内如果突然转用另外一个解析实体类去解析会解析失败，只能等过限定时间或者清除本地缓存去解决这一问题。
+
 
 ##### （2）RequestBuilder的设置（网络请求的配置）
 ######  ①数据处理的方式
@@ -831,12 +907,13 @@ destroy()是用来关掉改页面时把刷新View的一些动画等释放，防�
 
 ####  3.DataManager的Realm的使用
 
- ##### （1）配置
+ #####  （1）配置
 ######   ①需要在项目的Application初始化Realm的一些参数
 
     //Realm的配置
 	Config.realmVersion=0;
 	Config.realmName="realm.realm";
+	Config.realmMigration=customMigration;//数据库数据迁移（been类字段增加移除）
 
 ######   ②在Project 的build.gradle中的dependencies加入
 
@@ -881,9 +958,36 @@ destroy()是用来关掉改页面时把刷新View的一些动画等释放，防�
 	void deleteFirstByRealm(Class<? extends RealmObject> clazz);
 	void deleteAllByRealm(Class<? extends RealmObject> clazz);
 
+##### （4）Realm数据迁移（been类字段增加移除）
 
-##### （4）注意的问题
-######  1.自定义Realm的保存文件文成的时候需要以.realm为后缀
+随着app版本的迭代，数据库的字段可能会增加或者移除这时候就需要用到Realm提供的RealmMigration进行设置。
+
+    public class CustomMigration implements RealmMigration {
+	  @Override
+	  public void migrate(DynamicRealm realm, long oldVersion, long newVersion) {
+		  RealmSchema schema = realm.getSchema();
+		  if (oldVersion == 0 && newVersion == 1) {
+			  RealmObjectSchema personSchema = schema.get("User");
+			  personSchema
+					.addField("age", int.class);
+			  oldVersion++;
+		  }else if(oldVersion == 1&&newVersion==2){
+			  RealmObjectSchema personSchema = schema.get("User");
+			  personSchema
+					.addField("address", String.class);
+			  oldVersion++;
+		  }
+	    }
+     }
+
+######  步骤：
+-  **自定义RealmMigration，在migrate方法中进行字段的增加或者移除。**
+-  **在Application中升Realm的版本号Config.realmVersion往上增加。**
+-  **在Application设置RealmMigration，Config.realmMigration=customMigration。**
+
+##### （5）注意的问题
+
+-  **自定义Realm的保存文件文成的时候需要以.realm为后缀。**
 
 
 ###  六、 Base的使用
@@ -1134,6 +1238,37 @@ destroy()是用来关掉改页面时把刷新View的一些动画等释放，防�
 - 如果是必要权限被禁止而没有选择禁止提醒退出之后下次会重新请求权限。
 - 如果必要权限被禁止和选择了禁止提醒重新进入页面在onRequestPermissionsResult会重新回调方法。
 - 使用者可以根据onRequestPermissionsResult（）方法中返回来的标志PermissionManager.EXIST_NECESSARY_PERMISSIONS_PROHIBTED和PermissionManager.EXIST_NECESSARY_PERMISSIONS_PROHIBTED_NOT_REMIND做出对应的显示和操作（例如弹框提示跳转到设置页面或者toat提示）。
+
+####  4.提供几种比较常用的Dialog弹框
+![](https://upload-images.jianshu.io/upload_images/4361802-607bfea3f81b09b6.gif?imageMogr2/auto-orient/strip)
+
+#####  ①提供的Dialog
+- DIALOG_TEXT_TWO_BUTTON_DEFAULT：默认弹窗样式。
+- DIALOG_TEXT_TWO_BUTTON_CUSTOMIZE：自定义弹出按钮提示。
+- DIALOG_LOADING_PROGRASSBAR：默认加载弹框。
+- DIALOG_DISPLAY_ADVERTISING：显示广告图的弹框样式。
+- DIALOG_CHOICE_ITEM：单项选择弹框样式。
+
+#####  ②自定义Dialog样式
+- 继承BaseDialog，通过setContentView(R.layout.dialog_list);设置弹窗布局。
+- 在提供的initUI（）方法中进行相应的逻辑设置。
+
+
+#####  ③BaseDialog提供的方法
+- setContentView（）：设置弹框布局样式。
+- show（）：显示弹框。
+- isShowing（）：判断弹框是否显示。
+- dismiss（）：弹框销毁。
+- setCancelable（）：点击返回键和外部不可取消。
+- setDialogCancel（）：点击返回键可以取消。
+
+####  5.提供几种比较常用的Utils工具类
+- DisplayUtils：px和dp的转换、获取屏幕高宽、状态栏白底黑字、设置状态栏颜色、设置状态栏全屏透明、获取状态栏的高度、获取ActionBar的高度。
+- FileUtils：写文件、读取文本文件中的内容、判断缓存是否失效、检查文件是否存在、删除目录、检查是否安装SD卡、删除文件。
+- GlideUtils：Glide显示网络图片、Glide实现高斯模糊。
+- LogUtils：日志工具类。
+- NetworkUtils：网络工具类。
+- ToastUtils：Toast提示类
 
 
 #### 本文章会根据需要持续更新，建议star收藏，便于查看。也欢迎大家提出更多建议。
