@@ -50,6 +50,7 @@ public class BaseUiActivity extends BaseActivity implements BaseRecyclerViewAdap
 		mDatas.add("Base介绍");
 		mDatas.add("StateView");
 		mDatas.add("Permission");
+		mDatas.add("Dialog的使用");
 
 		refreshUI();
 	}
@@ -82,6 +83,10 @@ public class BaseUiActivity extends BaseActivity implements BaseRecyclerViewAdap
 				break;
 			case 2:
 				intent = new Intent(this, PermissionActivity.class);
+				startActivity(intent);
+				break;
+			case 3:
+				intent = new Intent(this, DialogActivity.class);
 				startActivity(intent);
 				break;
 		}

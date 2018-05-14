@@ -39,12 +39,14 @@ public class FragmentRealm extends BaseFragment{
 				user=new User();
 				user.setId("132323");
 				user.setName("Young1");
+				user.setAge(14);
+				user.setAddress("广州市");
 				DataManager.getInstance(DataManager.DataType.REALM).saveOrUpdateWithPKByRealm(user);
 				showToast("保存成功");
 				break;
 			case R.id.queryBtn:
 				user= (User) DataManager.getInstance(DataManager.DataType.REALM).queryFirstByRealm(User.class);
-				String showContent="用户Id:"+user.getId()+"\n"+"用户姓名："+user.getName();
+				String showContent="用户Id:"+user.getId()+"\n"+"用户姓名："+user.getName()+"\n"+"用户年龄："+user.getAge()+"\n"+"用户地址："+user.getAddress();
 				showToast(showContent);
 				break;
 		}

@@ -35,7 +35,6 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
 
     implementation supportDependencies.appCompat
@@ -46,6 +45,11 @@ dependencies {
      * https://github.com/81813780/AVLoadingIndicatorView
      */
     implementation thirdDependencies.avi
+    /**
+     * https://github.com/wasabeef/glide-transformations
+     * 高斯模糊的Glide
+     */
+    implementation thirdDependencies.glideTransformation
     /**
      * retrofit和rxjava
      */
@@ -58,7 +62,7 @@ dependencies {
 
 }
 
-version = "1.2.4"
+version = "1.2.5"
 group = "com.youngman"
 
 bintray {
@@ -74,10 +78,10 @@ bintray {
         publish = true // 是否是公开项目。
 
         version {
-            name = '1.2.4'
+            name = '1.2.5'
             desc = 'Collection aggregates some of the basic modules of the project, saving developer time.'
             released  = new Date()
-            vcsTag = 'v1.2.4'
+            vcsTag = 'v1.2.5'
             attributes = ['gradle-plugin': 'com.use.less:com.use.less.gradle:gradle-useless-plugin']
         }
     }

@@ -3,9 +3,9 @@ package com.youngmanster.collection.adapter.baseadapter;
 import android.content.Context;
 
 import com.youngmanster.collection.R;
-import com.youngmanster.collection.utils.DisplayUtil;
 import com.youngmanster.collectionlibrary.refreshrecyclerview.base.adapter.BaseRecyclerViewAdapter;
 import com.youngmanster.collectionlibrary.refreshrecyclerview.base.adapter.BaseViewHolder;
+import com.youngmanster.collectionlibrary.utils.DisplayUtils;
 
 import java.util.List;
 
@@ -19,7 +19,7 @@ public class DragAndDeleteAdapter extends BaseRecyclerViewAdapter<String> {
 
 	public DragAndDeleteAdapter(Context mContext, List<String> mDatas) {
 		super(mContext, R.layout.item_main, mDatas);
-		mHeight= DisplayUtil.dip2px(mContext,100);
+		mHeight= DisplayUtils.dip2px(mContext,100);
 	}
 
 	@Override

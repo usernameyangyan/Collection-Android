@@ -8,6 +8,7 @@ import com.youngmanster.collectionlibrary.network.gson.GsonUtils;
 import com.youngmanster.collectionlibrary.network.rx.RxSchedulers;
 import com.youngmanster.collectionlibrary.network.rx.RxSubscriber;
 import com.youngmanster.collectionlibrary.utils.FileUtils;
+import com.youngmanster.collectionlibrary.utils.LogUtils;
 import com.youngmanster.collectionlibrary.utils.NetworkUtils;
 
 import java.io.IOException;
@@ -66,7 +67,6 @@ public class RequestManager extends DataManagerImpl {
 			Observable<ResponseBody> observable = getRetrofit(builder, false);
 			return loadOnlyNetWorkSaveList(builder, observable);
 		}
-
 		return null;
 	}
 
@@ -79,9 +79,9 @@ public class RequestManager extends DataManagerImpl {
 			}
 		} else if (builder.getHttpType() == RequestBuilder.HttpType.DEFAULT_POST) {
 			if (isCache) {
-				return RetrofitManager.getApiService(RequestService.class).getObservableWithQueryMap(builder.getUrl(), builder.getRequestParam());
+				return RetrofitManager.getApiService(RequestService.class).getObservableWithQueryMapByPost(builder.getUrl(), builder.getRequestParam());
 			} else {
-				return RetrofitManager.getNoCacheApiService(RequestService.class).getObservableWithQueryMap(builder.getUrl(), builder.getRequestParam());
+				return RetrofitManager.getNoCacheApiService(RequestService.class).getObservableWithQueryMapByPost(builder.getUrl(), builder.getRequestParam());
 			}
 		} else if (builder.getHttpType() == RequestBuilder.HttpType.FIELDMAP_POST) {
 			if (isCache) {
@@ -113,7 +113,14 @@ public class RequestManager extends DataManagerImpl {
 				@Override
 				public void subscribe(ObservableEmitter<T> emitter) throws Exception {
 					String json = FileUtils.ReadTxtFile(builder.getFilePath() + "/" + builder.getFileName());
-					T a = GsonUtils.fromJsonArray(json, builder.getTransformClass());
+					T a;
+					if(Config.MClASS==null){
+						a=GsonUtils.fromJsonNoCommonClass(json, builder.getTransformClass());
+					}else if(!builder.isUserCommonClass()){
+						a=GsonUtils.fromJsonNoCommonClass(json, builder.getTransformClass());
+					}else{
+						a=GsonUtils.fromJsonArray(json, builder.getTransformClass());
+					}
 					builder.getRxObservableListener().onNext(a);
 				}
 			}).subscribe(new Consumer<T>() {
@@ -132,15 +139,20 @@ public class RequestManager extends DataManagerImpl {
 					@Override
 					public void accept(ResponseBody responseBody) throws Exception {
 						json[0]=responseBody.string();
-						if(!TextUtils.isEmpty(json[0])&&!json[0].equals("")){
-							FileUtils.WriterTxtFile(builder.getFilePath(), builder.getFileName(), json[0], false);
-						}
+						FileUtils.WriterTxtFile(builder.getFilePath(), builder.getFileName(), json[0], false);
 					}
 				})
 				.subscribeWith(new RxSubscriber<ResponseBody>() {
 					@Override
 					public void _onNext(final ResponseBody t) {
-						T a = GsonUtils.fromJsonArray(json[0], builder.getTransformClass());
+						T a;
+						if(Config.MClASS==null){
+							a=GsonUtils.fromJsonNoCommonClass(json[0], builder.getTransformClass());
+						}else if(!builder.isUserCommonClass()){
+							a=GsonUtils.fromJsonNoCommonClass(json[0], builder.getTransformClass());
+						}else{
+							a=GsonUtils.fromJsonArray(json[0], builder.getTransformClass());
+						}
 						builder.getRxObservableListener().onNext(a);
 					}
 
@@ -170,8 +182,16 @@ public class RequestManager extends DataManagerImpl {
 				@Override
 				public void subscribe(ObservableEmitter<T> emitter) throws Exception {
 					String json = FileUtils.ReadTxtFile(builder.getFilePath() + "/" + builder.getFileName());
-					T a = GsonUtils.fromJsonObject(json, builder.getTransformClass());
+					T a;
+					if(Config.MClASS==null){
+						a=GsonUtils.fromJsonNoCommonClass(json, builder.getTransformClass());
+					}else if(!builder.isUserCommonClass()){
+						a=GsonUtils.fromJsonNoCommonClass(json, builder.getTransformClass());
+					}else{
+						a=GsonUtils.fromJsonObject(json, builder.getTransformClass());
+					}
 					builder.getRxObservableListener().onNext(a);
+
 				}
 			}).subscribe(new Consumer<T>() {
 				@Override
@@ -189,15 +209,20 @@ public class RequestManager extends DataManagerImpl {
 					@Override
 					public void accept(ResponseBody responseBody) throws Exception {
 						json[0]=responseBody.string();
-						if(!TextUtils.isEmpty(json[0])&&!json[0].equals("")){
-							FileUtils.WriterTxtFile(builder.getFilePath(), builder.getFileName(), json[0], false);
-						}
+						FileUtils.WriterTxtFile(builder.getFilePath(), builder.getFileName(),json[0], false);
 					}
 				})
 				.subscribeWith(new RxSubscriber<ResponseBody>() {
 					@Override
 					public void _onNext(final ResponseBody t) {
-						T a = GsonUtils.fromJsonObject(json[0], builder.getTransformClass());
+						T a;
+						if(Config.MClASS==null){
+							a=GsonUtils.fromJsonNoCommonClass(json[0], builder.getTransformClass());
+						}else if(!builder.isUserCommonClass()){
+							a=GsonUtils.fromJsonNoCommonClass(json[0], builder.getTransformClass());
+						}else{
+							a=GsonUtils.fromJsonObject(json[0], builder.getTransformClass());
+						}
 						builder.getRxObservableListener().onNext(a);
 					}
 
@@ -226,9 +251,17 @@ public class RequestManager extends DataManagerImpl {
 			@Override
 			public void subscribe(ObservableEmitter<T> emitter) throws Exception {
 				String json = FileUtils.ReadTxtFile(builder.getFilePath() + "/" + builder.getFileName());
-				if (!TextUtils.isEmpty(json) && !json.equals("")) {
-					T a = GsonUtils.fromJsonArray(json, builder.getTransformClass());
-					emitter.onNext(a);//返回数据不继续执行
+					if (!TextUtils.isEmpty(json) && !json.equals("")) {
+						T a;
+						if(Config.MClASS==null){
+							a=GsonUtils.fromJsonNoCommonClass(json, builder.getTransformClass());
+						}else if(!builder.isUserCommonClass()){
+							a=GsonUtils.fromJsonNoCommonClass(json, builder.getTransformClass());
+						}else{
+							a=GsonUtils.fromJsonArray(json, builder.getTransformClass());
+						}
+						emitter.onNext(a);
+
 				} else {
 					NetWorkCodeException.ResponseThrowable e = new NetWorkCodeException.ResponseThrowable();
 					e.code = NetWorkCodeException.NETWORD_ERROR;
@@ -244,21 +277,28 @@ public class RequestManager extends DataManagerImpl {
 					@Override
 					public void accept(ResponseBody responseBody) throws Exception {
 						json[0] =responseBody.string();
-						if(!TextUtils.isEmpty(json[0])&&!json[0].equals("")){
-							FileUtils.WriterTxtFile(builder.getFilePath(), builder.getFileName(), json[0], false);
-						}
+						FileUtils.WriterTxtFile(builder.getFilePath(), builder.getFileName(), json[0], false);
 					}
 				})
 				.compose(RxSchedulers.<ResponseBody>io_main())
 				.subscribeWith(new RxSubscriber<ResponseBody>() {
 					@Override
 					public void _onNext(ResponseBody t) {
-						T a = GsonUtils.fromJsonArray(json[0], builder.getTransformClass());
+						T a;
+						if(Config.MClASS==null){
+							a = GsonUtils.fromJsonNoCommonClass(json[0], builder.getTransformClass());
+						}else if(!builder.isUserCommonClass()){
+							a = GsonUtils.fromJsonNoCommonClass(json[0], builder.getTransformClass());
+						}else{
+							a = GsonUtils.fromJsonArray(json[0], builder.getTransformClass());
+						}
 						builder.getRxObservableListener().onNext(a);
+
 					}
 
 					@Override
 					public void _onError(NetWorkCodeException.ResponseThrowable e) {
+						LogUtils.info("1000","_onError");
 						observableC.subscribe(new Consumer<T>() {
 							@Override
 							public void accept(T t) throws Exception {
@@ -288,8 +328,16 @@ public class RequestManager extends DataManagerImpl {
 			public void subscribe(ObservableEmitter<T> emitter) throws Exception {
 				String json = FileUtils.ReadTxtFile(builder.getFilePath() + "/" + builder.getFileName());
 				if (!TextUtils.isEmpty(json) && !json.equals("")) {
-					T a = GsonUtils.fromJsonObject(json, builder.getTransformClass());
+					T a;
+					if(Config.MClASS==null){
+						a = GsonUtils.fromJsonNoCommonClass(json, builder.getTransformClass());
+					}else if(!builder.isUserCommonClass()){
+						a = GsonUtils.fromJsonNoCommonClass(json, builder.getTransformClass());
+					}else{
+						a = GsonUtils.fromJsonObject(json, builder.getTransformClass());
+					}
 					emitter.onNext(a);//返回数据不继续执行
+
 				} else {
 					NetWorkCodeException.ResponseThrowable e = new NetWorkCodeException.ResponseThrowable();
 					e.code = NetWorkCodeException.NETWORD_ERROR;
@@ -305,14 +353,19 @@ public class RequestManager extends DataManagerImpl {
 			@Override
 			public void accept(ResponseBody t) throws Exception {
 				json[0]=t.string();
-				if(!TextUtils.isEmpty(json[0])&&!json[0].equals("")){
-					FileUtils.WriterTxtFile(builder.getFilePath(), builder.getFileName(), json[0], false);
-				}
+				FileUtils.WriterTxtFile(builder.getFilePath(), builder.getFileName(),json[0], false);
 			}
 		}).compose(RxSchedulers.<ResponseBody>io_main()).subscribeWith(new RxSubscriber<ResponseBody>() {
 			@Override
 			public void _onNext(ResponseBody t) {
-				T a = GsonUtils.fromJsonObject(json[0], builder.getTransformClass());
+				T a;
+				if(Config.MClASS==null){
+					a = GsonUtils.fromJsonNoCommonClass(json[0], builder.getTransformClass());
+				}else if(!builder.isUserCommonClass()){
+					a = GsonUtils.fromJsonNoCommonClass(json[0], builder.getTransformClass());
+				}else{
+					a =GsonUtils.fromJsonObject(json[0], builder.getTransformClass());
+				}
 				builder.getRxObservableListener().onNext(a);
 			}
 
@@ -341,7 +394,6 @@ public class RequestManager extends DataManagerImpl {
 	private <T> DisposableObserver<ResponseBody> loadOnlyNetWorkSaveList(final RequestBuilder<T> builder, Observable<ResponseBody> observable) {
 
 		if (FileUtils.checkFileExists(builder.getFilePath() + "/" + builder.getFileName())) { // 已经在SD卡中存在
-			builder.getRxObservableListener().onNext(null);
 			return null;
 		}
 
@@ -350,17 +402,24 @@ public class RequestManager extends DataManagerImpl {
 			@Override
 			public void accept(ResponseBody t) throws Exception {
 				json[0]=t.string();
-				if(!TextUtils.isEmpty(json[0])&&!json[0].equals("")){
-					FileUtils.WriterTxtFile(builder.getFilePath(), builder.getFileName(), json[0], false);
-				}
+				FileUtils.WriterTxtFile(builder.getFilePath(), builder.getFileName(), json[0], false);
 			}
 		}).compose(RxSchedulers.<ResponseBody>io_main())
 				.subscribeWith(new RxSubscriber<ResponseBody>() {
 					@Override
 					public void _onNext(ResponseBody t) {
 						if (builder.isDiskCacheNetworkSaveReturn() == true) {
-							T a = GsonUtils.fromJsonArray(json[0], builder.getTransformClass());
+							T a;
+							if(Config.MClASS==null){
+								a = GsonUtils.fromJsonNoCommonClass(json[0], builder.getTransformClass());
+							}else if(!builder.isUserCommonClass()){
+								a = GsonUtils.fromJsonNoCommonClass(json[0], builder.getTransformClass());
+							}else{
+								a = GsonUtils.fromJsonArray(json[0], builder.getTransformClass());
+							}
+
 							builder.getRxObservableListener().onNext(a);
+
 						}
 					}
 
@@ -388,7 +447,6 @@ public class RequestManager extends DataManagerImpl {
 	private <T> DisposableObserver<ResponseBody> loadOnlyNetWorkSaveModel(final RequestBuilder<T> builder, Observable<ResponseBody> observable) {
 
 		if (FileUtils.checkFileExists(builder.getFilePath() + "/" + builder.getFileName())) { // 已经在SD卡中存在
-			builder.getRxObservableListener().onNext(null);
 			return null;
 		}
 
@@ -397,16 +455,22 @@ public class RequestManager extends DataManagerImpl {
 			@Override
 			public void accept(ResponseBody t) throws Exception {
 				json[0]=t.string();
-				if(!TextUtils.isEmpty(json[0])&&!json[0].equals("")){
-					FileUtils.WriterTxtFile(builder.getFilePath(), builder.getFileName(), json[0], false);
-				}
+				FileUtils.WriterTxtFile(builder.getFilePath(), builder.getFileName(), json[0], false);
 			}
 		}).compose(RxSchedulers.<ResponseBody>io_main())
 				.subscribeWith(new RxSubscriber<ResponseBody>() {
 					@Override
 					public void _onNext(ResponseBody t) {
 						if (builder.isDiskCacheNetworkSaveReturn() == true) {
-							T a = GsonUtils.fromJsonObject(json[0], builder.getTransformClass());
+							T a;
+							if(Config.MClASS==null){
+								a = GsonUtils.fromJsonNoCommonClass(json[0], builder.getTransformClass());
+							}else if(!builder.isUserCommonClass()){
+								a = GsonUtils.fromJsonNoCommonClass(json[0], builder.getTransformClass());
+							}else{
+								a = GsonUtils.fromJsonObject(json[0], builder.getTransformClass());
+							}
+
 							builder.getRxObservableListener().onNext(a);
 						}
 					}
@@ -437,8 +501,16 @@ public class RequestManager extends DataManagerImpl {
 					@Override
 					public void _onNext(ResponseBody t) {
 						try {
-							T a = GsonUtils.fromJsonArray(t.string(), builder.getTransformClass());
+							T a;
+							if(Config.MClASS==null){
+								a = GsonUtils.fromJsonNoCommonClass(t.string(), builder.getTransformClass());
+							}else if(!builder.isUserCommonClass()){
+								a = GsonUtils.fromJsonNoCommonClass(t.string(), builder.getTransformClass());
+							}else{
+								a = GsonUtils.fromJsonArray(t.string(), builder.getTransformClass());
+							}
 							builder.getRxObservableListener().onNext(a);
+
 						} catch (IOException e) {
 							e.printStackTrace();
 						}
@@ -467,8 +539,16 @@ public class RequestManager extends DataManagerImpl {
 					@Override
 					public void _onNext(ResponseBody t) {
 						try {
-							T a = GsonUtils.fromJsonObject(t.string(), builder.getTransformClass());
+							T a;
+							if(Config.MClASS==null){
+								a = GsonUtils.fromJsonNoCommonClass(t.string(), builder.getTransformClass());
+							}else if(!builder.isUserCommonClass()){
+								a = GsonUtils.fromJsonNoCommonClass(t.string(), builder.getTransformClass());
+							}else{
+								a = GsonUtils.fromJsonObject(t.string(), builder.getTransformClass());
+							}
 							builder.getRxObservableListener().onNext(a);
+
 						} catch (IOException e) {
 							e.printStackTrace();
 						}

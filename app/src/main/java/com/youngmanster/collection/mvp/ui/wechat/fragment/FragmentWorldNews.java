@@ -100,7 +100,7 @@ public class FragmentWorldNews extends BaseFragment<WeChatWorldNewsPresenter> im
 				weChatFeaturedAdapter.notifyDataSetChanged();
 			}else if (refreshRv.isLoading()) {
 				refreshRv.loadMoreComplete();
-				if (newsList.size() == 0) {
+				if (newsList==null||newsList.size() == 0) {
 					refreshRv.setNoMoreDate(true);
 				}
 			}

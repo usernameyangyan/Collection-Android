@@ -8,7 +8,6 @@ import com.youngmanster.collection.mvp.contract.wechat.okhttpcache.WeChatFeature
 import com.youngmanster.collectionlibrary.db.DataManager;
 import com.youngmanster.collectionlibrary.network.RequestBuilder;
 import com.youngmanster.collectionlibrary.network.rx.RxObservableListener;
-
 import java.util.List;
 
 /**

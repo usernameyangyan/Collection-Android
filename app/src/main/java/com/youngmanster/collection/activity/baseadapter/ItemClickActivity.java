@@ -9,6 +9,7 @@ import com.youngmanster.collection.adapter.baseadapter.ItemClickAdapter;
 import com.youngmanster.collection.base.BaseActivity;
 import com.youngmanster.collection.been.ClickItem;
 import com.youngmanster.collectionlibrary.refreshrecyclerview.base.adapter.BaseRecyclerViewAdapter;
+import com.youngmanster.collectionlibrary.utils.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,17 +66,17 @@ public class ItemClickActivity extends BaseActivity implements BaseRecyclerViewA
 
 	@Override
 	public void onClick(View v) {
-		showToast("其实点击我没有奖");
+		ToastUtils.showToast(ItemClickActivity.this,"其实点击我没有奖");
 	}
 
 	@Override
 	public void onItemClick(View view, int position) {
-		showToast(mDatas.get(position).getTitle());
+		ToastUtils.showToast(ItemClickActivity.this,mDatas.get(position).getTitle());
 	}
 
 	@Override
 	public boolean onItemLongClick(View view, int position) {
-		showToast("进行长按操作");
+		ToastUtils.showToast(ItemClickActivity.this,"进行长按操作");
 		return true;
 	}
 }

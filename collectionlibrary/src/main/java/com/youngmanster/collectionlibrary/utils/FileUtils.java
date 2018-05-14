@@ -15,9 +15,6 @@ import java.io.UnsupportedEncodingException;
 
 /**
  * 文件操作类
- *
- * @author minggo
- * @time 2014-12-2下午2:16:19
  */
 public class FileUtils {
 

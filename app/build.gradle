@@ -64,8 +64,6 @@ dependencies {
     implementation supportDependencies.design
     implementation thirdDependencies.butterknife
     annotationProcessor thirdDependencies.butterknifeCompiler
-    implementation thirdDependencies.glide
-    annotationProcessor thirdDependencies.glideCompiler
     implementation thirdDependencies.multidex
     implementation project(':collectionlibrary')
 }

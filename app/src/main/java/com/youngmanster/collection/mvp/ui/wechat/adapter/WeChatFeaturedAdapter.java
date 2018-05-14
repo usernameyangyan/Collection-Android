@@ -4,10 +4,10 @@ import android.content.Context;
 import android.widget.ImageView;
 import com.youngmanster.collection.R;
 import com.youngmanster.collection.been.wechat.WeChatNews;
-import com.youngmanster.collection.utils.GlideUtil;
 import com.youngmanster.collectionlibrary.refreshrecyclerview.base.adapter.BaseRecyclerViewAdapter;
 import com.youngmanster.collectionlibrary.refreshrecyclerview.base.adapter.BaseViewHolder;
 import com.youngmanster.collectionlibrary.refreshrecyclerview.pulltorefresh.PullToRefreshRecyclerView;
+import com.youngmanster.collectionlibrary.utils.GlideUtils;
 
 import java.util.List;
 
@@ -29,6 +29,6 @@ public class WeChatFeaturedAdapter extends BaseRecyclerViewAdapter<WeChatNews>{
 				.setText(R.id.weChatTimeTv,weChatNews.getCtime());
 
 		ImageView imageView=baseViewHolder.getView(R.id.weChatIv);
-		GlideUtil.loadImg(mContext,weChatNews.getPicUrl(),R.mipmap.ic_bttom_loading_01,R.mipmap.pull_wheel,imageView);
+		GlideUtils.loadImg(mContext,weChatNews.getPicUrl(),R.mipmap.ic_bttom_loading_01,imageView);
 	}
 }

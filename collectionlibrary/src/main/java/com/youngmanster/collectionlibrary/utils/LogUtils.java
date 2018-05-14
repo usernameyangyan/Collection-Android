@@ -16,8 +16,6 @@ import java.util.Date;
 
 /**
  * 答应日记工具类
- * @author minggo
- * @time 2014-12-2下午2:18:10
  */
 public class LogUtils {
 

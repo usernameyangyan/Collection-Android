@@ -3,10 +3,10 @@ package com.youngmanster.collection.adapter.recyclerview;
 import android.content.Context;
 
 import com.youngmanster.collection.R;
-import com.youngmanster.collection.utils.DisplayUtil;
 import com.youngmanster.collectionlibrary.refreshrecyclerview.base.adapter.BaseRecyclerViewAdapter;
 import com.youngmanster.collectionlibrary.refreshrecyclerview.base.adapter.BaseViewHolder;
 import com.youngmanster.collectionlibrary.refreshrecyclerview.pulltorefresh.PullToRefreshRecyclerView;
+import com.youngmanster.collectionlibrary.utils.DisplayUtils;
 
 import java.util.List;
 
@@ -21,8 +21,8 @@ public class DefaultRecyclerAdapter extends BaseRecyclerViewAdapter<String> {
 
     public DefaultRecyclerAdapter(Context mContext, List<String> mDatas, PullToRefreshRecyclerView pullToRefreshRecyclerView) {
         super(mContext, R.layout.item_pull_refresh, mDatas, pullToRefreshRecyclerView);
-        mScreenWidth= DisplayUtil.getScreenWidthPixels(mContext);
-        mItemWidth=(mScreenWidth-DisplayUtil.dip2px(mContext,30))/3;
+        mScreenWidth= DisplayUtils.getScreenWidthPixels(mContext);
+        mItemWidth=(mScreenWidth-DisplayUtils.dip2px(mContext,30))/3;
     }
 
     @Override

@@ -21,11 +21,11 @@ import retrofit2.http.Url;
 
 public interface RequestService{
 
-    /**
-     *找回密码
-     */
     @GET
    Observable<ResponseBody> getObservableWithQueryMap(@Url String url, @QueryMap Map<String, Object> map);
+
+    @POST
+    Observable<ResponseBody> getObservableWithQueryMapByPost(@Url String url, @QueryMap Map<String, Object> map);
 
     @FormUrlEncoded
     @POST

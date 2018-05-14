@@ -4,7 +4,6 @@
 			  android:layout_width="match_parent"
 			  android:layout_height="match_parent">
 
-	<include layout="@layout/common_toolbar"/>
 	<include layout="@layout/layout_state"/>
 
 	<com.youngmanster.collectionlibrary.refreshrecyclerview.pulltorefresh.PullToRefreshRecyclerView

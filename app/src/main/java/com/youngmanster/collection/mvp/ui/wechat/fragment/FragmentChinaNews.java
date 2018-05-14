@@ -92,7 +92,7 @@ public class FragmentChinaNews extends BaseFragment<WeChatChinaNewsPresenter> im
 		} else {
 			if (refreshRv.isLoading()) {
 				refreshRv.loadMoreComplete();
-				if (newsList.size() == 0) {
+				if (newsList==null||newsList.size() == 0) {
 					refreshRv.setNoMoreDate(true);
 				}
 			} else if (refreshRv.isRefreshing()) {

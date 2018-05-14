@@ -5,6 +5,7 @@ import android.content.Context;
 
 import com.youngmanster.collection.BuildConfig;
 import com.youngmanster.collection.been.Result;
+import com.youngmanster.collection.db.CustomMigration;
 import com.youngmanster.collectionlibrary.config.Config;
 import com.youngmanster.collectionlibrary.network.RequestManager;
 import com.youngmanster.collectionlibrary.utils.LogUtils;
@@ -19,6 +20,8 @@ import io.realm.RealmSchema;
  */
 
 public class AppApplication extends Application{
+
+	private CustomMigration customMigration=new CustomMigration();
 
 	@Override
 	public void onCreate() {
@@ -42,8 +45,8 @@ public class AppApplication extends Application{
 		Config.URL_DOMAIN="http://api.tianapi.com/";
 		//SharePreference配置
 		Config.USER_CONFIG="Collection_User";
-		Config.realmVersion=0;
+		Config.realmVersion=2;
 		Config.realmName="realm.realm";
-
+		Config.realmMigration=customMigration;
 	}
 }

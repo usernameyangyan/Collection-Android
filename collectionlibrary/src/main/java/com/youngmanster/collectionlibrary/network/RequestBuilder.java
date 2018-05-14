@@ -14,13 +14,14 @@ import okhttp3.MultipartBody;
 
 public class RequestBuilder<T> {
 
-    private ReqType reqType= ReqType.DEFAULT_CACHE_LIST;
+    private ReqType reqType=ReqType.DEFAULT_CACHE_LIST;
     private Class clazz;
     private String url;
     private String filePath;
     private String fileName;
     private int limtHours=1;
-    private HttpType httpType= HttpType.DEFAULT_GET;
+    private boolean isUserCommonClass=true;
+    private HttpType httpType=HttpType.DEFAULT_GET;
     private RxObservableListener<T> rxObservableListener;
     private Map<String, Object> requestParam;
     private MultipartBody.Part part;
@@ -43,17 +44,13 @@ public class RequestBuilder<T> {
         DISK_CACHE_NO_NETWORK_MODEL,
         //保存网络数据到本地磁盘，可以设定网络请求是否返回数据
         DISK_CACHE_NETWORK_SAVE_RETURN_MODEL,
-        DISK_CACHE_NETWORK_SAVE_RETURN_LIST,
+        DISK_CACHE_NETWORK_SAVE_RETURN_LIST
     }
 
     public enum HttpType {
-        //GET请求
         DEFAULT_GET,
-        //POST请求
         DEFAULT_POST,
-        //如果请求URL出现中文乱码，可选择这个
         FIELDMAP_POST,
-        //上传一张图片
         ONE_MULTIPART_POST
     }
 
@@ -81,7 +78,7 @@ public class RequestBuilder<T> {
         return url;
     }
 
-    public RequestBuilder setFilePathAndFileName(String filePath, String fileName) {
+    public RequestBuilder setFilePathAndFileName(String filePath,String fileName) {
         this.filePath = filePath;
         this.fileName=fileName;
         return this;
@@ -127,7 +124,7 @@ public class RequestBuilder<T> {
         return isDiskCacheNetworkSaveReturn;
     }
 
-    public RequestBuilder setHttpTypeAndReqType(HttpType httpType, ReqType reqType) {
+    public RequestBuilder setHttpTypeAndReqType(HttpType httpType,ReqType reqType) {
         this.httpType = httpType;
         this.reqType = reqType;
         return this;
@@ -147,6 +144,15 @@ public class RequestBuilder<T> {
 
     public RequestBuilder setPart(MultipartBody.Part part) {
         this.part = part;
+        return this;
+    }
+
+    public boolean isUserCommonClass() {
+        return isUserCommonClass;
+    }
+
+    public RequestBuilder setUserCommonClass(boolean userCommonClass) {
+        isUserCommonClass = userCommonClass;
         return this;
     }
 

@@ -4,9 +4,9 @@ import android.content.Context;
 
 import com.youngmanster.collection.R;
 import com.youngmanster.collection.been.MultiItem;
-import com.youngmanster.collection.utils.DisplayUtil;
 import com.youngmanster.collectionlibrary.refreshrecyclerview.base.adapter.BaseRecyclerViewMultiItemAdapter;
 import com.youngmanster.collectionlibrary.refreshrecyclerview.base.adapter.BaseViewHolder;
+import com.youngmanster.collectionlibrary.utils.DisplayUtils;
 
 
 import java.util.List;
@@ -22,7 +22,7 @@ public class MultipleAdapter extends BaseRecyclerViewMultiItemAdapter<MultiItem>
 
 	public MultipleAdapter(Context mContext, List<MultiItem> mDatas) {
 		super(mContext, mDatas);
-		mHeight = DisplayUtil.dip2px(mContext, 100);
+		mHeight = DisplayUtils.dip2px(mContext, 100);
 		addItemType(MultiItem.TYPE_TEXT, R.layout.item_main);
 		addItemType(MultiItem.TYPE_IMG, R.layout.item_img);
 		addItemType(MultiItem.TYPE_TEXT_IMG, R.layout.item_click);

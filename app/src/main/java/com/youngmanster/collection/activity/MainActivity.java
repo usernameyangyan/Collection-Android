@@ -15,6 +15,7 @@ import com.youngmanster.collection.db.activity.DataManagerActivity;
 import com.youngmanster.collection.mvp.ui.MVPActivity;
 import com.youngmanster.collectionlibrary.refreshrecyclerview.base.adapter.BaseRecyclerViewAdapter;
 import com.youngmanster.collectionlibrary.refreshrecyclerview.pulltorefresh.PullToRefreshRecyclerView;
+import com.youngmanster.collectionlibrary.utils.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,7 +75,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerViewAdapte
 	public void onBackPressed() {
 
 		if (System.currentTimeMillis() > currentTime) {
-			showToast("再按一次即可退出");
+			ToastUtils.showToast(MainActivity.this,"再按一次即可退出");
 		} else {
 			super.onBackPressed();
 		}

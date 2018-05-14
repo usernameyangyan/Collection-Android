@@ -8,8 +8,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.youngmanster.collection.R;
 import com.youngmanster.collectionlibrary.base.IBaseActivity;
 import com.youngmanster.collectionlibrary.mvp.BasePresenter;
@@ -24,7 +22,6 @@ import butterknife.Unbinder;
 
 public abstract class BaseActivity<T extends BasePresenter> extends IBaseActivity {
     private Unbinder unbinder;
-    private Toast toast = null;
     public Toolbar mCommonToolbar;
     private TextView titleTv;
 
@@ -46,37 +43,6 @@ public abstract class BaseActivity<T extends BasePresenter> extends IBaseActivit
         super.onDestroy();
         unbinder.unbind();
     }
-
-    /**
-     * 显示{@link Toast}通知
-     *
-     * @param showText 字符串资源id
-     */
-    public void showToast(final String showText) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if (toast == null) {
-                    toast = Toast.makeText(BaseActivity.this, showText, Toast.LENGTH_SHORT);
-                } else {
-                    toast.setText(showText);
-                    toast.setDuration(Toast.LENGTH_SHORT);
-                }
-                toast.show();
-            }
-        });
-    }
-
-    /**
-     * 显示{@link Toast}通知
-     *
-     * @param strResId 字符串资源id
-     */
-    public void showToast(final int strResId) {
-        String text = getString(strResId);
-        showToast(text);
-    }
-
     /**
      * 设置Toolbar成ActionBar
      */

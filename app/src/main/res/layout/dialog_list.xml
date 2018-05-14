@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content">
+
+	<LinearLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:orientation="vertical">
+
+		<TextView
+			android:id="@+id/tv_Tips"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:background="#E7E7E7"
+			android:gravity="center"
+			android:padding="15dp"
+			android:textColor="#7d7d7d"
+			android:textSize="14sp"
+			android:text="选择item"/>
+
+		<android.support.v7.widget.RecyclerView
+			android:id="@+id/rv_Item"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"/>
+	</LinearLayout>
+
+</RelativeLayout>

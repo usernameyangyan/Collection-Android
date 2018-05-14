@@ -8,8 +8,7 @@ import android.text.TextUtils;
 import java.util.Locale;
 
 /**
- * 网络工具类
- * Created by zhengjinbin on 2016/5/17.
+ * 网络工具类17.
  */
 public class NetworkUtils {
 	public static final int NET_TYPE_NOT = 0x00;

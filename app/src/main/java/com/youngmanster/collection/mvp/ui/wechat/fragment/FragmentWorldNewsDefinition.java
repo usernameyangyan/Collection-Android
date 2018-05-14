@@ -101,7 +101,7 @@ public class FragmentWorldNewsDefinition extends BaseFragment<WeChatWorldNewsDef
 				weChatFeaturedAdapter.notifyDataSetChanged();
 			}else if (refreshRv.isLoading()) {
 				refreshRv.loadMoreComplete();
-				if (newsList.size() == 0) {
+				if (newsList==null||newsList.size() == 0) {
 					refreshRv.setNoMoreDate(true);
 				}
 			}

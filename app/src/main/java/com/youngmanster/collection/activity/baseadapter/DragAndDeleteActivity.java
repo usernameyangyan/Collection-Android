@@ -8,6 +8,7 @@ import com.youngmanster.collection.adapter.baseadapter.DragAndDeleteAdapter;
 import com.youngmanster.collection.base.BaseActivity;
 import com.youngmanster.collectionlibrary.refreshrecyclerview.base.adapter.BaseRecyclerViewAdapter;
 import com.youngmanster.collectionlibrary.refreshrecyclerview.base.helper.BaseRecycleItemTouchHelper;
+import com.youngmanster.collectionlibrary.utils.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,7 +71,7 @@ public class DragAndDeleteActivity extends BaseActivity implements BaseRecyclerV
 			@Override
 			public void run() {
 				dragAndDeleteAdapter.notifyDataSetChanged();
-				showToast("操作完成");
+				ToastUtils.showToast(DragAndDeleteActivity.this,"操作完成");
 			}
 		},300);
 	}
