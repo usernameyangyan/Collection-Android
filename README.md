@@ -27,11 +27,11 @@ compile 'com.youngman:collectionlibrary:1.2.5'
 
 ### 更新说明
 ####  v1.2.5
-> 1.修正Retrofit DEFAULT_POST请求方式指向错误。   
-> 2.Retrofit 数据解析兼容没有公用been类，可以指定公用been类和不指定公用been类、或者混合使用。
-> 3.Realm增加数据迁移（数据库字段增加或移除）。
-> 4.增加几种通用的Dialog弹窗，提供方法自定义。
-> 5.提供几种比较常用的Utils工具类。
+> 1.修正Retrofit DEFAULT_POST请求方式指向错误。      
+> 2.Retrofit 数据解析兼容没有公用been类，可以指定公用been类和不指定公用been类、或者混合使用。   
+> 3.Realm增加数据迁移（数据库字段增加或移除）。   
+> 4.增加几种通用的Dialog弹窗，提供方法自定义。   
+> 5.提供几种比较常用的Utils工具类。   
 
 ####  v1.2.4
 > 1.增加DataManager用来统一管理数据请求，包括Retrofit的请求、SharePreference以及Realm的数据请求。   
