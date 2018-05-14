@@ -1,11 +1,12 @@
 ## Collection
 
-![Travis](https://img.shields.io/badge/release-1.1.5-green.svg)
+![Travis](https://img.shields.io/badge/release-1.2.5-green.svg)
 ![Travis](https://img.shields.io/badge/llicense-MIT-green.svg)
 ![Travis](https://img.shields.io/badge/build-passing-green.svg)
 
 
-Collection聚合了项目搭建的一些基本模块，节约开发者时间，协助项目的快速搭建,RecyclerView+Adapter+网络请求+MVP+基本Base,能够满足一个项目的基本实现，框架中暂时还没有把数据库和SharePrefence添加进去，后续会把两者跟网络请求封装在一起的 。
+Collection聚合了项目搭建的一些基本模块，节约开发者时间，协助项目的快速搭建,RecyclerView+Adapter+Retrofit+RxJava+MVP+DataManager+基本Base,能够满足一个项目的基本实现。
+
 
 #### 更多交流请加微信公众号
 ![](https://upload-images.jianshu.io/upload_images/4361802-88c89753c38ddf70.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
@@ -16,12 +17,26 @@ Collection聚合了项目搭建的一些基本模块，节约开发者时间，�
 
 ## 框架的引入
 
->implementation 'com.youngman:collectionlibrary:1.1.5'   
-compile 'com.youngman:collectionlibrary:1.1.5'
+>implementation 'com.youngman:collectionlibrary:1.2.5'   
+compile 'com.youngman:collectionlibrary:1.2.5'
 
->Error:Could not find com.android.support:appcompat-v7:27.0.2.
-因为library的Support Repository是27.0.2,可能跟项目有所冲突，如果sdk已经装了27还是会出现同样的错误。
+>Error:Could not find com.android.support:appcompat-v7:27.x.x.
+因为library的Support Repository是27.x.x,可能跟项目有所冲突，如果sdk已经装了27还是会出现同样的错误。
 解决办法：在项目根build.gradle中加入  maven { url "https://maven.google.com" }
+
+
+### 更新说明
+####  v1.2.5
+> 1.修正Retrofit DEFAULT_POST请求方式指向错误。      
+> 2.Retrofit 数据解析兼容没有公用been类，可以指定公用been类和不指定公用been类、或者混合使用。   
+> 3.Realm增加数据迁移（数据库字段增加或移除）。   
+> 4.增加几种通用的Dialog弹窗，提供方法自定义。   
+> 5.提供几种比较常用的Utils工具类。   
+
+####  v1.2.4
+> 1.增加DataManager用来统一管理数据请求，包括Retrofit的请求、SharePreference以及Realm的数据请求。   
+> 2.Retrofit的请求的整合。
+> 3.PullToRefreshRecyclerView的空布局bug修改。
 
 
 ## 项目介绍
@@ -51,16 +66,25 @@ compile 'com.youngman:collectionlibrary:1.1.5'
 - MVP+RxJava+Retrofit+OkHttp的缓存机制 
 - MVP+RxJava+Retrofit+自定义磁盘缓存机制  
 
-**4.Base的使用**   
+
+**4.DataManager的使用**  
+
+- DataManager的Retrofit请求
+- DataManager的SharePreference的使用
+-  DataManager的Realm的使用
+
+**5.Base的使用**   
 
 - Base封装了MVP和项目的基类   
 - UI状态控制StateView的使用  
 - 三步实现Permission(权限)设置
+- 提供几种比较常用的Dialog弹框
+- 提供几种比较常用的Utils工具类
 
 
 
 ###  一、框架整体模块
-![](https://upload-images.jianshu.io/upload_images/4361802-f0b81113274451b6.gif?imageMogr2/auto-orient/strip)
+![](https://upload-images.jianshu.io/upload_images/4361802-fb6a3fc709e0e235.gif?imageMogr2/auto-orient/strip)
 
 
 ### 二 、PullToRefreshRecyclerView的使用
@@ -464,57 +488,41 @@ destroy()是用来关掉改页面时把刷新View的一些动画等释放，防�
   ###### 注意：需要延时再进行逻辑操作，不然会出现数据混乱。
   
   
-  ### 四、MVP+RxJava+Retrofit的封装使用
+  ###  四、MVP+RxJava+Retrofit的封装使用
 
-#### 1.框架中的Retrofit+RxJava封装的了解
-
-###### （1）Retrofit:RetrofitManager提供getApiService()和getNoCacheApiService，分别可以获取到可以缓存的retrofit和没有缓存的retrofit,使用第一种在没有网络的时候可以根据缓存进行显示，缓存的相关配置下面会有介绍。
+###### 由于Retrofit已经封装在DataManager中，在DataManager中有详细的介绍，这里只是提供一个例子让大家了解如何使用MVP+RxJava+Retrofit。
 
 
-###### （2）RxJava：提供了RxManager、RxObservableListener、RxSchedulers、RxSubscriber。
 
-- RxManager：对Observables 和 Subscribers管理。
+#### 1.在使用Retrofit请求网络之前需要进行配置，在框架中提供了了Config配置类
 
-- RxObservableListener：对结果回调。
-
-- RxSchedulers：线程切换。
-
-- RxSubscriber：Observer的处理事件。
-
-###### （3）网络请求管理RequestManager：提供对应的请求操作。
-
-- loadFormDiskResultListLimitTime():设置缓存时间，没超过设置的时间不请求网络，只返回缓存数据。结果为一个List。
-- loadFormDiskModeLimitTime():设置缓存时间，没超过设置的时间不请求网络，只返回缓存数据。结果为一个Model。
-- loadNoNetWorkWithCacheResultList():没有网络再请求缓存。结果为一个List。
-- loadNoNetWorkWithCacheModel():没有网络再请求缓存。结果为一个Model。
-- loadOnlyNetWorkSaveResult():把结果保存到本地，根据标志是否返回数据，如果本地存在则不需要下载。
-- loadOnlyNetWork()：只通过网络返回数据。
-
-###### 前面5种请求方式主要是和自定缓存磁盘关联起来，配合RetrofitManager.getNoCacheApiService()使用，loadOnlyNetWork()和RetrofitManager.getApiService()结合使用，这样就可以实现OkHttp缓存和自定义磁盘缓存。
-
-
-####  2.使用框架在项目需要做的操作
-
-
-###### 在使用Retrofit请求网络之前需要进行配置，在框架中提供了了Config配置类
+###### 框架中的Config总览如下：
 
 	public class Config {
-    	//是否为BuildConfig.DEBUG，日志输出需要
-    	public static boolean DEBUG;
-    	//网络请求的域名
-    	public static String URL_DOMAIN;
-    	//网络缓存地址
-    	public static String URL_CACHE;
-    	//设置Context
-    	public static Context CONTEXT;
-    	//设置OkHttp的缓存机制的最大缓存时间,默认为一天
-    	public static long MAX_CACHE_SECONDS= 60 * 60 * 24;
-    	//缓存最大的内存,默认为10M
-    	public static long MAX_MEMORY_SIZE=10 * 1024 * 1024;
-    	//设置网络请求json通用解析类
-    	public static Class MClASS;
+          /**必传参数**/
+          //是否为BuildConfig.DEBUG,日志输出需要
+          public static boolean DEBUG;
+          //设置Context
+          public static Context CONTEXT;
+          /**Retrofit**/
+          //网络请求的域名
+          public static String URL_DOMAIN;
+          //网络缓存地址
+          public static String URL_CACHE;
+          //设置OkHttp的缓存机制的最大缓存时间,默认为一天
+          public static long MAX_CACHE_SECONDS= 60 * 60 * 24;
+          //缓存最大的内存,默认为10M
+          public static long MAX_MEMORY_SIZE=10 * 1024 * 1024;
+          //设置网络请求json通用解析类
+          public static Class MClASS;
+          /**SharePreference**/
+          public static String USER_CONFIG;
+          /**Realm**/
+          public static RealmMigration realmMigration;
+          public static int realmVersion=0;
+          public static String realmName="myRealm.realm";
 
-	}
+    }
 
 ###### 在项目中需要根据项目需要进行配置，在Application中设置
 
@@ -522,12 +530,12 @@ destroy()是用来关掉改页面时把刷新View的一些动画等释放，防�
 		Config.DEBUG= BuildConfig.DEBUG;//这个如果是测试时，日志输出，网络请求相关信息输出
 		Config.URL_CACHE=AppConfig.URL_CACHE;//OkHttp缓存地址
 		Config.CONTEXT=this;//这个是必传
-		Config.MClASS= Result.class;//主要是网络请求通用数据实体类，自定义磁盘缓存需要用到
+		Config.MClASS= Result.class;//如果项目的json数据格式统一可以设置一个统一的been类
 		Config.URL_DOMAIN="http://api.tianapi.com/";//网络请求域名
 	}
 
 
-###### 根据项目需要定义一个通用的数据实体类，这是本例通用实体类
+###### 根据项目需要定义一个通用的数据实体类，这是本例通用实体类，这个类需要设置到Applicatin中
 
 	public class Result<T> implements Serializable {
 
@@ -559,8 +567,298 @@ destroy()是用来关掉改页面时把刷新View的一些动画等释放，防�
 			this.newslist = newslist;
 		}
 	}
-	
-###### 温馨提醒：由于每个项目返回来的json数据格式有所不同，如果Result中代表的字段例如newslist没有内容返回来的时候这个字段需要后台控制不返回，如果不做处理会报解析错误。
+
+
+######  温馨提醒：由于每个项目返回来的json数据格式有所不同，如果Result中代表的字段例如newslist没有内容返回来的时候这个字段需要后台控制不返回，如果不做处理会报解析错误。
+
+####  3.MVP+RxJava+Retrofit+OkHttp的缓存机制
+
+![](https://upload-images.jianshu.io/upload_images/4361802-e0f0294088db24bd.gif?imageMogr2/auto-orient/strip)
+
+
+###### 上面的缓存配置完成之后通过以下代码即可：
+
+    public class WeChatWorldNewsPresenter extends WeChatWorldNewsContract.Presenter {
+        @Override
+         public void requestWorldNews(int page, int num) {
+
+         RequestBuilder<Result<List<WeChatNews>>> resultRequestBuilder = new RequestBuilder<>(new RxObservableListener<Result<List<WeChatNews>>>(mView) {
+            @Override
+            public void onNext(Result<List<WeChatNews>> result) {
+                mView.refreshUI(result.getNewslist());
+            }
+        });
+
+        resultRequestBuilder
+                .setUrl(ApiUrl.URL_WETCHAT_WORLD_NEWS)
+                .setTransformClass(WeChatNews.class)
+                .setRequestParam(ApiClient.getRequiredBaseParam())
+                .setHttpTypeAndReqType(RequestBuilder.HttpType.DEFAULT_GET, RequestBuilder.ReqType.DEFAULT_CACHE_LIST)
+                .setParam("page",page)
+                .setParam("num",num);
+
+        rxManager.addObserver(DataManager.getInstance(DataManager.DataType.RETROFIT).httpRequest(resultRequestBuilder));
+      }
+    }
+
+#### 3.MVP+RxJava+Retrofit+OkHttp的缓存机制
+
+[效果图](https://upload-images.jianshu.io/upload_images/4361802-e0f0294088db24bd.gif?imageMogr2/auto-orient/strip)
+
+
+###### 上面的缓存配置完成之后通过以下代码即可：
+
+    public class WeChatWorldNewsPresenter extends WeChatWorldNewsContract.Presenter {
+        @Override
+         public void requestWorldNews(int page, int num) {
+
+         RequestBuilder<Result<List<WeChatNews>>> resultRequestBuilder = new RequestBuilder<>(new RxObservableListener<Result<List<WeChatNews>>>(mView) {
+            @Override
+            public void onNext(Result<List<WeChatNews>> result) {
+                mView.refreshUI(result.getNewslist());
+            }
+        });
+
+        resultRequestBuilder
+                .setUrl(ApiUrl.URL_WETCHAT_WORLD_NEWS)
+                .setTransformClass(WeChatNews.class)
+                .setRequestParam(ApiClient.getRequiredBaseParam())
+                .setHttpTypeAndReqType(RequestBuilder.HttpType.DEFAULT_GET, RequestBuilder.ReqType.DEFAULT_CACHE_LIST)
+                .setParam("page",page)
+                .setParam("num",num);
+
+        rxManager.addObserver(DataManager.getInstance(DataManager.DataType.RETROFIT).httpRequest(resultRequestBuilder));
+      }
+    }
+
+
+####  4.MVP+RxJava+Retrofit+自定义磁盘缓存机制
+
+[效果图](https://upload-images.jianshu.io/upload_images/4361802-04e2322fc5f515ee.gif?imageMogr2/auto-orient/strip)
+
+  public class WeChatChinaNewsDefinitionPresenter extends WeChatChinaNewsContract.Presenter {
+	    @Override
+	    public void requestChinaNews(int page, int num) {
+		    String filePath = AppConfig.STORAGE_DIR + "wechat/china";
+		    String fileName = "limttime.t";
+
+		    RequestBuilder resultRequestBuilder = new RequestBuilder<>(new RxObservableListener<Result<List<WeChatNews>>>(mView) {
+			    @Override
+			    public void onNext(Result<List<WeChatNews>> result) {
+				    mView.refreshUI(result.getNewslist());
+			    }
+		    }).setFilePathAndFileName(filePath, fileName)
+				.setTransformClass(WeChatNews.class)
+				.setUrl(ApiUrl.URL_WETCHAT_CHINA_NEWS)
+				.setRequestParam(ApiClient.getRequiredBaseParam())
+				.setHttpTypeAndReqType(RequestBuilder.HttpType.DEFAULT_GET,RequestBuilder.ReqType.DISK_CACHE_LIST_LIMIT_TIME)
+				.setParam("page", page)
+				.setParam("num", num);
+
+		    rxManager.addObserver(DataManager.getInstance(DataManager.DataType.RETROFIT).httpRequest(resultRequestBuilder));
+	    }
+    }
+
+
+#####  注意：
+
+######  ①RxObservableListener有三个回调方法
+    void onNext(T result);
+    void onComplete();
+    void onError(NetWorkCodeException.ResponseThrowable e);
+######  只会重写onNext方法，其它两个方法可以自行选择重写。
+######  ②RxObservableListener提供两个构造函数
+    protected RxObservableListener(BaseView view){
+	    this.mView = view;
+    }
+
+    protected RxObservableListener(BaseView view, String errorMsg){
+	     this.mView = view;
+         this.mErrorMsg = errorMsg;
+    }
+
+###### 这两个构造函数主要主要是为了统一处理onError的，如果要自定义错误提醒，则可以选择第二个构造函数。
+
+######  ③通过DataManager的网络请求方式会返回来一个DisposableObserver，需要把它通过rxManager.addObserver()添加进CompositeDisposable才能正常执行。
+
+
+###  五、DataManager的使用（DataManager封装了三种数据请求方式，包括Retroift、SharePreference和Realm）
+
+####   1.DataManager的了解 
+
+**提供了三种方式**
+
+    public enum DataType {
+		RETROFIT, REALM, SHAREPREFERENCE
+    }
+
+**通过DataManager.getInstance(DataManager.DataType.XXX)可获得对应的请求方式。**
+
+####  1.DataManager的Retrofit请求 
+##### （1）配置
+需要在项目的Application初始化Retrofit的一些参数
+
+        //基本配置
+		Config.DEBUG= BuildConfig.DEBUG;
+		Config.CONTEXT=this;
+		//Retrofit配置
+		Config.URL_CACHE=AppConfig.URL_CACHE;
+		Config.MClASS= Result.class;//如果项目的json数据格式统一可以设置一个统一的been类
+		Config.URL_DOMAIN="http://api.tianapi.com/";	
+
+
+
+##### （2）使用统一解析类、不使用统一解析类、混合使用
+
+![](https://user-gold-cdn.xitu.io/2018/5/14/1635d7e3a50ad4b2?w=368&h=654&f=gif&s=1584805)
+
+###### ① 如果项目如果项目的json数据格式统一可以设置一个统一的been类，例如上面的例子的Result类,同时要在Config类设置（下面例子都是有统一解析类）：
+
+    RequestBuilder<Result<List<WeChatNews>>> resultRequestBuilder = new RequestBuilder<>(new RxObservableListener<Result<List<WeChatNews>>>(mView) {
+			@Override
+			public void onNext(Result<List<WeChatNews>> result) {
+				mView.refreshUI(result.getNewslist());
+			}
+		});
+
+		resultRequestBuilder
+				.setUrl(ApiUrl.URL_WETCHAT_FEATURED)
+				.setTransformClass(WeChatNews.class)
+				.setRequestParam(ApiClient.getRequiredBaseParam())
+				.setParam("page",page)
+				.setParam("num",num);
+
+		rxManager.addObserver(DataManager.getInstance(DataManager.DataType.RETROFIT).httpRequest(resultRequestBuilder));
+
+
+######  ②如果项目没有统一的解析been类，那么Config类就不用设置了，在Retrofit请求的时候直接指定一个解析类就可以了：
+
+     RequestBuilder<WeChatNewsResult> resultRequestBuilder = new RequestBuilder<>(new RxObservableListener<WeChatNewsResult>(mView) {
+			@Override
+			public void onNext(WeChatNewsResult result) {
+				mView.refreshUI(result.getNewslist());
+			}
+		});
+
+		resultRequestBuilder
+				.setUrl(ApiUrl.URL_WETCHAT_FEATURED)
+                            .setTransformClass(WeChatNewsResult.class)
+				.setRequestParam(ApiClient.getRequiredBaseParam())
+				.setParam("page",page)
+				.setParam("num",num);
+
+		rxManager.addObserver(DataManager.getInstance(DataManager.DataType.RETROFIT).httpRequest(resultRequestBuilder));
+
+
+######  ③如果项目想两种方式共存，那么在请求的时候需要通过setUserCommonClass（false）设置才能不使用统一解析类进行解析：
+
+    RequestBuilder<WeChatNewsResult> resultRequestBuilder = new RequestBuilder<>(new RxObservableListener<WeChatNewsResult>(mView) {
+			@Override
+			public void onNext(WeChatNewsResult result) {
+				mView.refreshUI(result.getNewslist());
+			}
+		});
+
+		resultRequestBuilder
+				.setUrl(ApiUrl.URL_WETCHAT_FEATURED)
+                            .setTransformClass(WeChatNewsResult.class)
+				.setUserCommonClass(false)
+				.setRequestParam(ApiClient.getRequiredBaseParam())
+				.setParam("page",page)
+				.setParam("num",num);
+
+		rxManager.addObserver(DataManager.getInstance(DataManager.DataType.RETROFIT).httpRequest(resultRequestBuilder));
+
+
+##### 注意：DISK_CACHE_LIST_LIMIT_TIME和DISK_CACHE_MODEL_LIMIT_TIME这两种限时使用缓存的请求方式不统一一种解析方式会出现页面没有数据显示，因为在限定的时间内如果突然转用另外一个解析实体类去解析会解析失败，只能等过限定时间或者清除本地缓存去解决这一问题。
+
+
+##### （2）RequestBuilder的设置（网络请求的配置）
+######  ①数据处理的方式
+    public enum ReqType {
+        //没有缓存
+        NO_CACHE_MODEL,
+        No_CACHE_LIST,
+        //默认Retrofit缓存
+        DEFAULT_CACHE_MODEL,
+        DEFAULT_CACHE_LIST,
+        //自定义磁盘缓存，返回List
+        DISK_CACHE_LIST_LIMIT_TIME,
+        //自定义磁盘缓存，返回Model
+        DISK_CACHE_MODEL_LIMIT_TIME,
+        //自定义磁盘缓存，没有网络返回磁盘缓存，返回List
+        DISK_CACHE_NO_NETWORK_LIST,
+        //自定义磁盘缓存，没有网络返回磁盘缓存，返回Model
+        DISK_CACHE_NO_NETWORK_MODEL,
+        //保存网络数据到本地磁盘，可以设定网络请求是否返回数据
+        DISK_CACHE_NETWORK_SAVE_RETURN_MODEL,
+        DISK_CACHE_NETWORK_SAVE_RETURN_LIST,
+     }
+
+######  ②网络请求方式
+    public enum HttpType {
+        //GET请求
+        DEFAULT_GET,
+        //POST请求
+        DEFAULT_POST,
+        //如果请求URL出现中文乱码，可选择这个
+        FIELDMAP_POST,
+        //上传一张图片
+        ONE_MULTIPART_POST
+    }
+
+
+######  ③RequestBuilder的填充
+
+     RequestBuilder<Result<List<WeChatNews>>> resultRequestBuilder = new RequestBuilder<>(new RxObservableListener<Result<List<WeChatNews>>>(mView) {
+            @Override
+            public void onNext(Result<List<WeChatNews>> result) {
+                mView.refreshUI(result.getNewslist());
+            }
+        });
+
+        resultRequestBuilder
+                .setUrl(ApiUrl.URL_WETCHAT_WORLD_NEWS)
+                .setTransformClass(WeChatNews.class)
+                .setHttpTypeAndReqType(RequestBuilder.HttpType.DEFAULT_GET, RequestBuilder.ReqType.DEFAULT_CACHE_LIST)
+                .setRequestParam(ApiClient.getRequiredBaseParam())
+                .setParam("page",page)
+                .setParam("num",num);
+
+######  ④DataManager提供Retrofit请求的方法
+
+     <T> DisposableObserver<ResponseBody> httpRequest(RequestBuilder<T> requestBuilder);
+
+
+##### （3）Retrofit的扩展
+######  如果存在DataManager提供的方法满足不了的请求可以通过RetrofitManager提供的getNoCacheApiService（）和getApiService（）获得不缓存和缓存的Retrofit，然后通过RxSubscriber进行回调。
+
+    Observable<WeChatAccessToken> observable = RetrofitManager.getNoCacheApiService(ApiService.class)
+				.getWeChatStr(ApiUrl.URL_WECHAT_HOST + ApiUrl.ACCESS_TOKEN, reqParams);
+
+		DisposableObserver<WeChatAccessToken> observer = observable
+				.compose(RxSchedulers.<WeChatAccessToken>io_main())
+				.subscribeWith(new RxSubscriber<WeChatAccessToken>() {
+					@Override
+					public void _onNext(WeChatAccessToken weChatAccessToken) {
+						getUserInfo(weChatAccessToken);
+					}
+
+					@Override
+					public void _onError(NetWorkCodeException.ResponseThrowable responseThrowable) {
+						showToast(R.string.wx_LoginResultEmpty);
+						hideLoadingDialog();
+						finish();
+					}
+
+					@Override
+					public void _onComplete() {
+
+					}
+				});
+
+		rxManager.addObserver(observer);
+
 
 ###### 定义一个ApiService类
 
@@ -574,105 +872,127 @@ destroy()是用来关掉改页面时把刷新View的一些动画等释放，防�
 		@GET
 		Observable<Result<List<WeChatNews>>> getWeChatFeaturedNews(@Url String url, @QueryMap Map<String,Object> map);
 	}
-#### 3.MVP+RxJava+Retrofit+OkHttp的缓存机制
-
-[效果图](https://upload-images.jianshu.io/upload_images/4361802-e0f0294088db24bd.gif?imageMogr2/auto-orient/strip)
 
 
-###### RetrofitManager.getApiService()+RequestManager.loadOnlyNetWork()+缓存配置即可  
+##### （4）注意的问题
+######   ①请求的域名已经在Application设置好了，setUrl不需要填完整的url
+######   ②要区分清楚接口返回的数据时List还是Model，从而选择对应的ReqType
+######   ③setRequestParam可以设置参数集合，setParam可以单个设置
+######   ④使用DISK_CACHE_LIST_LIMIT_TIME/DISK_CACHE_MODEL_LIMIT_TIME这两个显示限时缓存时需要通过setFilePathAndFileName（）设置保存路径setLimtHours（）设置缓存时间（单位为：小时）
+######   ⑤如果要上传单张图片需要用到HttpType.ONE_MULTIPART_POST的请求方式，同时通过RequestBuilder设置MultipartBody.Part
 
 
-###### 上面的缓存配置完成之后通过以下代码即可：
+ #### 2.DataManager的SharePreference的使用
+##### （1）配置
+需要在项目的Application初始化SharePreference的一些参数
 
-    //通过RetrofitManager.getApiService（）可以进行缓存
-	public class WeChatChinaNewsModel implements WeChatChinaNewsContract.Model {
-		@Override
-		public Observable<Result<List<WeChatNews>>> loadChinaNews(int page, int num) {
-			Map<String,Object> map= ApiClient.getRequiredBaseParam();
-			map.put("page",page);
-			map.put("num",num);
-			return RetrofitManager.getApiService(ApiService.class)
-				.getWeChatChinaNews(ApiUrl.URL_WETCHAT_CHINA_NEWS,map);
-		}
-	}
+    //SharePreference配置
+    Config.USER_CONFIG="Collection_User";
 
-    //通过RetrofitManager.getApiService（）配合RequestManager.loadOnlyNetWork
-	public class WeChatChinaNewsPresenter extends WeChatChinaNewsContract.Presenter {
-    	@Override
-    	public void requestChinaNews(int page, int num) {
+##### （2）使用方法
+    DataManager.getInstance(DataManager.DataType.SHAREPREFERENCE).saveByKeyWithSP("user","这
 
-        	rxManager.addObserver(RequestManager.loadOnlyNetWork(mModel.loadChinaNews(page, num),
-                new RxObservableListener<Result<List<WeChatNews>>>(mView) {
-                    @Override
-                    public void onNext(Result<List<WeChatNews>> result) {
-                        mView.refreshUI(result.getNewslist());
-                    }
-                }));
-    	}
-	}
+    String user=DataManager.getInstance(DataManager.DataType.SHAREPREFERENCE).queryByKeyWithSP("user",String.class);是一条测试的内容");
 
+##### （3）DataManager提供SharePreference请求的方法
 
-#### 4.MVP+RxJava+Retrofit+自定义磁盘缓存机制
+    //自定义保存的配置文件名、key
+    void saveByNameAndKeyWithSP(String name, String key, Object object);
+     //使用在Application配置的保存文件名
+    void saveByKeyWithSP(String key,Object object);
+     //查询保存在自定义的配置文件的内容
+    <T> T queryByNameAndKeyWithSP(String name, String key, Class<T> clazz);
+    //查询保存在Application设置的文件的内容
+    <T> T queryByKeyWithSP(String key, Class<T> clazz);
 
-[效果图](https://upload-images.jianshu.io/upload_images/4361802-04e2322fc5f515ee.gif?imageMogr2/auto-orient/strip)
+####  3.DataManager的Realm的使用
 
-###### RetrofitManager.getNoCacheApiService()+RequestManager提供的除了loadOnlyNetWork()的其他数据获取方式即可使用自定义磁盘缓存
+ #####  （1）配置
+######   ①需要在项目的Application初始化Realm的一些参数
 
+    //Realm的配置
+	Config.realmVersion=0;
+	Config.realmName="realm.realm";
+	Config.realmMigration=customMigration;//数据库数据迁移（been类字段增加移除）
 
+######   ②在Project 的build.gradle中的dependencies加入
 
-    //通过RetrofitManager.getNoCacheApiService（）去掉OkHttp缓存
-	public class WeChatChinaNewsDefinitionModel implements WeChatChinaNewsContract.Model {
-		@Override
-		public Observable<Result<List<WeChatNews>>> loadChinaNews(int page, int num) {
-			Map<String,Object> map= ApiClient.getRequiredBaseParam();
-			map.put("page",page);
-			map.put("num",num);
-			return RetrofitManager.getNoCacheApiService(ApiService.class)
-				.getWeChatChinaNews(ApiUrl.URL_WETCHAT_CHINA_NEWS,map);
-		}
-	}
+    classpath "io.realm:realm-gradle-plugin:5.0.0"
+
+######   ③在项目 的build.gradle中的顶部加入
+
+    apply plugin: 'realm-android'
+
+##### （2）使用方法
+
+    DataManager.getInstance(DataManager.DataType.REALM).saveOrUpdateWithPKByRealm(user);
+    user= (User) DataManager.getInstance(DataManager.DataType.REALM).queryFirstByRealm(User.class);
 
 
-    //RetrofitManager.getNoCacheApiService（）
-	public class WeChatChinaNewsDefinitionPresenter extends WeChatChinaNewsContract.Presenter {
-    	@Override
-    	public void requestChinaNews(int page, int num) {
-        	String filePath = AppConfig.STORAGE_DIR + "wechat/china/";
-        	String fileName = "limttime.t";
+##### （3）DataManager提供Realm请求的方法
 
-        	rxManager.addObserver(RequestManager.loadFormDiskResultListLimitTime(
-                mModel.loadChinaNews(page, num), new RxObservableListener<Result<List<WeChatNews>>>(mView) {
-                    @Override
-                    public void onNext(Result<List<WeChatNews>> result) {
-                        mView.refreshUI(result.getNewslist());
-                    }
-                }, WeChatNews.class, 1, filePath, fileName));
-    	}
-	}
+        /**
+	 * 保存操作
+	 */
+	void saveOrUpdateWithPKByRealm(final RealmObject bean);
+	void saveOrUpdateWithPKByRealm(final List<? extends RealmObject> beans);
+	void saveWithoutPKByRealm(final RealmObject bean);
+	void saveWithoutPKByRealm(final List<? extends RealmObject> beans);
 
-#####  注意：
-######  ①通过RequestManager提供的几种请求方式返回来一个DisposableObserver，需要把它通过rxManager.addObserver()添加进CompositeDisposable才能正常执行。
-######  ②RxObservableListener有三个回调方法
-    void onNext(T result);
-    void onComplete();
-    void onError(NetWorkCodeException.ResponseThrowable e);
-######  只会重写onNext方法，其它两个方法可以自行选择重写。
-######  ③RxObservableListener提供两个构造函数
-    protected RxObservableListener(BaseView view){
-		this.mView = view;
-    }
+	/**
+	 * 查询操作
+	 */
+	RealmObject queryFirstByRealm(Class<? extends RealmObject> clazz);
+	RealmObject queryAllWithFieldByRealm(Class<? extends RealmObject> clazz, String fieldName, String value);
+	List<? extends RealmObject> queryAllByRealm(Class<? extends RealmObject> clazz);
+	List<? extends RealmObject> queryAllWithSortByRealm(Class<? extends RealmObject> clazz, String fieldName,Boolean isAscendOrDescend);
 
-    protected RxObservableListener(BaseView view, String errorMsg){
-	 	 this.mView = view;
-         this.mErrorMsg = errorMsg;
-    }
+	/**
+	 * 修改操作
+	 */
+	void updateParamWithPKByRealm(Class<? extends RealmObject> clazz, String primaryKeyName, Object primaryKeyValue, String fieldName,Object newValue);
 
-###### 这两个构造函数主要主要是为了统一处理onError的，如果要自定义错误提醒，则可以选择第二个构造函数。
+	/**
+	 * 删除操作
+	 */
+	void deleteFirstByRealm(Class<? extends RealmObject> clazz);
+	void deleteAllByRealm(Class<? extends RealmObject> clazz);
+
+##### （4）Realm数据迁移（been类字段增加移除）
+
+随着app版本的迭代，数据库的字段可能会增加或者移除这时候就需要用到Realm提供的RealmMigration进行设置。
+
+    public class CustomMigration implements RealmMigration {
+	  @Override
+	  public void migrate(DynamicRealm realm, long oldVersion, long newVersion) {
+		  RealmSchema schema = realm.getSchema();
+		  if (oldVersion == 0 && newVersion == 1) {
+			  RealmObjectSchema personSchema = schema.get("User");
+			  personSchema
+					.addField("age", int.class);
+			  oldVersion++;
+		  }else if(oldVersion == 1&&newVersion==2){
+			  RealmObjectSchema personSchema = schema.get("User");
+			  personSchema
+					.addField("address", String.class);
+			  oldVersion++;
+		  }
+	    }
+     }
+
+######  步骤：
+-  **自定义RealmMigration，在migrate方法中进行字段的增加或者移除。**
+-  **在Application中升Realm的版本号Config.realmVersion往上增加。**
+-  **在Application设置RealmMigration，Config.realmMigration=customMigration。**
+
+##### （5）注意的问题
+
+-  **自定义Realm的保存文件文成的时候需要以.realm为后缀。**
 
 
-### 六、 Base的使用
+###  六、 Base的使用
 
-#### 1.Base封装了MVP和项目的基类   
+####  1.Base封装了MVP和项目的基类   
 
 ##### （1）MVP
 
@@ -918,6 +1238,37 @@ destroy()是用来关掉改页面时把刷新View的一些动画等释放，防�
 - 如果是必要权限被禁止而没有选择禁止提醒退出之后下次会重新请求权限。
 - 如果必要权限被禁止和选择了禁止提醒重新进入页面在onRequestPermissionsResult会重新回调方法。
 - 使用者可以根据onRequestPermissionsResult（）方法中返回来的标志PermissionManager.EXIST_NECESSARY_PERMISSIONS_PROHIBTED和PermissionManager.EXIST_NECESSARY_PERMISSIONS_PROHIBTED_NOT_REMIND做出对应的显示和操作（例如弹框提示跳转到设置页面或者toat提示）。
+
+####  4.提供几种比较常用的Dialog弹框
+![](https://upload-images.jianshu.io/upload_images/4361802-607bfea3f81b09b6.gif?imageMogr2/auto-orient/strip)
+
+#####  ①提供的Dialog
+- DIALOG_TEXT_TWO_BUTTON_DEFAULT：默认弹窗样式。
+- DIALOG_TEXT_TWO_BUTTON_CUSTOMIZE：自定义弹出按钮提示。
+- DIALOG_LOADING_PROGRASSBAR：默认加载弹框。
+- DIALOG_DISPLAY_ADVERTISING：显示广告图的弹框样式。
+- DIALOG_CHOICE_ITEM：单项选择弹框样式。
+
+#####  ②自定义Dialog样式
+- 继承BaseDialog，通过setContentView(R.layout.dialog_list);设置弹窗布局。
+- 在提供的initUI（）方法中进行相应的逻辑设置。
+
+
+#####  ③BaseDialog提供的方法
+- setContentView（）：设置弹框布局样式。
+- show（）：显示弹框。
+- isShowing（）：判断弹框是否显示。
+- dismiss（）：弹框销毁。
+- setCancelable（）：点击返回键和外部不可取消。
+- setDialogCancel（）：点击返回键可以取消。
+
+####  5.提供几种比较常用的Utils工具类
+- DisplayUtils：px和dp的转换、获取屏幕高宽、状态栏白底黑字、设置状态栏颜色、设置状态栏全屏透明、获取状态栏的高度、获取ActionBar的高度。
+- FileUtils：写文件、读取文本文件中的内容、判断缓存是否失效、检查文件是否存在、删除目录、检查是否安装SD卡、删除文件。
+- GlideUtils：Glide显示网络图片、Glide实现高斯模糊。
+- LogUtils：日志工具类。
+- NetworkUtils：网络工具类。
+- ToastUtils：Toast提示类
 
 
 #### 本文章会根据需要持续更新，建议star收藏，便于查看。也欢迎大家提出更多建议。
