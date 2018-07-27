@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+			  xmlns:app="http://schemas.android.com/apk/res-auto"
+			  android:orientation="vertical"
+			  android:layout_width="match_parent"
+			  android:layout_height="match_parent">
+
+	<include layout="@layout/common_toolbar"/>
+
+
+	<android.support.v4.view.ViewPager
+
+		android:id="@+id/viewPager"
+		android:layout_width="match_parent"
+		android:layout_height="0dp"
+		android:layout_weight="1"/>
+
+	<View
+		android:layout_width="match_parent"
+		android:layout_height="0.5dp"
+		android:background="@color/driver_font"/>
+
+	<com.youngmanster.collectionlibrary.customview.tablayout.CommonTabLayout
+		android:id="@+id/customTabView"
+		app:tab_tabMode="fixed"
+		android:layout_width="match_parent"
+		android:layout_height="70dp"
+		app:tab_padding="15dp" />
+
+</LinearLayout>

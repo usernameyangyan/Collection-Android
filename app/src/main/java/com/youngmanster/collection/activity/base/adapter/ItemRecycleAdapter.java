@@ -1,5 +1,5 @@
 
-package com.youngmanster.collection.activity.base;
+package com.youngmanster.collection.activity.base.adapter;
 
 import android.content.Context;
 import com.youngmanster.collection.R;

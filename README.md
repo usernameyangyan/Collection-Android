@@ -1,6 +1,6 @@
 ## Collection
 
-![Travis](https://img.shields.io/badge/release-1.2.5-green.svg)
+![Travis](https://img.shields.io/badge/release-1.2.7-green.svg)
 ![Travis](https://img.shields.io/badge/llicense-MIT-green.svg)
 ![Travis](https://img.shields.io/badge/build-passing-green.svg)
 
@@ -17,8 +17,8 @@ Collection聚合了项目搭建的一些基本模块，节约开发者时间，�
 
 ## 框架的引入
 
->implementation 'com.youngman:collectionlibrary:1.2.5'   
-compile 'com.youngman:collectionlibrary:1.2.5'
+>implementation 'com.youngman:collectionlibrary:1.2.7'
+compile 'com.youngman:collectionlibrary:1.2.7'
 
 >Error:Could not find com.android.support:appcompat-v7:27.x.x.
 因为library的Support Repository是27.x.x,可能跟项目有所冲突，如果sdk已经装了27还是会出现同样的错误。
@@ -26,6 +26,17 @@ compile 'com.youngman:collectionlibrary:1.2.5'
 
 
 ### 更新说明
+
+####  v1.2.7
+> 1.增加自定义控件TabLayout。
+
+####  v1.2.6
+> 1.RxJava的依赖更新。
+> 2.修正RecyclerView头部布局不能铺满问题。
+> 3.PopupWindow的使用。
+> 4.DisplayUtils工具类对状态栏的修改。
+
+
 ####  v1.2.5
 > 1.修正Retrofit DEFAULT_POST请求方式指向错误。      
 > 2.Retrofit 数据解析兼容没有公用been类，可以指定公用been类和不指定公用been类、或者混合使用。   
@@ -79,8 +90,14 @@ compile 'com.youngman:collectionlibrary:1.2.5'
 - UI状态控制StateView的使用  
 - 三步实现Permission(权限)设置
 - 提供几种比较常用的Dialog弹框
+- 提供几种比较常用的PopupWindow弹框
+- 使用DisplayUtils修改状态栏
 - 提供几种比较常用的Utils工具类
 
+
+**6.CustomView的使用**
+-  CommonTabLayout的使用
+-  OutSideFrameTabLayout的使用
 
 
 ###  一、框架整体模块
@@ -1262,13 +1279,90 @@ destroy()是用来关掉改页面时把刷新View的一些动画等释放，防�
 - setCancelable（）：点击返回键和外部不可取消。
 - setDialogCancel（）：点击返回键可以取消。
 
-####  5.提供几种比较常用的Utils工具类
+#### 5.提供几种比较常用的PopupWindow弹框
+
+![](https://upload-images.jianshu.io/upload_images/4361802-feb5a3664b8c8ddb.gif?imageMogr2/auto-orient/strip)
+
+#####  ①BasePopupWindow提供的方法
+- BasePopupWindow(Context context) :调用该构造函数默认弹出框铺满全屏。
+- BasePopupWindow(Context context, int w, int h)：调用该构造函数可指定弹出框大小。
+-  showPopup（）：在屏幕中央显示弹框。
+- showPopupAsDropDown(View anchor):在指定控件底部显示弹框。
+- setShowMaskView(boolean isShowMaskView):设置是否显示遮层。
+- dismiss():销毁弹出框。
+- getPopupLayoutRes():自定义弹出框的布局文件。
+- getPopupAnimationStyleRes():自定义弹出框的动画文件。
+
+#####  ②自定义PopupWindow
+- 继承BasePopupWindow。
+- 通过getPopupLayoutRes(R.layout.xxx)设置弹窗布局。
+- 通过getPopupAnimationStyleRes(R.style.xxx)设置弹窗动画，不需要动画可以忽略不设置。
+
+      <style name="animation_scale" parent="android:Animation.Dialog">
+		<item name="android:windowEnterAnimation">@anim/scale_tip_in</item>
+		<item name="android:windowExitAnimation">@anim/scale_tip_out</item>
+      </style>
+
+- 如果需要显示遮层，在构造函数通过setShowMaskView(true)设置。
+
+#### 6.使用DisplayUtils修改状态栏
+
+![](https://upload-images.jianshu.io/upload_images/4361802-8fe97b79628f38a2.gif?imageMogr2/auto-orient/strip)
+
+- setStatusBarFullTranslucentWithBlackFont（Activity act）：状态栏透明黑字。
+- setStatusBarBlackFontBgColor(Activity activity,int bgColor)：修改状态栏颜色同时字体变为黑色。
+- setStatusBarFullTranslucent(Activity act)：状态栏透明。
+- setStatusBarColor(Activity activity, int colorResId)：改变状态栏颜色。
+
+####  7.提供几种比较常用的Utils工具类
 - DisplayUtils：px和dp的转换、获取屏幕高宽、状态栏白底黑字、设置状态栏颜色、设置状态栏全屏透明、获取状态栏的高度、获取ActionBar的高度。
 - FileUtils：写文件、读取文本文件中的内容、判断缓存是否失效、检查文件是否存在、删除目录、检查是否安装SD卡、删除文件。
 - GlideUtils：Glide显示网络图片、Glide实现高斯模糊。
 - LogUtils：日志工具类。
 - NetworkUtils：网络工具类。
-- ToastUtils：Toast提示类
+- ToastUtils：Toast提示类。
+
+
+### 七、 CustomView的使用
+
+####  1.CommonTabLayout的使用
+![](https://upload-images.jianshu.io/upload_images/4361802-eed89d4cf407dbbf.gif?imageMogr2/auto-orient/strip)
+
+#####  ①属性：
+- tab_tabIndicatorWidth：设置下滑线的长度。
+- tab_tabIndicatorHeight：设置下滑线的高度。
+- tab_tabIndicatorColor:下滑线颜色。
+- tab_indicator_marginLeft/tab_indicator_marginRight/tab_indicator_marginTop/tab_indicator_marginBottom：设置下滑线外边距。
+- tab_tabTextColor：没选中字体颜色。
+- tab_tabTextSize：字体大小。
+- tab_tabSelectedTextColor:选中字体颜色。
+- tab_padding:下滑线内边距，block样式时可以通过该属性设置距离。
+- tab_tabBackground:Tab的背景颜色。
+- tab_indicator_corner:下滑线的圆角大小。
+- tab_indicator_gravity（bottom、top）:设置下滑线显示的位置，只针对line和triangle。
+- tab_tabMode（scrollable、fixed）:Tab的显示模式。
+- tab_indicator_style（line、triangle、block）:下滑线的样式。
+
+#####  ②具体用户可参照例子使用。
+
+####  2.OutSideFrameTabLayout的使用
+
+![](https://upload-images.jianshu.io/upload_images/4361802-c221ec93b552c6bd.gif?imageMogr2/auto-orient/strip)
+
+#####  ①属性：
+- tab_tabIndicatorColor：设置Tab颜色。
+- tab_indicator_corner：圆角大小
+- tab_indicator_marginLeft/tab_indicator_marginRight/tab_indicator_marginTop/tab_indicator_marginBottom：设置下滑线外边距。
+- tab_tabTextColor：没选中字体颜色。
+- tab_tabTextSize：字体大小。
+- tab_tabSelectedTextColor：选中字体颜色。
+- tab_padding：内边距。
+- tab_bar_color：bar的背景颜色。
+- tab_bar_stroke_color：外框的颜色。
+- tab_bar_stroke_width：外框的大小。
+- tab_width：bar的长度。
+
+#####  ②具体用户可参照例子使用。
 
 
 #### 本文章会根据需要持续更新，建议star收藏，便于查看。也欢迎大家提出更多建议。

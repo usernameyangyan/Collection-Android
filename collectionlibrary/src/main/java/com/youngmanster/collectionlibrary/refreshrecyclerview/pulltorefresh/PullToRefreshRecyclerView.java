@@ -706,6 +706,7 @@ public class PullToRefreshRecyclerView extends RecyclerView {
 		public void onViewAttachedToWindow(ViewHolder holder) {
 			super.onViewAttachedToWindow(holder);
 			ViewGroup.LayoutParams lp = holder.itemView.getLayoutParams();
+			lp.width= ViewGroup.LayoutParams.MATCH_PARENT;
 			if (lp != null
 					&& lp instanceof StaggeredGridLayoutManager.LayoutParams
 					&& (isHeader(holder.getLayoutPosition()) || isRefreshHeader(holder.getLayoutPosition()) || isFooter(holder.getLayoutPosition()))) {

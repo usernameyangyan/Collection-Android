@@ -5,9 +5,14 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.os.Build;
+import android.support.v4.view.ViewCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+
+import com.youngmanster.collectionlibrary.R;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -94,25 +99,25 @@ public class DisplayUtils {
 	}
 
 
-	//白色可以替换成其他浅色系(状态栏白底黑字)
-	public static void setStatusBar(Activity activity, int color,int defaultColor) {
+	//白色可以替换成其他浅色系
+	public static void setStatusBarBlackFontBgColor(Activity activity,int bgColor) {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
 			if (MIUISetStatusBarLightMode(activity.getWindow(), true)) {//MIUI
 				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP&& Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {//5.0
-					activity.getWindow().setStatusBarColor(activity.getResources().getColor(color));
+					activity.getWindow().setStatusBarColor(activity.getResources().getColor(bgColor));
 				}else if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-					activity.getWindow().setStatusBarColor(activity.getResources().getColor(color));
+					activity.getWindow().setStatusBarColor(activity.getResources().getColor(bgColor));
 					activity.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
 				}
 			} else if (FlymeSetStatusBarLightMode(activity.getWindow(), true)) {//Flyme
 				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {//5.0
-					activity.getWindow().setStatusBarColor(activity.getResources().getColor(color));
+					activity.getWindow().setStatusBarColor(activity.getResources().getColor(bgColor));
 				}
 			} else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {//6.0
-				activity.getWindow().setStatusBarColor(activity.getResources().getColor(color));
+				activity.getWindow().setStatusBarColor(activity.getResources().getColor(bgColor));
 				activity.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
 			}else{
-				setWindowStatusBarColor(activity,defaultColor);
+				setStatusBarColor(activity,R.color.black);
 			}
 		}
 	}
@@ -120,7 +125,7 @@ public class DisplayUtils {
 	/**
 	 * 设置状态栏颜色
 	 * */
-	public static void setWindowStatusBarColor(Activity activity, int colorResId) {
+	public static void setStatusBarColor(Activity activity, int colorResId) {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 			Window window = activity.getWindow();
 			window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
@@ -202,25 +207,44 @@ public class DisplayUtils {
 	}
 
 	/**
-	 * 设置状态栏全屏透明(这个适合设置activity)
+	 * 设置状态栏全屏透明（状态栏字体颜色为默认）
 	 * */
-	public static void setActivityStatusBarFullTranslucent(Activity act,int defaultColor) {
+	public static void setStatusBarFullTranslucent(Activity act) {
 		//设置全屏透明状态栏
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP&&getSetStatusBarLightMode(act)) {
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 			act.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS |
 					WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
 			act.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
 			act.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
 			act.getWindow().setStatusBarColor(Color.TRANSPARENT);
 		}else{
-			setWindowStatusBarColor(act,defaultColor);
+			setStatusBarColor(act,R.color.black);
+		}
+	}
+
+	/**
+	 * 设置状态栏全屏透明（状态栏字体颜色为默认）
+	 * */
+	public static void setStatusBarFullTranslucentWithBlackFont(Activity act) {
+		//设置全屏透明状态栏
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP&&isCanSetStatusBarBlackFontLightMode(act)) {
+			act.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+			ViewGroup rootView = (ViewGroup) ((ViewGroup) act.findViewById(android.R.id.content)).getChildAt(0);
+			ViewCompat.setFitsSystemWindows(rootView, false);
+			rootView.setClipToPadding(true);
+			act.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS |
+					WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+			act.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+			act.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+			act.getWindow().setStatusBarColor(Color.TRANSPARENT);
+			act.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
 		}
 	}
 
 	/**
 	 * 判断状态栏是否可以设置为黑字
 	 * */
-	public static boolean getSetStatusBarLightMode(Activity activity) {
+	public static boolean isCanSetStatusBarBlackFontLightMode(Activity activity) {
 
 		if (MIUISetStatusBarLightMode(activity.getWindow(), true)) {//MIUI
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {//5.0

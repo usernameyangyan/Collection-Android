@@ -10,8 +10,8 @@
 	<uses-permission android:name="android.permission.RECEIVE_WAP_PUSH"/>
 
 	<application
-		android:allowBackup="true"
 		android:name=".common.AppApplication"
+		android:allowBackup="true"
 		android:icon="@mipmap/icon_collection"
 		android:label="@string/app_name"
 		android:supportsRtl="true"
@@ -69,17 +69,17 @@
 			android:theme="@style/AppTheme.NoActionBar"/>
 
 		<activity
-			android:name=".activity.base.BaseUiActivity"
+			android:name=".activity.base.activity.BaseUiActivity"
 			android:screenOrientation="portrait"
 			android:theme="@style/AppTheme.NoActionBar"/>
 
 		<activity
-			android:name=".activity.base.IntroductionActivity"
+			android:name=".activity.base.activity.IntroductionActivity"
 			android:screenOrientation="portrait"
 			android:theme="@style/AppTheme.NoActionBar"/>
 
 		<activity
-			android:name=".activity.base.StateViewActivity"
+			android:name=".activity.base.activity.StateViewActivity"
 			android:screenOrientation="portrait"
 			android:theme="@style/AppTheme.NoActionBar"/>
 
@@ -98,21 +98,115 @@
 			android:screenOrientation="portrait"
 			android:theme="@style/AppTheme.NoActionBar"/>
 
-		<activity android:name=".activity.base.PermissionActivity"
-				  android:screenOrientation="portrait"
-				  android:theme="@style/AppTheme.NoActionBar"/>
-
-		<activity android:name=".mvp.ui.wechat.activity.WeChatNewsDefinitionActivity"
+		<activity
+			android:name=".activity.base.activity.PermissionActivity"
 			android:screenOrientation="portrait"
 			android:theme="@style/AppTheme.NoActionBar"/>
 
-		<activity android:name=".db.activity.DataManagerActivity"
-				  android:screenOrientation="portrait"
-				  android:theme="@style/AppTheme.NoActionBar"/>
+		<activity
+			android:name=".mvp.ui.wechat.activity.WeChatNewsDefinitionActivity"
+			android:screenOrientation="portrait"
+			android:theme="@style/AppTheme.NoActionBar"/>
 
-		<activity android:name=".activity.base.DialogActivity"
-				  android:screenOrientation="portrait"
-				  android:theme="@style/AppTheme.NoActionBar"/>
+		<activity
+			android:name=".db.activity.DataManagerActivity"
+			android:screenOrientation="portrait"
+			android:theme="@style/AppTheme.NoActionBar"/>
+
+		<activity
+			android:name=".activity.base.activity.DialogActivity"
+			android:screenOrientation="portrait"
+			android:theme="@style/AppTheme.NoActionBar"/>
+
+		<activity
+			android:name=".activity.base.activity.ChangeStatusBarActivity"
+			android:screenOrientation="portrait"
+			android:theme="@style/AppTheme.NoActionBar"/>
+
+		<activity
+			android:name=".activity.base.activity.StatusBarColorActivity"
+			android:screenOrientation="portrait"
+			android:theme="@style/AppTheme.NoActionBar"/>
+
+		<activity
+			android:name=".activity.base.activity.TransparentAndBlackFontStatusBarActivity"
+			android:screenOrientation="portrait"
+			android:theme="@style/AppTheme.NoActionBar"/>
+
+		<activity
+			android:name=".activity.base.activity.TransparentStatusBarActivity"
+			android:screenOrientation="portrait"
+			android:theme="@style/AppTheme.NoActionBar"/>
+
+		<activity
+			android:name=".activity.base.popupwindow.PopupWindowDemoActivity"
+			android:screenOrientation="portrait"
+			android:theme="@style/AppTheme.NoActionBar"/>
+
+		<activity
+			android:name=".activity.base.activity.PopupMenuActivity"
+			android:screenOrientation="portrait"
+			android:theme="@style/AppTheme.NoActionBar"/>
+
+		<activity
+			android:name=".customview.activity.CustomViewActivity"
+			android:screenOrientation="portrait"
+			android:theme="@style/AppTheme.NoActionBar"/>
+
+		<activity
+			android:name=".customview.activity.CommonTabLayoutActivity"
+			android:screenOrientation="portrait"
+			android:theme="@style/AppTheme.NoActionBar"/>
+
+		<activity
+			android:name=".customview.activity.CommonLayoutStyleOneActivity"
+			android:screenOrientation="portrait"
+			android:theme="@style/AppTheme.NoActionBar"/>
+
+		<activity
+			android:name=".customview.activity.CommonLayoutStyleTwoActivity"
+			android:screenOrientation="portrait"
+			android:theme="@style/AppTheme.NoActionBar"/>
+
+		<activity
+			android:name=".customview.activity.CommonLayoutStyleThreeActivity"
+			android:screenOrientation="portrait"
+			android:theme="@style/AppTheme.NoActionBar"/>
+
+		<activity
+			android:name=".customview.activity.CommonLayoutStyleFourActivity"
+			android:screenOrientation="portrait"
+			android:theme="@style/AppTheme.NoActionBar"/>
+
+		<activity
+			android:name=".customview.activity.CommonTaLayoutStyleFiveActivity"
+			android:screenOrientation="portrait"
+			android:theme="@style/AppTheme.NoActionBar"/>
+
+		<activity
+			android:name=".customview.activity.CommonLayoutStyleSixActivity"
+			android:screenOrientation="portrait"
+			android:theme="@style/AppTheme.NoActionBar"/>
+
+		<activity
+			android:name=".customview.activity.CommonLayoutStyleSevenActivity"
+			android:screenOrientation="portrait"
+			android:theme="@style/AppTheme.NoActionBar"/>
+
+		<activity
+			android:name=".customview.activity.OutSideFrameTabLayoutActivity"
+			android:screenOrientation="portrait"
+			android:theme="@style/AppTheme.NoActionBar"/>
+
+		<activity
+			android:name=".customview.activity.OutSideFrameTabLayoutOneActivity"
+			android:screenOrientation="portrait"
+			android:theme="@style/AppTheme.NoActionBar"/>
+
+		<activity
+			android:name=".customview.activity.OutSideFrameTabLayoutTwoActivity"
+			android:screenOrientation="portrait"
+			android:theme="@style/AppTheme.NoActionBar"/>
 
 	</application>
 </manifest>

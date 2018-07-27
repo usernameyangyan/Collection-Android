@@ -6,11 +6,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 
 import com.youngmanster.collection.R;
-import com.youngmanster.collection.activity.base.BaseUiActivity;
+import com.youngmanster.collection.activity.base.activity.BaseUiActivity;
 import com.youngmanster.collection.activity.baseadapter.BaseAdapterActivity;
 import com.youngmanster.collection.activity.recyclerview.RecyclerViewActivity;
 import com.youngmanster.collection.adapter.MainViewAdapter;
 import com.youngmanster.collection.base.BaseActivity;
+import com.youngmanster.collection.customview.activity.CustomViewActivity;
 import com.youngmanster.collection.db.activity.DataManagerActivity;
 import com.youngmanster.collection.mvp.ui.MVPActivity;
 import com.youngmanster.collectionlibrary.refreshrecyclerview.base.adapter.BaseRecyclerViewAdapter;
@@ -59,6 +60,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerViewAdapte
 		listData.add("MVP+RxJava+Retrofit");
 		listData.add("DataManager(Retrofit/SharePreference/Realm)");
 		listData.add("Base");
+		listData.add("CustomView");
 		refreshUI();
 	}
 
@@ -114,6 +116,10 @@ public class MainActivity extends BaseActivity implements BaseRecyclerViewAdapte
 				break;
 			case 4:
 				intent = new Intent(this, BaseUiActivity.class);
+				startActivity(intent);
+				break;
+			case 5:
+				intent = new Intent(this, CustomViewActivity.class);
 				startActivity(intent);
 				break;
 		}

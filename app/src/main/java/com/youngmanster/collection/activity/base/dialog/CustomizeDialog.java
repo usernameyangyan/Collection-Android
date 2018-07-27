@@ -1,4 +1,4 @@
-package com.youngmanster.collection.activity.base;
+package com.youngmanster.collection.activity.base.dialog;
 
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.youngmanster.collection.R;
+import com.youngmanster.collection.activity.base.adapter.ItemRecycleAdapter;
 import com.youngmanster.collectionlibrary.base.BaseDialog;
 import com.youngmanster.collectionlibrary.refreshrecyclerview.base.adapter.BaseRecyclerViewAdapter;
 import com.youngmanster.collectionlibrary.utils.ToastUtils;
@@ -27,7 +28,7 @@ public class CustomizeDialog extends BaseDialog implements BaseRecyclerViewAdapt
 	@BindView(R.id.rv_Item)
 	protected RecyclerView rv_Item;
 
-	private  ItemRecycleAdapter itemRecycleAdapter;
+	private ItemRecycleAdapter itemRecycleAdapter;
 	private List<String> itemStr=new ArrayList<>();
 
 	public CustomizeDialog(Context context) {

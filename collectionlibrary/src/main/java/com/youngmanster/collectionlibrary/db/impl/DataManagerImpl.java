@@ -33,12 +33,12 @@ public  class DataManagerImpl implements SharePreferenceHelper,DbHelper,HttpHelp
      *  SharePreference
      */
     @Override
-    public <T> T queryByNameAndKeyWithSP(String name, String key, Class<T> clazz) {
+    public <T> T queryByNameAndKeyWithSP(String name, String key, Class<T> clazz,Object defaultValue) {
         return null;
     }
 
     @Override
-    public <T> T queryByKeyWithSP(String key, Class<T> clazz) {return null;}
+    public <T> T queryByKeyWithSP(String key, Class<T> clazz,Object defaultValue) {return null;}
 
     /***
      * retrofit

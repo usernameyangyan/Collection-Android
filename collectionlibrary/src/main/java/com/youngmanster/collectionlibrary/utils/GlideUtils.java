@@ -50,11 +50,29 @@ public class GlideUtils {
 	 * @param url
 	 * @param imageView
 	 */
-	public static void loadImgBlur(Context context, String url, ImageView imageView) {
+	public static void loadImgBlur(Context context, String url, int defaultLoadingImg,ImageView imageView) {
 		try {
 			RequestOptions options = new RequestOptions()
 					.priority(Priority.HIGH)
+					.placeholder(defaultLoadingImg)
+					.error(defaultLoadingImg)
 					.bitmapTransform(new BlurTransformation(40, 16));
+			Glide.with(context)
+					.load(url)
+					.apply(options)
+					.into(imageView);
+		} catch (Exception exception) {
+			return;
+		}
+	}
+
+	public static void loadImgBlur(Context context, String url, int defaultLoadingImg,ImageView imageView,int blurRadius,int blurSampling) {
+		try {
+			RequestOptions options = new RequestOptions()
+					.priority(Priority.HIGH)
+					.placeholder(defaultLoadingImg)
+					.error(defaultLoadingImg)
+					.bitmapTransform(new BlurTransformation(blurRadius, blurSampling));
 			Glide.with(context)
 					.load(url)
 					.apply(options)

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+			  xmlns:app="http://schemas.android.com/apk/res-auto"
+			  android:orientation="vertical"
+			  android:layout_width="match_parent"
+			  android:layout_height="match_parent">
+
+	<include layout="@layout/common_toolbar"/>
+
+	<com.youngmanster.collectionlibrary.customview.tablayout.CommonTabLayout
+		android:id="@+id/customTabView"
+		app:tab_tabTextColor="@color/black"
+		app:tab_tabMode="fixed"
+		app:tab_tabSelectedTextColor="@color/colorPrimary"
+		app:tab_tabTextSize="16sp"
+		app:tab_tabIndicatorColor="#4B6A87"
+		android:layout_width="match_parent"
+		android:layout_height="50dp"
+		app:tab_indicator_corner="10dp"
+		app:tab_tabIndicatorWidth="20dp"
+		app:tab_tabIndicatorHeight="5dp"
+		app:tab_padding="15dp" />
+
+	<View
+		android:layout_width="match_parent"
+		android:layout_height="0.5dp"
+		android:background="@color/driver_font"/>
+
+
+	<android.support.v4.view.ViewPager
+
+		android:id="@+id/viewPager"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"/>
+
+</LinearLayout>

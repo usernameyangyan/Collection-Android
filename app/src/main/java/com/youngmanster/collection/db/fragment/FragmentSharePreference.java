@@ -35,7 +35,7 @@ public class FragmentSharePreference extends BaseFragment{
 				showToast("保存成功");
 				break;
 			case R.id.queryBtn:
-				String user=DataManager.getInstance(DataManager.DataType.SHAREPREFERENCE).queryByKeyWithSP("user",String.class);
+				String user=DataManager.getInstance(DataManager.DataType.SHAREPREFERENCE).queryByKeyWithSP("user",String.class,"");
 				showToast(user);
 				break;
 		}

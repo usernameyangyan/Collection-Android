@@ -85,13 +85,13 @@ public class DataManager extends DataManagerImpl {
 	 * @return
 	 */
 	@Override
-	public <T> T queryByNameAndKeyWithSP(String name, String key, Class<T> claZZ) {
-		return dataManagerStub.queryByNameAndKeyWithSP(name, key, claZZ);
+	public <T> T queryByNameAndKeyWithSP(String name, String key, Class<T> claZZ,Object defaultValue) {
+		return dataManagerStub.queryByNameAndKeyWithSP(name, key, claZZ,defaultValue);
 	}
 
 	@Override
-	public <T> T queryByKeyWithSP(String key, Class<T> clazz) {
-		return dataManagerStub.queryByKeyWithSP(key, clazz);
+	public <T> T queryByKeyWithSP(String key, Class<T> clazz,Object defaultValue) {
+		return dataManagerStub.queryByKeyWithSP(key, clazz,defaultValue);
 	}
 
 	/***

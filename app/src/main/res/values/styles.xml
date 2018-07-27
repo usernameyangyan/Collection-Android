@@ -29,4 +29,15 @@
 		<item name="android:stateListAnimator" tools:targetApi="lollipop">@drawable/lift_on_touch</item>
 	</style>
 
+	<!--PopupWindow底部显示动画-->
+	<style name="animation_bottom" parent="android:Animation.Dialog">
+		<item name="android:windowEnterAnimation">@anim/slide_bottom_in</item>
+		<item name="android:windowExitAnimation">@anim/slide_bottom_out</item>
+	</style>
+
+	<style name="animation_scale" parent="android:Animation.Dialog">
+		<item name="android:windowEnterAnimation">@anim/scale_tip_in</item>
+		<item name="android:windowExitAnimation">@anim/scale_tip_out</item>
+	</style>
+
 </resources>

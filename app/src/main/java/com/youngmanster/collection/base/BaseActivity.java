@@ -23,7 +23,7 @@ import butterknife.Unbinder;
 public abstract class BaseActivity<T extends BasePresenter> extends IBaseActivity {
     private Unbinder unbinder;
     public Toolbar mCommonToolbar;
-    private TextView titleTv;
+    public TextView titleTv;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

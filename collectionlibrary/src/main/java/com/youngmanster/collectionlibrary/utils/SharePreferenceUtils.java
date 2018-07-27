@@ -147,9 +147,9 @@ public class SharePreferenceUtils extends DataManagerImpl {
 	 * @param name
 	 * @return
 	 */
-	public boolean getBoolean(Context context, String name, String key) {
+	public boolean getBoolean(Context context, String name, String key,boolean defaultValue) {
 		if (context != null && name != null) {
-			return context.getSharedPreferences(name, Context.MODE_PRIVATE).getBoolean(key, false);
+			return context.getSharedPreferences(name, Context.MODE_PRIVATE).getBoolean(key, defaultValue);
 		}
 		return false;
 	}
@@ -235,6 +235,8 @@ public class SharePreferenceUtils extends DataManagerImpl {
 			putString(context,name,key.toString(),object.toString());
 		}else if (object instanceof Boolean){
 			putBoolean(context,name,key.toString(),(boolean) object);
+		}else if(object instanceof Long){
+			putLong(context,name,key.toString(),(long)object);
 		}
 	}
 
@@ -246,33 +248,35 @@ public class SharePreferenceUtils extends DataManagerImpl {
 			putStringByDefaultSP(context,key.toString(),object.toString());
 		}else if (object instanceof Boolean){
 			putBooleanByDefaultSP(context,key.toString(),(boolean) object);
+		}else if(object instanceof Long){
+			putLong(context,key.toString(),(long)object);
 		}
 	}
 
 	@Override
-	public <T> T queryByNameAndKeyWithSP(String name, String key, Class<T> clazz) {
+	public <T> T queryByNameAndKeyWithSP(String name, String key, Class<T> clazz,Object defaultValue) {
 		if (clazz == Integer.class){
-			return (T)Integer.valueOf(getInt(context,name,key.toString(),0));
+			return (T)Integer.valueOf(getInt(context,name,key.toString(),(int)defaultValue));
 		}else if(clazz == String.class){
-			return (T)String.valueOf(getString(context,name,key.toString(),""));
+			return (T)String.valueOf(getString(context,name,key.toString(),defaultValue.toString()));
 		}else if (clazz == Boolean.class){
-			return (T)Boolean.valueOf(getBoolean(context,name,key.toString()));
+			return (T)Boolean.valueOf(getBoolean(context,name,key.toString(),(boolean)defaultValue));
 		}else if(clazz==Long.class){
-			return (T)Long.valueOf(getLong(context,name,key.toString(),0));
+			return (T)Long.valueOf(getLong(context,name,key.toString(),(long) defaultValue));
 		}
 		return null;
 	}
 
 	@Override
-	public <T> T queryByKeyWithSP(String key, Class<T> clazz) {
+	public <T> T queryByKeyWithSP(String key, Class<T> clazz,Object defaultValue) {
 		if (clazz == Integer.class){
-			return (T)Integer.valueOf(getInt(context,key.toString(),0));
+			return (T)Integer.valueOf(getInt(context,key.toString(), (int) defaultValue));
 		}else if(clazz == String.class){
-			return (T)String.valueOf(getStringByDefaultSP(context,key.toString(),""));
+			return (T)String.valueOf(getStringByDefaultSP(context,key.toString(),defaultValue.toString()));
 		}else if (clazz == Boolean.class){
-			return (T)Boolean.valueOf(getBooleanByDefaultSP(context,key.toString(),true));
+			return (T)Boolean.valueOf(getBooleanByDefaultSP(context,key.toString(),(boolean)defaultValue));
 		}else if(clazz==Long.class){
-			return (T)Long.valueOf(getLong(context,key.toString(),0));
+			return (T)Long.valueOf(getLong(context,key.toString(),(int)defaultValue));
 		}
 		return null;
 	}

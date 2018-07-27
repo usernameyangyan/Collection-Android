@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+			  android:orientation="vertical"
+			  android:layout_width="match_parent"
+			  android:layout_height="match_parent">
+
+	<include layout="@layout/common_toolbar"/>
+
+
+	<Button
+		android:id="@+id/status_btn1"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginRight="30dp"
+		android:layout_marginLeft="30dp"
+		android:text="@string/popup_slide_bottom"
+		android:layout_marginTop="30dp"/>
+
+	<Button
+		android:id="@+id/status_btn2"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginRight="30dp"
+		android:layout_marginLeft="30dp"
+		android:text="@string/popup_slide_btn"
+		android:layout_marginTop="30dp"/>
+
+	<Button
+		android:id="@+id/status_btn3"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginRight="30dp"
+		android:layout_marginLeft="30dp"
+		android:text="@string/popup_tip_btn"
+		android:layout_marginTop="30dp"/>
+
+	<Button
+		android:id="@+id/status_btn4"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:layout_marginRight="30dp"
+		android:layout_marginLeft="30dp"
+		android:text="@string/popup_menu_list"
+		android:layout_marginTop="30dp"/>
+
+
+</LinearLayout>

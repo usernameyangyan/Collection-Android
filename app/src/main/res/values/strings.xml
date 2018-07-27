@@ -55,4 +55,22 @@
 	<string name="dialog_sample_4">实例四：显示广告图</string>
 	<string name="dialog_sample_5">实例五：单选选择</string>
 	<string name="dialog_sample_6">实例六：自定义样式</string>
+
+	<string name="status_bar_title">修改状态栏</string>
+	<string name="status_bar_bg">状态栏背景颜色</string>
+	<string name="status_bar_light_black">改变状态栏背景的同时把字体变为黑色</string>
+	<string name="status_bar_scroll_black">改变状态栏背景的同时默认系统状态字体颜色</string>
+	<string name="status_bar_tran">透明状态栏</string>
+	<string name="status_bar_tran_black">黑字透明状态栏</string>
+	<string name="status_bar_setting">点击修改状态栏背景色</string>
+
+	<string name="popup_title">PopupWindow的使用</string>
+	<string name="popup_slide_bottom">从底部弹出</string>
+	<string name="popup_slide_btn">跟随按钮显示</string>
+	<string name="popup_tip_btn">提示框</string>
+	<string name="popup_menu_list">列表菜单</string>
+
+	<string name="custom_view_title">自定义组件</string>
+	<string name="tab_Indicator_title">样式展示</string>
+	<string name="custom_tab_diff">CommonTabLayout的不同样式</string>
 </resources>
