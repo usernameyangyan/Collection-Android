@@ -47,6 +47,7 @@ public class CustomViewActivity extends BaseActivity implements BaseRecyclerView
 
 		mDatas.add("CommonTabLayout");
 		mDatas.add("OutSideFrameTabLayout");
+		mDatas.add("AutoLinefeedLayout");
 		refreshUI();
 	}
 
@@ -74,6 +75,10 @@ public class CustomViewActivity extends BaseActivity implements BaseRecyclerView
 				break;
 			case 1:
 				intent = new Intent(this, OutSideFrameTabLayoutActivity.class);
+				startActivity(intent);
+				break;
+			case 2:
+				intent = new Intent(this, WrapLinearLayoutActivity.class);
 				startActivity(intent);
 				break;
 		}

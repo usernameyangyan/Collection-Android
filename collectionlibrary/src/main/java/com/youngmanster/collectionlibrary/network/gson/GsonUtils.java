@@ -1,9 +1,20 @@
 package com.youngmanster.collectionlibrary.network.gson;
 
+import android.text.TextUtils;
+
+import com.google.gson.ExclusionStrategy;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 import com.youngmanster.collectionlibrary.config.Config;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -12,7 +23,6 @@ import java.util.List;
  */
 
 public class GsonUtils {
-    static Gson gson = new Gson();
 
     /**
      * 转化为object
@@ -23,9 +33,24 @@ public class GsonUtils {
      * @return
      */
     public static <T> T fromJsonObject(String reader, Class tranformClass) {
+
         Type type = new ParameterizedTypeImpl(Config.MClASS, new Class[]{tranformClass});
 
-        return gson.fromJson(reader, type);
+        if (!TextUtils.isEmpty(Config.EXPOSEPARAM)) {
+            try {
+                JSONObject jsonObject = new JSONObject(reader);
+                if (TextUtils.isEmpty(jsonObject.get(Config.EXPOSEPARAM).toString())) {
+                    return getGsonExpose().fromJson(reader, type);
+                } else {
+                    return getGsonWithoutExpose().fromJson(reader, type);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return null;
+        } else {
+            return getGsonWithoutExpose().fromJson(reader, type);
+        }
     }
 
     /**
@@ -41,12 +66,57 @@ public class GsonUtils {
         Type listType = new ParameterizedTypeImpl(List.class, new Class[]{listClass});
         // 根据List<T>生成完整的Result<List<T>>
         Type type = new ParameterizedTypeImpl(Config.MClASS, new Type[]{listType});
-        return gson.fromJson(reader, type);
+
+        if (!TextUtils.isEmpty(Config.EXPOSEPARAM)) {
+            try {
+                JSONObject jsonObject = new JSONObject(reader);
+                if (TextUtils.isEmpty(jsonObject.get(Config.EXPOSEPARAM).toString())) {
+                    return getGsonExpose().fromJson(reader, type);
+                } else {
+                    return getGsonWithoutExpose().fromJson(reader, type);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return null;
+        } else {
+            return getGsonWithoutExpose().fromJson(reader, type);
+        }
     }
 
 
-    public static <T> T fromJsonNoCommonClass(String reader, Class listClass){
-        T result = (T) gson.fromJson(reader, listClass);
+    public static <T> T fromJsonNoCommonClass(String reader, Class listClass) {
+        T result = (T) getGsonWithoutExpose().fromJson(reader, listClass);
         return result;
+    }
+
+    public static <ITEM> List<ITEM> transJsonArray(String reader, Class<ITEM> itemClass) {
+        JsonParser jsonParser = new JsonParser();
+        JsonArray jsonElements = jsonParser.parse(reader).getAsJsonArray();//获取JsonArray对象
+        ArrayList<ITEM> beans = new ArrayList<>();
+        for (JsonElement bean : jsonElements) {
+            ITEM bean1 = getGsonWithoutExpose().fromJson(bean, itemClass);//解析
+            beans.add(bean1);
+        }
+        return beans;
+    }
+
+    private static Gson gsonWithoutExpose;
+    private static Gson gsonExpose;
+
+    public static Gson getGsonWithoutExpose() {
+        if (gsonWithoutExpose == null) {
+            gsonWithoutExpose = new Gson();
+        }
+        return gsonWithoutExpose;
+    }
+
+    private static Gson getGsonExpose() {
+        if (gsonExpose == null) {
+            ExclusionStrategy excludeStrategy = new SetterExclusionStrategy(Config.EXPOSEPARAM);
+            gsonExpose = new GsonBuilder().setExclusionStrategies(excludeStrategy)
+                    .create();
+        }
+        return gsonExpose;
     }
 }

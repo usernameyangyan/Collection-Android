@@ -9,7 +9,7 @@ import com.youngmanster.collection.been.wechat.WeChatNews;
 import com.youngmanster.collection.mvp.contract.wechat.okhttpcache.WeChatChinaNewsContract;
 import com.youngmanster.collection.mvp.presenter.wechat.definitioncache.WeChatChinaNewsDefinitionPresenter;
 import com.youngmanster.collection.mvp.ui.wechat.adapter.WeChatFeaturedAdapter;
-import com.youngmanster.collectionlibrary.base.StateView;
+import com.youngmanster.collectionlibrary.base.stateview.StateView;
 import com.youngmanster.collectionlibrary.refreshrecyclerview.base.adapter.BaseRecyclerViewAdapter;
 import com.youngmanster.collectionlibrary.refreshrecyclerview.pulltorefresh.PullToRefreshRecyclerView;
 
@@ -28,7 +28,7 @@ public class FragmentChinaNewsDefinition extends BaseFragment<WeChatChinaNewsDef
     @BindView(R.id.refreshRv)
 	PullToRefreshRecyclerView refreshRv;
     @BindView(R.id.state_view)
-	StateView stateView;
+    StateView stateView;
 
     private static final int PAGE_SIZE = 15;
     private int pageSize = 1;

@@ -5,7 +5,7 @@ import android.view.View;
 import com.youngmanster.collection.R;
 import com.youngmanster.collection.activity.base.dialog.CustomizeDialog;
 import com.youngmanster.collection.base.BaseActivity;
-import com.youngmanster.collectionlibrary.base.CommonDialog;
+import com.youngmanster.collectionlibrary.base.dialog.CommonDialog;
 import com.youngmanster.collectionlibrary.utils.ToastUtils;
 
 import butterknife.OnClick;

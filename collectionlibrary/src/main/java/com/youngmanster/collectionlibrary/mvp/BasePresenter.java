@@ -1,7 +1,6 @@
 package com.youngmanster.collectionlibrary.mvp;
 
 import com.youngmanster.collectionlibrary.network.rx.RxManager;
-
 /**
  * Created by yangyan
  * on 2018/3/18.

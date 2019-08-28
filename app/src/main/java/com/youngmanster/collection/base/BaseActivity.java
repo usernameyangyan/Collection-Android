@@ -7,10 +7,14 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.youngmanster.collection.R;
-import com.youngmanster.collectionlibrary.base.IBaseActivity;
+import com.youngmanster.collectionlibrary.base.activity.IBaseActivity;
 import com.youngmanster.collectionlibrary.mvp.BasePresenter;
+import com.youngmanster.collectionlibrary.utils.DisplayUtils;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -22,20 +26,19 @@ import butterknife.Unbinder;
 
 public abstract class BaseActivity<T extends BasePresenter> extends IBaseActivity {
     private Unbinder unbinder;
-    public Toolbar mCommonToolbar;
+    public RelativeLayout common_bar_panel;
     public TextView titleTv;
+    public ImageView backBtn;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         unbinder= ButterKnife.bind(this);
 
-        mCommonToolbar = ButterKnife.findById(this, R.id.common_toolbar);
-        titleTv= ButterKnife.findById(this, R.id.titleTv);
-        if(mCommonToolbar!=null){
-            setupToolbar(mCommonToolbar);
-            setTitle("");
-        }
+        //顶部toolbar
+        common_bar_panel = findViewById(R.id.common_bar_panel);
+        titleTv = findViewById(R.id.titleTv);
+        backBtn = findViewById(R.id.btnBack);
     }
 
     @Override
@@ -52,33 +55,54 @@ public abstract class BaseActivity<T extends BasePresenter> extends IBaseActivit
         }
     }
 
-    /** ActionBar显示返回图标 */
+    /**
+     * 显示返回按钮
+     */
     protected void showHomeAsUp(@DrawableRes int resId) {
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setHomeAsUpIndicator(resId);
-            actionBar.setDisplayHomeAsUpEnabled(true);
+        if (backBtn != null) {
+            backBtn.setVisibility(View.VISIBLE);
+            backBtn.setImageResource(resId);
+            backBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onBackPressed();
+                }
+            });
         }
     }
 
     /**
-     * 自定义Toolbar的title内容
+     * 显示名称
      */
     protected void setTitleContent(String title) {
         if (titleTv != null) {
             titleTv.setVisibility(View.VISIBLE);
             titleTv.setText(title);
+            titleTv.setText(title);
         }
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                break;
+    /**
+     * 显示名称id
+     */
+    protected void setTitleContent(int titleId) {
+        if (titleTv != null) {
+            titleTv.setVisibility(View.VISIBLE);
+            titleTv.setText(getString(titleId));
+            titleTv.setText(getString(titleId));
         }
-        return super.onOptionsItemSelected(item);
     }
 
+
+    protected void setTopBarMargins(View view,boolean isFullTranslucent) {
+        if (isFullTranslucent) {
+            if (view.getLayoutParams() instanceof LinearLayout.LayoutParams) {
+                LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) view.getLayoutParams();
+                layoutParams.setMargins(0, DisplayUtils.getStatusBarHeight(this), 0, 0);
+            } else if (view.getLayoutParams() instanceof RelativeLayout.LayoutParams) {
+                RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) view.getLayoutParams();
+                layoutParams.setMargins(0, DisplayUtils.getStatusBarHeight(this), 0, 0);
+            }
+        }
+    }
 }

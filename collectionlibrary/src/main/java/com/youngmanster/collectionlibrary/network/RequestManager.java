@@ -12,6 +12,8 @@ import com.youngmanster.collectionlibrary.utils.LogUtils;
 import com.youngmanster.collectionlibrary.utils.NetworkUtils;
 
 import java.io.IOException;
+import java.util.Iterator;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
@@ -22,6 +24,7 @@ import io.reactivex.observers.DisposableObserver;
 import okhttp3.CacheControl;
 import okhttp3.Interceptor;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
@@ -73,24 +76,105 @@ public class RequestManager extends DataManagerImpl {
 	private <T> Observable<ResponseBody> getRetrofit(RequestBuilder<T> builder, boolean isCache) {
 		if (builder.getHttpType() == RequestBuilder.HttpType.DEFAULT_GET) {
 			if (isCache) {
-				return RetrofitManager.getApiService(RequestService.class).getObservableWithQueryMap(builder.getUrl(), builder.getRequestParam());
+                if(builder.getHeaders()!=null&&builder.getHeaders().size()>0){
+                    return RetrofitManager.getWithoutHeaderApiService(RequestService.class).getObservableWithQueryMapWithHeaders(builder.getUrl(), builder.getRequestParam(),builder.getHeaders());
+                }else{
+                    return RetrofitManager.getApiService(RequestService.class).getObservableWithQueryMap(builder.getUrl(), builder.getRequestParam());
+                }
 			} else {
-				return RetrofitManager.getNoCacheApiService(RequestService.class).getObservableWithQueryMap(builder.getUrl(), builder.getRequestParam());
+                if(builder.getHeaders()!=null&&builder.getHeaders().size()>0){
+                    return RetrofitManager.getNoCacheAndWithoutHeadersApiService(RequestService.class).getObservableWithQueryMapWithHeaders(builder.getUrl(), builder.getRequestParam(),builder.getHeaders());
+                }else{
+                    return RetrofitManager.getNoCacheApiService(RequestService.class).getObservableWithQueryMap(builder.getUrl(), builder.getRequestParam());
+                }
 			}
 		} else if (builder.getHttpType() == RequestBuilder.HttpType.DEFAULT_POST) {
 			if (isCache) {
-				return RetrofitManager.getApiService(RequestService.class).getObservableWithQueryMapByPost(builder.getUrl(), builder.getRequestParam());
+                if(builder.getHeaders()!=null&&builder.getHeaders().size()>0){
+                    return RetrofitManager.getWithoutHeaderApiService(RequestService.class).getObservableWithQueryMapByPostWithHeaders(builder.getUrl(), builder.getRequestParam(),builder.getHeaders());
+                }else{
+                    return RetrofitManager.getApiService(RequestService.class).getObservableWithQueryMapByPost(builder.getUrl(), builder.getRequestParam());
+                }
+
 			} else {
-				return RetrofitManager.getNoCacheApiService(RequestService.class).getObservableWithQueryMapByPost(builder.getUrl(), builder.getRequestParam());
+				if(builder.getHeaders()!=null&&builder.getHeaders().size()>0){
+					return RetrofitManager.getNoCacheAndWithoutHeadersApiService(RequestService.class).getObservableWithQueryMapByPostWithHeaders(builder.getUrl(), builder.getRequestParam(),builder.getHeaders());
+				}else{
+					return RetrofitManager.getNoCacheApiService(RequestService.class).getObservableWithQueryMapByPost(builder.getUrl(), builder.getRequestParam());
+				}
 			}
 		} else if (builder.getHttpType() == RequestBuilder.HttpType.FIELDMAP_POST) {
 			if (isCache) {
-				return RetrofitManager.getApiService(RequestService.class).getObservableWithFieldMap(builder.getUrl(), builder.getRequestParam());
+                if(builder.getHeaders()!=null&&builder.getHeaders().size()>0){
+                    return RetrofitManager.getWithoutHeaderApiService(RequestService.class).getObservableWithFieldMapWithHeaders(builder.getUrl(), builder.getRequestParam(),builder.getHeaders());
+                }else{
+                    return RetrofitManager.getApiService(RequestService.class).getObservableWithFieldMap(builder.getUrl(), builder.getRequestParam());
+                }
 			} else {
-				return RetrofitManager.getNoCacheApiService(RequestService.class).getObservableWithFieldMap(builder.getUrl(), builder.getRequestParam());
+                if(builder.getHeaders()!=null&&builder.getHeaders().size()>0){
+                    return RetrofitManager.getNoCacheAndWithoutHeadersApiService(RequestService.class).getObservableWithFieldMapWithHeaders(builder.getUrl(), builder.getRequestParam(),builder.getHeaders());
+                }else{
+                    return RetrofitManager.getNoCacheApiService(RequestService.class).getObservableWithFieldMap(builder.getUrl(), builder.getRequestParam());
+                }
 			}
 		}else if(builder.getHttpType() == RequestBuilder.HttpType.ONE_MULTIPART_POST){
-			return RetrofitManager.getApiService(RequestService.class).getObservableWithImage(builder.getUrl(), builder.getRequestParam(),builder.getPart());
+            if (isCache) {
+                if(builder.getHeaders()!=null&&builder.getHeaders().size()>0){
+                    return RetrofitManager.getWithoutHeaderApiService(RequestService.class).getObservableWithImageWithHeaders(builder.getUrl(), builder.getRequestParam(),builder.getPart(),builder.getHeaders());
+                }else{
+                    return RetrofitManager.getApiService(RequestService.class).getObservableWithImage(builder.getUrl(), builder.getRequestParam(),builder.getPart());
+                }
+            }else{
+                if(builder.getHeaders()!=null&&builder.getHeaders().size()>0){
+                    return RetrofitManager.getNoCacheAndWithoutHeadersApiService(RequestService.class).getObservableWithImageWithHeaders(builder.getUrl(), builder.getRequestParam(),builder.getPart(),builder.getHeaders());
+                }else{
+                    return RetrofitManager.getNoCacheApiService(RequestService.class).getObservableWithImage(builder.getUrl(), builder.getRequestParam(),builder.getPart());
+                }
+            }
+
+		}else if(builder.getHttpType() == RequestBuilder.HttpType.JSON_PARAM_POST){
+
+			Set set = builder.getRequestParam().keySet();
+			StringBuilder stringBuilder=new StringBuilder();
+			stringBuilder.append("{");
+			for(Iterator iter = set.iterator(); iter.hasNext();)
+			{
+
+				String key=(String)iter.next();
+				stringBuilder.append("\"");
+				stringBuilder.append(key);
+				stringBuilder.append("\"");
+				stringBuilder.append(":");
+
+				if((builder.getRequestParam().get(key).toString().charAt(0)=='['&&(builder.getRequestParam().get(key).toString().charAt(builder.getRequestParam().get(key).toString().length()-1)==']'))||
+						(builder.getRequestParam().get(key).toString().charAt(0)=='{'&&(builder.getRequestParam().get(key).toString().charAt(builder.getRequestParam().get(key).toString().length()-1)=='}'))){
+					stringBuilder.append(builder.getRequestParam().get(key));
+				}else{
+					stringBuilder.append("\"");
+					stringBuilder.append(builder.getRequestParam().get(key));
+					stringBuilder.append("\"");
+				}
+				stringBuilder.append(",");
+			}
+			String str=stringBuilder.toString();
+			String json=str.substring(0,str.length()-1);
+			json=json+"}";
+
+			LogUtils.info("10000",json);
+			RequestBody body= RequestBody.create(okhttp3.MediaType.parse("application/json;charset=UTF-8"),json);
+			if (isCache) {
+                if(builder.getHeaders()!=null&&builder.getHeaders().size()>0){
+                    return RetrofitManager.getWithoutHeaderApiService(RequestService.class).getObservableWithQueryJsonParamWithHeaders(builder.getUrl(),body,builder.getHeaders());
+                }else{
+                    return RetrofitManager.getApiService(RequestService.class).getObservableWithQueryJsonParam(builder.getUrl(),body);
+                }
+			} else {
+                if(builder.getHeaders()!=null&&builder.getHeaders().size()>0){
+                    return RetrofitManager.getNoCacheAndWithoutHeadersApiService(RequestService.class).getObservableWithQueryJsonParamWithHeaders(builder.getUrl(),body,builder.getHeaders());
+                }else{
+                    return RetrofitManager.getNoCacheApiService(RequestService.class).getObservableWithQueryJsonParam(builder.getUrl(),body);
+                }
+			}
 		}
 		return null;
 	}
@@ -114,7 +198,9 @@ public class RequestManager extends DataManagerImpl {
 				public void subscribe(ObservableEmitter<T> emitter) throws Exception {
 					String json = FileUtils.ReadTxtFile(builder.getFilePath() + "/" + builder.getFileName());
 					T a;
-					if(Config.MClASS==null){
+					if(builder.isReturnOriginJson()){
+						a= (T) json;
+					}else if(Config.MClASS==null){
 						a=GsonUtils.fromJsonNoCommonClass(json, builder.getTransformClass());
 					}else if(!builder.isUserCommonClass()){
 						a=GsonUtils.fromJsonNoCommonClass(json, builder.getTransformClass());
@@ -146,7 +232,9 @@ public class RequestManager extends DataManagerImpl {
 					@Override
 					public void _onNext(final ResponseBody t) {
 						T a;
-						if(Config.MClASS==null){
+						if(builder.isReturnOriginJson()){
+							a= (T) json[0];
+						}else if(Config.MClASS==null){
 							a=GsonUtils.fromJsonNoCommonClass(json[0], builder.getTransformClass());
 						}else if(!builder.isUserCommonClass()){
 							a=GsonUtils.fromJsonNoCommonClass(json[0], builder.getTransformClass());
@@ -183,7 +271,9 @@ public class RequestManager extends DataManagerImpl {
 				public void subscribe(ObservableEmitter<T> emitter) throws Exception {
 					String json = FileUtils.ReadTxtFile(builder.getFilePath() + "/" + builder.getFileName());
 					T a;
-					if(Config.MClASS==null){
+					if(builder.isReturnOriginJson()){
+						a= (T) json;
+					}else if(Config.MClASS==null){
 						a=GsonUtils.fromJsonNoCommonClass(json, builder.getTransformClass());
 					}else if(!builder.isUserCommonClass()){
 						a=GsonUtils.fromJsonNoCommonClass(json, builder.getTransformClass());
@@ -216,7 +306,9 @@ public class RequestManager extends DataManagerImpl {
 					@Override
 					public void _onNext(final ResponseBody t) {
 						T a;
-						if(Config.MClASS==null){
+						if(builder.isReturnOriginJson()){
+							a= (T) json[0];
+						}else if(Config.MClASS==null){
 							a=GsonUtils.fromJsonNoCommonClass(json[0], builder.getTransformClass());
 						}else if(!builder.isUserCommonClass()){
 							a=GsonUtils.fromJsonNoCommonClass(json[0], builder.getTransformClass());
@@ -253,7 +345,9 @@ public class RequestManager extends DataManagerImpl {
 				String json = FileUtils.ReadTxtFile(builder.getFilePath() + "/" + builder.getFileName());
 					if (!TextUtils.isEmpty(json) && !json.equals("")) {
 						T a;
-						if(Config.MClASS==null){
+						if(builder.isReturnOriginJson()){
+							a= (T) json;
+						} else if(Config.MClASS==null){
 							a=GsonUtils.fromJsonNoCommonClass(json, builder.getTransformClass());
 						}else if(!builder.isUserCommonClass()){
 							a=GsonUtils.fromJsonNoCommonClass(json, builder.getTransformClass());
@@ -285,7 +379,9 @@ public class RequestManager extends DataManagerImpl {
 					@Override
 					public void _onNext(ResponseBody t) {
 						T a;
-						if(Config.MClASS==null){
+						if(builder.isReturnOriginJson()){
+							a= (T) json[0];
+						}else if(Config.MClASS==null){
 							a = GsonUtils.fromJsonNoCommonClass(json[0], builder.getTransformClass());
 						}else if(!builder.isUserCommonClass()){
 							a = GsonUtils.fromJsonNoCommonClass(json[0], builder.getTransformClass());
@@ -329,7 +425,9 @@ public class RequestManager extends DataManagerImpl {
 				String json = FileUtils.ReadTxtFile(builder.getFilePath() + "/" + builder.getFileName());
 				if (!TextUtils.isEmpty(json) && !json.equals("")) {
 					T a;
-					if(Config.MClASS==null){
+					if(builder.isReturnOriginJson()){
+						a= (T) json;
+					}else if(Config.MClASS==null){
 						a = GsonUtils.fromJsonNoCommonClass(json, builder.getTransformClass());
 					}else if(!builder.isUserCommonClass()){
 						a = GsonUtils.fromJsonNoCommonClass(json, builder.getTransformClass());
@@ -359,7 +457,9 @@ public class RequestManager extends DataManagerImpl {
 			@Override
 			public void _onNext(ResponseBody t) {
 				T a;
-				if(Config.MClASS==null){
+				if(builder.isReturnOriginJson()){
+					a= (T) json[0];
+				} else if(Config.MClASS==null){
 					a = GsonUtils.fromJsonNoCommonClass(json[0], builder.getTransformClass());
 				}else if(!builder.isUserCommonClass()){
 					a = GsonUtils.fromJsonNoCommonClass(json[0], builder.getTransformClass());
@@ -410,7 +510,9 @@ public class RequestManager extends DataManagerImpl {
 					public void _onNext(ResponseBody t) {
 						if (builder.isDiskCacheNetworkSaveReturn() == true) {
 							T a;
-							if(Config.MClASS==null){
+							if(builder.isReturnOriginJson()){
+								a= (T) json[0];
+							}else if(Config.MClASS==null){
 								a = GsonUtils.fromJsonNoCommonClass(json[0], builder.getTransformClass());
 							}else if(!builder.isUserCommonClass()){
 								a = GsonUtils.fromJsonNoCommonClass(json[0], builder.getTransformClass());
@@ -463,7 +565,9 @@ public class RequestManager extends DataManagerImpl {
 					public void _onNext(ResponseBody t) {
 						if (builder.isDiskCacheNetworkSaveReturn() == true) {
 							T a;
-							if(Config.MClASS==null){
+							if(builder.isReturnOriginJson()){
+								a= (T) json[0];
+							}else if(Config.MClASS==null){
 								a = GsonUtils.fromJsonNoCommonClass(json[0], builder.getTransformClass());
 							}else if(!builder.isUserCommonClass()){
 								a = GsonUtils.fromJsonNoCommonClass(json[0], builder.getTransformClass());
@@ -502,7 +606,9 @@ public class RequestManager extends DataManagerImpl {
 					public void _onNext(ResponseBody t) {
 						try {
 							T a;
-							if(Config.MClASS==null){
+							if(builder.isReturnOriginJson()){
+								a= (T) t.string();
+							}else if(Config.MClASS==null){
 								a = GsonUtils.fromJsonNoCommonClass(t.string(), builder.getTransformClass());
 							}else if(!builder.isUserCommonClass()){
 								a = GsonUtils.fromJsonNoCommonClass(t.string(), builder.getTransformClass());
@@ -534,13 +640,16 @@ public class RequestManager extends DataManagerImpl {
 	 * 只通过网络返回数据，返回Model
 	 */
 	private <T> DisposableObserver<ResponseBody> loadOnlyNetWorkModel(final RequestBuilder<T> builder, Observable<ResponseBody> observable) {
+
 		DisposableObserver<ResponseBody> observer = observable.compose(RxSchedulers.<ResponseBody>io_main())
 				.subscribeWith(new RxSubscriber<ResponseBody>() {
 					@Override
 					public void _onNext(ResponseBody t) {
 						try {
 							T a;
-							if(Config.MClASS==null){
+							if(builder.isReturnOriginJson()){
+								a= (T) t.string();
+							}else if(Config.MClASS==null){
 								a = GsonUtils.fromJsonNoCommonClass(t.string(), builder.getTransformClass());
 							}else if(!builder.isUserCommonClass()){
 								a = GsonUtils.fromJsonNoCommonClass(t.string(), builder.getTransformClass());

@@ -3,17 +3,11 @@ package com.youngmanster.collection.activity.base.popupwindow;
 import android.content.Context;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.OvershootInterpolator;
-import android.view.animation.ScaleAnimation;
-import android.view.animation.TranslateAnimation;
 
 import com.youngmanster.collection.R;
 import com.youngmanster.collection.activity.base.adapter.PopupMenuListAdapter;
-import com.youngmanster.collectionlibrary.base.BasePopupWindow;
-import com.youngmanster.collectionlibrary.utils.DisplayUtils;
+import com.youngmanster.collectionlibrary.base.dialog.BasePopupWindow;
 
 import java.util.ArrayList;
 import java.util.List;

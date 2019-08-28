@@ -31,7 +31,7 @@ public abstract class BaseLoadMoreView  extends LinearLayout{
 
 	public BaseLoadMoreView(Context context) {
 		super(context);
-		LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+		LayoutParams lp = new LayoutParams(
 				RecyclerView.LayoutParams.MATCH_PARENT, RecyclerView.LayoutParams.WRAP_CONTENT);
 		this.setLayoutParams(lp);
 		initView(context);

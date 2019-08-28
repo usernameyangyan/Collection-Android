@@ -9,6 +9,7 @@
 		<!--空布局显示图片-->
 		<attr name="emptyImage" format="reference"/>
 		<attr name="emptyText" format="string"/>
+		<attr name="emptyViewRes" format="reference"/>
 		<!--断网显示图片-->
 		<attr name="disConnectImage" format="reference"/>
 		<attr name="disConnectText" format="string"/>
@@ -83,6 +84,5 @@
 		<attr name="tab_bar_stroke_width"/>
 		<attr name="tab_width"/>
 	</declare-styleable>
-
 
 </resources>

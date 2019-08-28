@@ -73,4 +73,9 @@
 	<string name="custom_view_title">自定义组件</string>
 	<string name="tab_Indicator_title">样式展示</string>
 	<string name="custom_tab_diff">CommonTabLayout的不同样式</string>
+
+
+	<string name="use_fragment_animation_1">跳转动画1</string>
+	<string name="use_fragment_animation_2">跳转动画2</string>
+	<string name="use_fragment_t">页面跳转</string>
 </resources>

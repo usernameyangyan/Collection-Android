@@ -134,8 +134,13 @@ public class DataManager extends DataManagerImpl {
 	}
 
 	@Override
-	public RealmObject queryAllWithFieldByRealm(Class<? extends RealmObject> clazz, String fieldName, String value) {
+	public List<? extends RealmObject> queryAllWithFieldByRealm(Class<? extends RealmObject> clazz, String fieldName, String value) {
 		return dataManagerStub.queryAllWithFieldByRealm(clazz, fieldName, value);
+	}
+
+	@Override
+	public RealmObject queryWithFieldByRealm(Class<? extends RealmObject> clazz, String fieldName, String value) {
+		return dataManagerStub.queryWithFieldByRealm(clazz, fieldName, value);
 	}
 
 	@Override
@@ -161,5 +166,10 @@ public class DataManager extends DataManagerImpl {
 	@Override
 	public void deleteAllByRealm(Class<? extends RealmObject> clazz) {
 		dataManagerStub.deleteAllByRealm(clazz);
+	}
+
+	@Override
+	public void deleteAllWithFieldByRealm(Class<? extends RealmObject> clazz, String fieldName, String value) {
+		dataManagerStub.deleteAllWithFieldByRealm(clazz,fieldName,value);
 	}
 }

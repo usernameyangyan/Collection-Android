@@ -209,7 +209,7 @@ public class DisplayUtils {
 	/**
 	 * 设置状态栏全屏透明（状态栏字体颜色为默认）
 	 * */
-	public static void setStatusBarFullTranslucent(Activity act) {
+	public static boolean setStatusBarFullTranslucent(Activity act) {
 		//设置全屏透明状态栏
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 			act.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS |
@@ -217,17 +217,21 @@ public class DisplayUtils {
 			act.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
 			act.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
 			act.getWindow().setStatusBarColor(Color.TRANSPARENT);
+			return true;
 		}else{
 			setStatusBarColor(act,R.color.black);
+			return false;
 		}
 	}
 
 	/**
-	 * 设置状态栏全屏透明（状态栏字体颜色为默认）
+	 * 设置状态栏全屏透明（状态栏字体颜色为默认黑色）
 	 * */
-	public static void setStatusBarFullTranslucentWithBlackFont(Activity act) {
+
+	public static boolean setStatusBarFullTranslucentWithBlackFont(Activity act) {
 		//设置全屏透明状态栏
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP&&isCanSetStatusBarBlackFontLightMode(act)) {
+
 			act.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
 			ViewGroup rootView = (ViewGroup) ((ViewGroup) act.findViewById(android.R.id.content)).getChildAt(0);
 			ViewCompat.setFitsSystemWindows(rootView, false);
@@ -238,6 +242,9 @@ public class DisplayUtils {
 			act.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
 			act.getWindow().setStatusBarColor(Color.TRANSPARENT);
 			act.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+			return true;
+		}else{
+			return false;
 		}
 	}
 

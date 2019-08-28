@@ -6,7 +6,7 @@ import android.support.v7.widget.GridLayoutManager;
 import com.youngmanster.collection.R;
 import com.youngmanster.collection.adapter.recyclerview.DefaultRecyclerAdapter;
 import com.youngmanster.collection.base.BaseActivity;
-import com.youngmanster.collectionlibrary.base.StateView;
+import com.youngmanster.collectionlibrary.base.stateview.StateView;
 import com.youngmanster.collectionlibrary.refreshrecyclerview.pulltorefresh.PullToRefreshRecyclerView;
 
 import java.util.ArrayList;

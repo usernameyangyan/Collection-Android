@@ -4,7 +4,7 @@ import android.content.Context;
 import android.view.ViewGroup;
 
 import com.youngmanster.collection.R;
-import com.youngmanster.collectionlibrary.base.BasePopupWindow;
+import com.youngmanster.collectionlibrary.base.dialog.BasePopupWindow;
 
 /**
  * Created by yangyan

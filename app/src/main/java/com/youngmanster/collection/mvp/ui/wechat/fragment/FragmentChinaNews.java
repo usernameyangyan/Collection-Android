@@ -11,7 +11,7 @@ import com.youngmanster.collection.mvp.presenter.wechat.okhttpcache.WeChatChinaN
 import com.youngmanster.collection.mvp.ui.wechat.adapter.WeChatFeaturedAdapter;
 import com.youngmanster.collection.view.DefinitionAnimationLoadMoreView;
 import com.youngmanster.collection.view.DefinitionAnimationRefreshHeaderView;
-import com.youngmanster.collectionlibrary.base.StateView;
+import com.youngmanster.collectionlibrary.base.stateview.StateView;
 import com.youngmanster.collectionlibrary.refreshrecyclerview.base.adapter.BaseRecyclerViewAdapter;
 import com.youngmanster.collectionlibrary.refreshrecyclerview.pulltorefresh.PullToRefreshRecyclerView;
 

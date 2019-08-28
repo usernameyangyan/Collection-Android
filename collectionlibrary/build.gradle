@@ -1,13 +1,26 @@
 apply plugin: 'com.android.library'
-apply from : "config.gradle"
 apply plugin: 'realm-android'
-apply plugin: 'com.jfrog.bintray'
-apply plugin: 'com.github.dcendents.android-maven'
+apply from : "config.gradle"
+apply plugin: 'com.novoda.bintray-release'
 
-def siteUrl = "https://github.com/usernameyangyan/Collection-Android"   // 项目的主页
-def gitUrl = 'https://github.com/usernameyangyan/Collection-Android.git'   // Git仓库的url
-Properties properties = new Properties()
-properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+publish {
+    userOrg = 'YoungManOpen'
+    groupId = 'com.youngman'
+    artifactId = 'collectionlibrary'
+    publishVersion = '1.2.8'
+    desc = '1.更新Realm数据库依赖。  \n' +
+            '2.更新RxJava、rxandroid、retrofit、converter-gson、adapter-rxjava2依赖。  \n' +
+            '3.封装好Fragment之间的交互，项目中可以选择使用一个Activity来作为跟容器，其它实现页面统一使用fragment来实现。  \n' +
+            '4.collectionLibary中的Config配置类增加json字段过滤、网络请求超时设置、网络请求头设置（全局请求头）。    \n' +
+            '5.增加自动换行布局。  \n' +
+            '6.Realm增加按数据字段查询和删除接口。  \n' +
+            '7.网络请求类型HttpType增加json类型请求参数。  \n' +
+            '8.网络请求增加个别接口请求头设置。  \n' +
+            '9.增加适配不同手机像素。'
+    website = 'https://github.com/usernameyangyan/Collection-Android'
+}
+
 
 android {
     compileSdkVersion app.compileSdkVersion
@@ -15,8 +28,8 @@ android {
     defaultConfig {
         minSdkVersion app.minSdkVersion
         targetSdkVersion app.targetSdkVersion
-        versionCode app.versionCode
-        versionName app.versionName
+        versionCode 1
+        versionName "1.0"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
@@ -32,120 +45,29 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
-
     implementation supportDependencies.appCompat
     implementation supportDependencies.recyclerview
-
     /**
-     * 动画集合
-     * https://github.com/81813780/AVLoadingIndicatorView
+     *  动画集合
+     *  https://github.com/81813780/AVLoadingIndicatorView
      */
     implementation thirdDependencies.avi
     /**
-     * https://github.com/wasabeef/glide-transformations
-     * 高斯模糊的Glide
+     *  https://github.com/wasabeef/glide-transformations
+     *  高斯模糊的Glide
      */
     implementation thirdDependencies.glideTransformation
+
     /**
-     * retrofit和rxjava
+     *  retrofit和rxjava
      */
-    compile thirdDependencies.rxjava
-    compile thirdDependencies.rxandroid
-    compile thirdDependencies.retrofit
-    compile thirdDependencies.gsonConverter
-    compile thirdDependencies.rxjavaAdapter
-    compile thirdDependencies.loggingInterceptor
-
-}
-
-version = "1.2.7"
-group = "com.youngman"
-
-bintray {
-    user = properties.getProperty("bintray.user")
-    key = properties.getProperty("bintray.apikey")
-    pkg {
-        repo = 'collection'//自己bintray创建仓库名字
-        name = 'collectionlibrary'//Library的名字
-        websiteUrl = siteUrl
-        vcsUrl = gitUrl
-        licenses = ['MIT']//不能随便写，只能是仓库创建时选择的license type
-        userOrg = 'youngmanopen' //自己bintray创建的organization名称
-        publish = true // 是否是公开项目。
-
-        version {
-            name = '1.2.7'
-            desc = 'Collection aggregates some of the basic modules of the project, saving developer time.'
-            released  = new Date()
-            vcsTag = 'v1.2.7'
-            attributes = ['gradle-plugin': 'com.use.less:com.use.less.gradle:gradle-useless-plugin']
-        }
-    }
-    configurations = ['archives']
-}
-
-
-install {
-    repositories.mavenInstaller {
-        // This generates POM.xml with proper parameters
-        pom {
-            project {
-                packaging 'aar'
-                // Add your description here
-                name 'Collecction-Android'
-                description 'Collection aggregates some of the basic modules of the project, saving developer time.'
-                url siteUrl
-                // Set your license
-                licenses {
-                    license {
-                        name 'MIT'
-                        url 'https://github.com/usernameyangyan/Collection-Android/blob/master/LICENSE'
-                    }
-                }
-                developers {
-                    developer {
-                        id 'youngever'        //填写bintray或者github的用户名
-                        name 'youngman'         //姓名，可以是中文
-                        email 'youngman6627@gmail.com'
-                    }
-                }
-                scm {
-                    connection gitUrl
-                    developerConnection gitUrl
-                    url siteUrl
-                }
-            }
-        }
-    }
-}
-
-task sourcesJar(type: Jar) {
-    from android.sourceSets.main.java.srcDirs
-    classifier = 'sources'
-}
-task javadoc(type: Javadoc) {
-    failOnError false //必须添加以免出错
-    source = android.sourceSets.main.java.srcDirs
-    classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-}
-task javadocJar(type: Jar, dependsOn: javadoc) {
-    classifier = 'javadoc'
-    from javadoc.destinationDir
-}
-artifacts {
-    archives javadocJar
-    archives sourcesJar
-}
-
-tasks.withType(Javadoc) {
-    options.addStringOption('Xdoclint:none', '-quiet') //忽略javadoc错误
-    options{
-        encoding "UTF-8"
-        charSet 'UTF-8'
-        links "http://docs.oracle.com/javase/7/docs/api"
-    }
+    api thirdDependencies.rxjava
+    api thirdDependencies.rxandroid
+    api thirdDependencies.retrofit
+    api thirdDependencies.gsonConverter
+    api thirdDependencies.rxjavaAdapter
+    api thirdDependencies.loggingInterceptor
 }

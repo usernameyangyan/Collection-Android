@@ -6,8 +6,11 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.youngmanster.collection.R;
 import com.youngmanster.collection.adapter.recyclerview.DefinitionRecyclerAdapter;
@@ -45,14 +48,15 @@ public class TransparentAndBlackFontStatusBarActivity extends BaseActivity {
 	@Override
 	public void init() {
 		DisplayUtils.setStatusBarFullTranslucentWithBlackFont(this);
-		mCommonToolbar.setBackgroundColor(getResources().getColor(R.color.white));
+		common_bar_panel.setBackgroundColor(getResources().getColor(R.color.white));
 		showHomeAsUp(R.mipmap.nav_back);
 //		setTitleContent("复仇者联盟3");
 
 		if (DisplayUtils.isCanSetStatusBarBlackFontLightMode(this)) {
-			mCommonToolbar.getLayoutParams().height = DisplayUtils.getActionBarHeight(this) + DisplayUtils.getStatusBarHeight(this);
-			mCommonToolbar.setPadding(0, DisplayUtils.getStatusBarHeight(this), 0, 0);
-//			titleTv.setPadding(0,DisplayUtils.getStatusBarHeight(this), 0, 0);
+			common_bar_panel.getLayoutParams().height = DisplayUtils.getActionBarHeight(this) + DisplayUtils.getStatusBarHeight(this);
+			common_bar_panel.setPadding(0, DisplayUtils.getStatusBarHeight(this), 0, 0);
+			RelativeLayout.LayoutParams layoutParams=new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT);
+			backBtn.setLayoutParams(layoutParams);
 		}
 
 		mRecyclerView.setNestedScrollingEnabled(false);
@@ -109,13 +113,13 @@ public class TransparentAndBlackFontStatusBarActivity extends BaseActivity {
 		int scrollY = getScollYDistance();
 		//快速下拉会引起瞬间scrollY<0
 		if (scrollY <= 0) {
-			mCommonToolbar.getBackground().mutate().setAlpha(0);
+			common_bar_panel.getBackground().mutate().setAlpha(0);
 			return;
 		}
 		//计算当前透明度比率
-		float radio = Math.min(1, scrollY / (ivHeight - mCommonToolbar.getHeight() * 1f));
+		float radio = Math.min(1, scrollY / (ivHeight - common_bar_panel.getHeight() * 1f));
 		//设置透明度
-		mCommonToolbar.getBackground().mutate().setAlpha((int) (radio * 0xFF));
+		common_bar_panel.getBackground().mutate().setAlpha((int) (radio * 0xFF));
 	}
 
 	@Override

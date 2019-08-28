@@ -2,6 +2,8 @@ package com.youngmanster.collectionlibrary.config;
 
 import android.content.Context;
 
+import java.util.Map;
+
 import io.realm.RealmMigration;
 
 /**
@@ -27,6 +29,7 @@ public class Config {
     public static long MAX_MEMORY_SIZE=10 * 1024 * 1024;
     //设置网络请求json通用解析类
     public static Class MClASS;
+    public static String EXPOSEPARAM;
     /**SharePreference**/
     public static String USER_CONFIG;
     /**Realm**/
@@ -34,4 +37,11 @@ public class Config {
     public static int realmVersion=0;
     public static String realmName="myRealm.realm";
 
+    /***请求接口超时设定**/
+    public static int CONNECT_TIMEOUT_SECONDS=60;
+    public static int READ_TIMEOUT_SECONDS=60;
+    public static int WRITE_TIMEOUT_SECONDS=60;
+
+    /***设置全局请求头***/
+    public static Map<String,String> HEADERS;
 }

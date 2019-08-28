@@ -22,18 +22,20 @@ public interface  DbHelper {
 	 * 查询操作
 	 */
 	RealmObject queryFirstByRealm(Class<? extends RealmObject> clazz);
-	RealmObject queryAllWithFieldByRealm(Class<? extends RealmObject> clazz, String fieldName, String value);
+	RealmObject queryWithFieldByRealm(Class<? extends RealmObject> clazz, String fieldName, String value);
+	List<? extends RealmObject> queryAllWithFieldByRealm(Class<? extends RealmObject> clazz, String fieldName, String value);
 	List<? extends RealmObject> queryAllByRealm(Class<? extends RealmObject> clazz);
-	List<? extends RealmObject> queryAllWithSortByRealm(Class<? extends RealmObject> clazz, String fieldName,Boolean isAscendOrDescend);
+	List<? extends RealmObject> queryAllWithSortByRealm(Class<? extends RealmObject> clazz, String fieldName, Boolean isAscendOrDescend);
 
 	/**
 	 * 修改操作
 	 */
-	void updateParamWithPKByRealm(Class<? extends RealmObject> clazz, String primaryKeyName, Object primaryKeyValue, String fieldName,Object newValue);
+	void updateParamWithPKByRealm(Class<? extends RealmObject> clazz, String primaryKeyName, Object primaryKeyValue, String fieldName, Object newValue);
 
 	/**
 	 * 删除操作
 	 */
 	void deleteFirstByRealm(Class<? extends RealmObject> clazz);
 	void deleteAllByRealm(Class<? extends RealmObject> clazz);
+	void deleteAllWithFieldByRealm(Class<? extends RealmObject> clazz, String fieldName, String value);
 }

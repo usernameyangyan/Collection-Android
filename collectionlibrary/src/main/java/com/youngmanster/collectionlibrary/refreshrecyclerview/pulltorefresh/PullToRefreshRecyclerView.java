@@ -124,6 +124,10 @@ public class PullToRefreshRecyclerView extends RecyclerView {
 		this.emptyView.setLayoutParams(lp);
 	}
 
+	public View getEmptyView(){
+		return this.emptyView;
+	}
+
 	/**
 	 * 自定义刷新View
 	 *

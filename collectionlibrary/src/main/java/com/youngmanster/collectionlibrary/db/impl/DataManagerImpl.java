@@ -78,7 +78,12 @@ public  class DataManagerImpl implements SharePreferenceHelper,DbHelper,HttpHelp
     }
 
     @Override
-    public RealmObject queryAllWithFieldByRealm(Class<? extends RealmObject> clazz, String fieldName, String value) {
+    public RealmObject queryWithFieldByRealm(Class<? extends RealmObject> clazz, String fieldName, String value) {
+        return null;
+    }
+
+    @Override
+    public List<? extends RealmObject> queryAllWithFieldByRealm(Class<? extends RealmObject> clazz, String fieldName, String value) {
         return null;
     }
 
@@ -104,6 +109,11 @@ public  class DataManagerImpl implements SharePreferenceHelper,DbHelper,HttpHelp
 
     @Override
     public void deleteAllByRealm(Class<? extends RealmObject> clazz) {
+
+    }
+
+    @Override
+    public void deleteAllWithFieldByRealm(Class<? extends RealmObject> clazz, String fieldName, String value) {
 
     }
 }

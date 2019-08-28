@@ -1,7 +1,9 @@
-package com.youngmanster.collectionlibrary.base;
+package com.youngmanster.collectionlibrary.base.dialog;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
@@ -15,6 +17,7 @@ import com.youngmanster.collectionlibrary.utils.DisplayUtils;
 
 public abstract class BaseDialog {
 
+	private DismissListener dismissListener;
 	private AlertDialog alertDialog;
 	protected AlertDialog.Builder builder;
 	protected int screenWidthPixels;
@@ -26,6 +29,12 @@ public abstract class BaseDialog {
 	public BaseDialog(Context context) {
 		this.context=context;
 	}
+
+	public BaseDialog(Context context,DismissListener dismissListener) {
+		this.context=context;
+		this.dismissListener=dismissListener;
+	}
+
 
 	public void setContentView(int layoutRes){
 		if(layoutRes!=0){
@@ -53,12 +62,22 @@ public abstract class BaseDialog {
 		}
 		initUI();
 		alertDialog = builder.create();
+
+		alertDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+			@Override
+			public void onDismiss(DialogInterface dialog) {
+				if(dismissListener!=null){
+					dismissListener.onDismissListener();
+				}
+			}
+		});
 	}
 
 	public void show() {
 		alertDialog.show();
 		WindowManager.LayoutParams params = alertDialog.getWindow().getAttributes();
 		params.width = (int) (screenWidthPixels-space*2);
+		params.gravity = Gravity.CENTER;
 		if(height>0){
 			params.height= (int) height;
 		}
@@ -104,5 +123,10 @@ public abstract class BaseDialog {
 	}
 
 	protected abstract void initUI();
+
+
+	public interface DismissListener{
+		void onDismissListener();
+	}
 
 }

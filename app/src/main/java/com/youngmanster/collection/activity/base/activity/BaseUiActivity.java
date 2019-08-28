@@ -49,6 +49,7 @@ public class BaseUiActivity extends BaseActivity implements BaseRecyclerViewAdap
 	public void requestData() {
 
 		mDatas.add("Base介绍");
+		mDatas.add("使用Fragment作为主要交互");
 		mDatas.add("StateView");
 		mDatas.add("Permission");
 		mDatas.add("Dialog的使用");
@@ -80,22 +81,26 @@ public class BaseUiActivity extends BaseActivity implements BaseRecyclerViewAdap
 				startActivity(intent);
 				break;
 			case 1:
-				intent = new Intent(this, StateViewActivity.class);
+				intent = new Intent(this, UseFragmentActivity.class);
 				startActivity(intent);
 				break;
 			case 2:
-				intent = new Intent(this, PermissionActivity.class);
+				intent = new Intent(this, StateViewActivity.class);
 				startActivity(intent);
 				break;
 			case 3:
-				intent = new Intent(this, DialogActivity.class);
+				intent = new Intent(this, PermissionActivity.class);
 				startActivity(intent);
 				break;
 			case 4:
-				intent = new Intent(this, PopupWindowDemoActivity.class);
+				intent = new Intent(this, DialogActivity.class);
 				startActivity(intent);
 				break;
 			case 5:
+				intent = new Intent(this, PopupWindowDemoActivity.class);
+				startActivity(intent);
+				break;
+			case 6:
 				intent = new Intent(this, ChangeStatusBarActivity.class);
 				startActivity(intent);
 				break;

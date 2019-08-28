@@ -21,11 +21,13 @@ public class RequestBuilder<T> {
     private String fileName;
     private int limtHours=1;
     private boolean isUserCommonClass=true;
+    private boolean isReturnOriginJson=false;
     private HttpType httpType=HttpType.DEFAULT_GET;
     private RxObservableListener<T> rxObservableListener;
     private Map<String, Object> requestParam;
     private MultipartBody.Part part;
     private boolean isDiskCacheNetworkSaveReturn;
+    private Map<String,String> headers;
 
     public enum ReqType {
         //没有缓存
@@ -50,6 +52,7 @@ public class RequestBuilder<T> {
     public enum HttpType {
         DEFAULT_GET,
         DEFAULT_POST,
+        JSON_PARAM_POST,
         FIELDMAP_POST,
         ONE_MULTIPART_POST
     }
@@ -57,6 +60,7 @@ public class RequestBuilder<T> {
     public RequestBuilder(RxObservableListener<T> rxObservableListener) {
         this.rxObservableListener = rxObservableListener;
         requestParam = new HashMap<>();
+        headers=new HashMap<>();
     }
 
 
@@ -106,6 +110,21 @@ public class RequestBuilder<T> {
         return this;
     }
 
+    public RequestBuilder setHeader(String key, String value){
+        headers.put(key, value);
+        return this;
+    }
+
+
+    public RequestBuilder setHeaders(Map<String, String> headers) {
+        this.headers.putAll(headers);
+        return this;
+    }
+
+    public Map<String, String> getHeaders() {
+        return headers;
+    }
+
     public RequestBuilder setRequestParam(Map<String, Object> requestParam) {
         this.requestParam.putAll(requestParam);
         return this;
@@ -153,6 +172,15 @@ public class RequestBuilder<T> {
 
     public RequestBuilder setUserCommonClass(boolean userCommonClass) {
         isUserCommonClass = userCommonClass;
+        return this;
+    }
+
+    public boolean isReturnOriginJson() {
+        return isReturnOriginJson;
+    }
+
+    public RequestBuilder setReturnOriginJson(boolean returnOriginJson) {
+        isReturnOriginJson = returnOriginJson;
         return this;
     }
 

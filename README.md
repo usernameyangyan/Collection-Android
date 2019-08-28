@@ -1,6 +1,6 @@
 ## Collection
 
-![Travis](https://img.shields.io/badge/release-1.2.7-green.svg)
+![Travis](https://img.shields.io/badge/release-1.2.8-green.svg)
 ![Travis](https://img.shields.io/badge/llicense-MIT-green.svg)
 ![Travis](https://img.shields.io/badge/build-passing-green.svg)
 
@@ -17,8 +17,7 @@ Collection聚合了项目搭建的一些基本模块，节约开发者时间，�
 
 ## 框架的引入
 
->implementation 'com.youngman:collectionlibrary:1.2.7'
-compile 'com.youngman:collectionlibrary:1.2.7'
+>implementation 'com.youngman:collectionlibrary:1.2.8'
 
 >Error:Could not find com.android.support:appcompat-v7:27.x.x.
 因为library的Support Repository是27.x.x,可能跟项目有所冲突，如果sdk已经装了27还是会出现同样的错误。
@@ -26,6 +25,18 @@ compile 'com.youngman:collectionlibrary:1.2.7'
 
 
 ### 更新说明
+
+
+####  v1.2.8
+> 1.更新Realm数据库依赖。  
+> 2.更新RxJava、rxandroid、retrofit、converter-gson、adapter-rxjava2依赖。  
+> 3.封装好Fragment之间的交互，项目中可以选择使用一个Activity来作为跟容器，其它实现页面统一使用fragment来实现。  
+> 4.collectionLibary中的Config配置类增加json字段过滤、网络请求超时设置、网络请求头设置（全局请求头）。    
+> 5.增加自动换行布局。  
+> 6.Realm增加按数据字段查询和删除接口。  
+> 7.网络请求类型HttpType增加json类型请求参数。  
+> 8.网络请求增加个别接口请求头设置。  
+> 9.增加适配不同手机像素。
 
 ####  v1.2.7
 > 1.增加自定义控件TabLayout。
@@ -532,12 +543,22 @@ destroy()是用来关掉改页面时把刷新View的一些动画等释放，防�
           public static long MAX_MEMORY_SIZE=10 * 1024 * 1024;
           //设置网络请求json通用解析类
           public static Class MClASS;
+		  //设置该参数可以去掉json某个字段不解析，比如EXPOSEPARAM=“data”,json的data字段内容不被解析
+		  public static String EXPOSEPARAM;
           /**SharePreference**/
           public static String USER_CONFIG;
           /**Realm**/
           public static RealmMigration realmMigration;
           public static int realmVersion=0;
           public static String realmName="myRealm.realm";
+
+          /***请求接口超时设定**/
+          public static int CONNECT_TIMEOUT_SECONDS=60;
+          public static int READ_TIMEOUT_SECONDS=60;
+          public static int WRITE_TIMEOUT_SECONDS=60;
+
+		  /***设置全局请求头***/
+          public static Map<String,String> HEADERS;
 
     }
 
@@ -676,6 +697,16 @@ destroy()是用来关掉改页面时把刷新View的一些动画等释放，防�
 	    }
     }
 
+
+##### 新增json请求参数以及针对接口设置的请求头设置
+
+ 	resultRequestBuilder.setUrl(ApiUrl.URL_ABOUT_US_RULE)
+                .setTransformClass(ContractUsInfo.class)
+                .setParam("code","contact_us")
+                .setHeader("Accept-Language",MultiLanguageUtils.getInstance().getRequestLanguage())
+                .setHttpTypeAndReqType(RequestBuilder.HttpType.JSON_PARAM_POST, RequestBuilder.ReqType.NO_CACHE_MODEL);
+
+        rxManager.addObserver(DataManager.getInstance(DataManager.DataType.RETROFIT).httpRequest(resultRequestBuilder));
 
 #####  注意：
 
@@ -820,8 +851,11 @@ destroy()是用来关掉改页面时把刷新View的一些动画等释放，防�
         DEFAULT_POST,
         //如果请求URL出现中文乱码，可选择这个
         FIELDMAP_POST,
+	    //json格式请求参数
+		JSON_PARAM_POST,
         //上传一张图片
         ONE_MULTIPART_POST
+
     }
 
 
@@ -961,6 +995,7 @@ destroy()是用来关掉改页面时把刷新View的一些动画等释放，防�
 	 */
 	RealmObject queryFirstByRealm(Class<? extends RealmObject> clazz);
 	RealmObject queryAllWithFieldByRealm(Class<? extends RealmObject> clazz, String fieldName, String value);
+	RealmObject queryWithFieldByRealm(Class<? extends RealmObject> clazz, String fieldName, String value) 
 	List<? extends RealmObject> queryAllByRealm(Class<? extends RealmObject> clazz);
 	List<? extends RealmObject> queryAllWithSortByRealm(Class<? extends RealmObject> clazz, String fieldName,Boolean isAscendOrDescend);
 
@@ -974,28 +1009,52 @@ destroy()是用来关掉改页面时把刷新View的一些动画等释放，防�
 	 */
 	void deleteFirstByRealm(Class<? extends RealmObject> clazz);
 	void deleteAllByRealm(Class<? extends RealmObject> clazz);
+	void deleteAllWithFieldByRealm(Class<? extends RealmObject> clazz, String fieldName, String value)
 
-##### （4）Realm数据迁移（been类字段增加移除）
+##### （4）Realm数据迁移（been类字段操作，更多参照Realm文档）
 
 随着app版本的迭代，数据库的字段可能会增加或者移除这时候就需要用到Realm提供的RealmMigration进行设置。
 
     public class CustomMigration implements RealmMigration {
-	  @Override
-	  public void migrate(DynamicRealm realm, long oldVersion, long newVersion) {
-		  RealmSchema schema = realm.getSchema();
-		  if (oldVersion == 0 && newVersion == 1) {
-			  RealmObjectSchema personSchema = schema.get("User");
-			  personSchema
-					.addField("age", int.class);
-			  oldVersion++;
-		  }else if(oldVersion == 1&&newVersion==2){
-			  RealmObjectSchema personSchema = schema.get("User");
-			  personSchema
-					.addField("address", String.class);
-			  oldVersion++;
-		  }
-	    }
-     }
+    	@Override
+    	public void migrate(DynamicRealm realm, long oldVersion, long newVersion) {
+
+        	RealmSchema schema = realm.getSchema();
+
+        		for(int i = (int) (oldVersion+1);i<=newVersion;i++){
+            		if (i == 1) {
+                		RealmObjectSchema personSchema = schema.get("BleLabelInfo");
+
+                		RealmObjectSchema multilanguageSchema = schema.create("MultiLanguage");
+                		multilanguageSchema.addField("zhHk", String.class);
+                		multilanguageSchema.addField("zhCn", String.class);
+                		multilanguageSchema.addField("en", String.class);
+
+                		personSchema
+                        	.addRealmObjectField("multilingualism", multilanguageSchema);
+            		} else if (i == 2) {
+                		RealmObjectSchema personSchema = schema.get("User");
+                		personSchema
+                        	.addField("id", String.class);
+
+
+                		RealmObjectSchema multilanguageSchema = schema.create("LabelRecord");
+                		multilanguageSchema.addField("major_minor", String.class);
+                		multilanguageSchema.addPrimaryKey("major_minor");
+                		multilanguageSchema.addField("major", String.class);
+                		multilanguageSchema.addField("minor", String.class);
+                		multilanguageSchema.addField("timeMillis", long.class);
+                		multilanguageSchema.addField("threshold",int.class);
+            		}else if(i==3){
+                		RealmObjectSchema personSchema = schema.get("User");
+                		personSchema
+                        	.addField("authType", boolean.class);
+            		}
+        		}
+
+
+    	}
+   	}
 
 ######  步骤：
 -  **自定义RealmMigration，在migrate方法中进行字段的增加或者移除。**
@@ -1110,6 +1169,7 @@ destroy()是用来关掉改页面时把刷新View的一些动画等释放，防�
        	   	unbinder= ButterKnife.bind(this);
     	}
 	}
+
  
 
 ###### 缺陷：如果对IBaseActivity进行扩展，在具体调用时需要类型才能调用相关方法。
@@ -1150,6 +1210,30 @@ destroy()是用来关掉改页面时把刷新View的一些动画等释放，防�
 		((WeChatChinaNewsPresenter)mPresenter).requestChinaNews(pageSize,PAGE_SIZE);
 	}
 
+##### （3）项目中的页面大多数都是使用Fragment实现交互，只有几个Activity作为跟容器的实现方式：
+- Activity继承IBaseActivity或者IBaseActivity的子类
+- 通过loadRootFragment加载根Fragment
+- 重写onCreateFragmentAnimator进行设定Fragment之间的跳转动画，分别可以设置为DefaultHorizontalAnimator、DefaultVerticalAnimator，可以自定义
+- 部分常用方法
+	- onSupportVisible()/onSupportInvisible()页面的显示/隐藏
+	- onBackPressedSupport()点击返回按钮回调，替换掉onBackPress方法
+	- onFragmentResult类似Activity的onActivityResult
+	- onNewBundle类似Activity的onNewBundle
+	- isRootFragment判断是否是跟Fragment
+	- loadRootFragment加载根Fragment, 即Activity内的第一个Fragment 或 Fragment内的第一个子Fragment
+	- loadMultipleRootFragment:加载多个同级根Fragment
+	- showHideFragment:show一个Fragment,hide其他同栈所有Fragment
+	- showHideFragment: show一个Fragment,hide一个Fragment
+	- start/startForResult/startWithPop/startWithPopTo
+	- 其它方法可以具体看IBaseFragment类
+
+![](https://i.imgur.com/BvnJ9SY.gif)
+
+
+##### （4）适配不同手机像素
+- 在Applicaton的onCreate中设置 Density.setDensity(this, 375f);
+- 375f代表设计稿的宽度，以dp为单位，后面需要以f（浮点型）
+
 #### 3.UI状态控制StateView的使用 
 
 ##### （1）StateView的四种状态：
@@ -1180,6 +1264,7 @@ destroy()是用来关掉改页面时把刷新View的一些动画等释放，防�
 		android:id="@+id/state_view">
 
 	</com.youngmanster.collectionlibrary.base.StateView >
+
 
 ###### ②添加到Ui页面的layout中
 
@@ -1364,6 +1449,14 @@ destroy()是用来关掉改页面时把刷新View的一些动画等释放，防�
 
 #####  ②具体用户可参照例子使用。
 
+#### 3.自动布局AutoLinefeedLayout的使用
+	<com.youngmanster.collectionlibrary.customview.wraplayout.AutoLinefeedLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+     
+	//填充的内容
+     </com.youngmanster.collectionlibrary.customview.wraplayout.AutoLinefeedLayout>
 
+![](https://i.imgur.com/3z5qQgn.gif)
 #### 本文章会根据需要持续更新，建议star收藏，便于查看。也欢迎大家提出更多建议。
 

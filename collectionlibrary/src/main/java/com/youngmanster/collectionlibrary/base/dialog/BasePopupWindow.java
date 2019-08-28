@@ -1,9 +1,11 @@
-package com.youngmanster.collectionlibrary.base;
+package com.youngmanster.collectionlibrary.base.dialog;
 
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.PixelFormat;
+import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.IBinder;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -24,6 +26,8 @@ public abstract class BasePopupWindow extends PopupWindow {
 	private boolean isShowMaskView=false;
 	private View maskView;
 	private WindowManager windowManager;
+	private int popupWidth;
+	private int popupHeight;
 
 	public BasePopupWindow(Context context) {
 		this.context=context;
@@ -49,6 +53,12 @@ public abstract class BasePopupWindow extends PopupWindow {
 				setAnimationStyle(getPopupAnimationStyleRes());
 			}
 
+
+			//获取自身的长宽高
+			popupView.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
+			popupHeight = popupView.getMeasuredHeight();
+			popupWidth = popupView.getMeasuredWidth();
+
 			popupView.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -58,6 +68,7 @@ public abstract class BasePopupWindow extends PopupWindow {
 		}
 
 	}
+
 
 	public void showPopup(){
 		View anchor=((Activity)context).findViewById(android.R.id.content);
@@ -71,6 +82,12 @@ public abstract class BasePopupWindow extends PopupWindow {
 		if(isShowMaskView){
 			addMask(anchor.getWindowToken());
 		}
+
+		Rect rect = new Rect();
+		anchor.getGlobalVisibleRect(rect);
+		int h = anchor.getResources().getDisplayMetrics().heightPixels - rect.bottom;
+		setHeight(h);
+
 		this.showAsDropDown(anchor);
 	}
 

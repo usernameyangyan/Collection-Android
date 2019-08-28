@@ -9,7 +9,7 @@ import com.youngmanster.collection.been.wechat.WeChatNews;
 import com.youngmanster.collection.mvp.contract.wechat.okhttpcache.WeChatNBANewsContract;
 import com.youngmanster.collection.mvp.presenter.wechat.okhttpcache.WeChatNBANewsPresenter;
 import com.youngmanster.collection.mvp.ui.wechat.adapter.WeChatFeaturedAdapter;
-import com.youngmanster.collectionlibrary.base.StateView;
+import com.youngmanster.collectionlibrary.base.stateview.StateView;
 import com.youngmanster.collectionlibrary.refreshrecyclerview.base.adapter.BaseRecyclerViewAdapter;
 import com.youngmanster.collectionlibrary.refreshrecyclerview.pulltorefresh.PullToRefreshRecyclerView;
 

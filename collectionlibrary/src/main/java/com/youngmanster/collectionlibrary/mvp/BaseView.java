@@ -6,5 +6,5 @@ package com.youngmanster.collectionlibrary.mvp;
  */
 
 public interface BaseView {
-	void onError(String errorMsg);
+    void onError(String errorMsg);
 }

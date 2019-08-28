@@ -1,9 +1,7 @@
-package com.youngmanster.collectionlibrary.base;
+package com.youngmanster.collectionlibrary.base.dialog;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.ImageView;
@@ -11,6 +9,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.youngmanster.collectionlibrary.R;
+import com.youngmanster.collectionlibrary.base.dialog.BaseDialog;
 import com.youngmanster.collectionlibrary.utils.GlideUtils;
 
 /**

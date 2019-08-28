@@ -20,6 +20,9 @@ public abstract class RxObservableListener<T> implements ObservableListener<T>{
 		this.mView = view;
 	}
 
+	protected RxObservableListener(){
+	}
+
 	protected RxObservableListener(BaseView view, String errorMsg){
 		this.mView = view;
 		this.mErrorMsg = errorMsg;

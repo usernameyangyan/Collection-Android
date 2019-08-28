@@ -7,7 +7,7 @@ import android.view.View;
 
 import com.youngmanster.collection.R;
 import com.youngmanster.collection.activity.base.adapter.ItemRecycleAdapter;
-import com.youngmanster.collectionlibrary.base.BaseDialog;
+import com.youngmanster.collectionlibrary.base.dialog.BaseDialog;
 import com.youngmanster.collectionlibrary.refreshrecyclerview.base.adapter.BaseRecyclerViewAdapter;
 import com.youngmanster.collectionlibrary.utils.ToastUtils;
 

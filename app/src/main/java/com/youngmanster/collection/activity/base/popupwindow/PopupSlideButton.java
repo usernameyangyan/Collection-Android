@@ -1,14 +1,10 @@
 package com.youngmanster.collection.activity.base.popupwindow;
 
 import android.content.Context;
-import android.view.Gravity;
-import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.TranslateAnimation;
 
 import com.youngmanster.collection.R;
-import com.youngmanster.collectionlibrary.base.BasePopupWindow;
+import com.youngmanster.collectionlibrary.base.dialog.BasePopupWindow;
 
 /**
  * Created by yangyan

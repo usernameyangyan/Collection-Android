@@ -1,6 +1,7 @@
 package com.youngmanster.collectionlibrary.network.rx;
 
 import com.youngmanster.collectionlibrary.network.NetWorkCodeException;
+import com.youngmanster.collectionlibrary.utils.LogUtils;
 
 import io.reactivex.observers.DisposableObserver;
 
@@ -19,11 +20,17 @@ public abstract class RxSubscriber<T> extends DisposableObserver<T>{
 
     @Override
     public void onError(Throwable e) {
+        if (!isDisposed()) {
+            dispose();
+        }
         _onError(NetWorkCodeException.getResponseThrowable(e));
     }
 
     @Override
     public void onComplete() {
+        if (!isDisposed()) {
+            dispose();
+        }
         _onComplete();
     }
 

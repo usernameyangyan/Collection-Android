@@ -127,9 +127,16 @@ public class RealmUtils extends DataManagerImpl {
 	 * @return
 	 */
 	@Override
-	public RealmObject queryAllWithFieldByRealm(Class<? extends RealmObject> clazz, String fieldName, String value) {
+	public RealmObject queryWithFieldByRealm(Class<? extends RealmObject> clazz, String fieldName, String value) {
 		RealmObject bean = realm.where(clazz).equalTo(fieldName, value).findFirst();
 		return bean;
+	}
+
+	@Override
+	public List<? extends RealmObject> queryAllWithFieldByRealm(Class<? extends RealmObject> clazz, String fieldName, String value) {
+		final RealmResults<? extends RealmObject> beans = realm.where(clazz).equalTo(fieldName, value).findAll();
+		List<? extends RealmObject> lists = realm.copyFromRealm(beans);
+		return lists;
 	}
 
 	/**
@@ -228,6 +235,19 @@ public class RealmUtils extends DataManagerImpl {
 	@Override
 	public void deleteAllByRealm(Class<? extends RealmObject> clazz) {
 		final RealmResults<? extends RealmObject> beans = realm.where(clazz).findAll();
+		realm.executeTransaction(new Realm.Transaction() {
+			@Override
+			public void execute(Realm realm) {
+				beans.deleteAllFromRealm();
+			}
+		});
+	}
+
+	@Override
+	public void deleteAllWithFieldByRealm(Class<? extends RealmObject> clazz, String fieldName, String value) {
+
+		final RealmResults<? extends RealmObject> beans = realm.where(clazz).equalTo(fieldName, value).findAll();
+
 		realm.executeTransaction(new Realm.Transaction() {
 			@Override
 			public void execute(Realm realm) {

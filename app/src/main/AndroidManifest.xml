@@ -208,5 +208,15 @@
 			android:screenOrientation="portrait"
 			android:theme="@style/AppTheme.NoActionBar"/>
 
+		<activity
+			android:name=".activity.base.activity.UseFragmentActivity"
+			android:screenOrientation="portrait"
+			android:theme="@style/AppTheme.NoActionBar"/>
+
+		<activity
+			android:name=".customview.activity.WrapLinearLayoutActivity"
+			android:screenOrientation="portrait"
+			android:theme="@style/AppTheme.NoActionBar"/>
+
 	</application>
 </manifest>
