@@ -1,5 +1,5 @@
 ext{
-    supportLibrary="27.0.2"
+    supportLibrary="27.1.1"
 
     supportDependencies=[
             appCompat    : "com.android.support:appcompat-v7:${supportLibrary}",

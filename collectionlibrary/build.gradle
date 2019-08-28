@@ -3,9 +3,9 @@ apply plugin: 'realm-android'
 apply from : "config.gradle"
 apply plugin: 'com.novoda.bintray-release'
 
-
 publish {
-    userOrg = 'YoungManOpen'
+    repoName='collection'
+    userOrg = 'youngmanopen'
     groupId = 'com.youngman'
     artifactId = 'collectionlibrary'
     publishVersion = '1.2.8'

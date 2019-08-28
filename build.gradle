@@ -12,13 +12,17 @@ buildscript {
             google()
         }
 
-        tasks.withType(Javadoc){
+        tasks.withType(Javadoc) {
             options.addStringOption('Xdoclint:none', '-quiet')
             options.addStringOption('encoding', 'UTF-8')
         }
+
+        tasks.withType(Javadoc).all {
+            enabled = false
+        }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.2.1'
+        classpath 'com.android.tools.build:gradle:3.1.0'
         classpath "io.realm:realm-gradle-plugin:5.14.0"
 
         classpath 'com.novoda:bintray-release:0.9.1'
