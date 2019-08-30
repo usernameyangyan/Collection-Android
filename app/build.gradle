@@ -2,6 +2,12 @@ apply plugin: 'com.android.application'
 apply from : "config.gradle"
 apply plugin: 'realm-android'
 
+def getDate() {
+    def date = new Date()
+    def formattedDate = date.format('yyyy-MM-dd-HH-mm')
+    return formattedDate
+}
+
 android {
     compileSdkVersion app.compileSdkVersion
     defaultConfig {
@@ -9,7 +15,7 @@ android {
         minSdkVersion app.minSdkVersion
         targetSdkVersion app.targetSdkVersion
         versionCode app.versionCode
-        versionName app.versionName
+        versionName VERSION_NAME
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         multiDexEnabled true
@@ -40,6 +46,41 @@ android {
 //            signingConfig signingConfigs.release
         }
     }
+
+
+    //修改生成的apk名字及输出文件夹
+    applicationVariants.all { variant ->
+        variant.outputs.all { output ->
+            //新名字
+            def newName
+            //时间戳
+            def timeNow
+            //输出文件夹
+            def outDirectory
+            //是否为Jenkins打包，输出路径不同
+            if ("true".equals(IS_JENKINS)) {
+                //Jenkins打包输出到服务器路径
+                timeNow = BUILD_TIME
+                //BUILD_PATH为服务器输出路径
+                outDirectory = output.outputFile.getParent()  //BUILD_PATH
+                //AutoBuildTest-v1.0.1-xiaomi-release.apk
+                newName = 'collection-v' + VERSION_NAME + '-'+BUILD_TYPE+'.apk'
+            } else {
+                //本机打包输出在本机路径
+                timeNow = getDate()
+                if ('debug'.equals(variant.buildType.name)) {
+                    newName = 'collection-v'+VERSION_NAME+ '-' + variant.buildType.name +'.apk'
+                } else {
+                    //AutoBuildTest-v1.0.1-xiaomi-release.apk
+                    newName = 'collection-v' + VERSION_NAME + '-' + variant.buildType.name + '.apk'
+                }
+            }
+
+            outputFileName = newName
+        }
+    }
+
+
 
     //这个是解决lint报错的代码
     lintOptions {
