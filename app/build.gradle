@@ -58,11 +58,11 @@ android {
             //输出文件夹
             def outDirectory
             //是否为Jenkins打包，输出路径不同
-            if ("true".equals(IS_JENKINS)) {
+            if (IS_JENKINS) {
                 //Jenkins打包输出到服务器路径
                 timeNow = BUILD_TIME
                 //AutoBuildTest-v1.0.1-xiaomi-release.apk
-                newName = 'collection-v' + VERSION_NAME +timeNow+ '-'+BUILD_TYPE+'.apk'
+                newName = 'collection-v' + VERSION_NAME + '-'+timeNow+ '-'+BUILD_TYPE+'.apk'
             } else {
                 //本机打包输出在本机路径
                 timeNow = getDate()
