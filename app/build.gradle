@@ -61,10 +61,8 @@ android {
             if ("true".equals(IS_JENKINS)) {
                 //Jenkins打包输出到服务器路径
                 timeNow = BUILD_TIME
-                //BUILD_PATH为服务器输出路径
-                outDirectory = output.outputFile.getParent()  //BUILD_PATH
                 //AutoBuildTest-v1.0.1-xiaomi-release.apk
-                newName = 'collection-v' + VERSION_NAME + '-'+BUILD_TYPE+'.apk'
+                newName = 'collection-v' + VERSION_NAME +timeNow+ '-'+BUILD_TYPE+'.apk'
             } else {
                 //本机打包输出在本机路径
                 timeNow = getDate()
