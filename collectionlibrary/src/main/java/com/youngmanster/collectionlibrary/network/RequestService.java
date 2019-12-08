@@ -61,4 +61,16 @@ public interface RequestService{
     Observable<ResponseBody> getObservableWithImageWithHeaders(@Url String url, @QueryMap Map<String, Object> map,
                                                                @Part MultipartBody.Part image, @HeaderMap Map<String, String> headers);
 
+
+ @Multipart
+ @POST
+ Observable<ResponseBody> getObservableWithImages(@Url String url, @QueryMap Map<String, Object> map,
+                                                  @Part() MultipartBody.Part[] images);
+
+ @Multipart
+ @POST
+ Observable<ResponseBody> getObservableWithImagesWithHeaders(@Url String url, @QueryMap Map<String, Object> map,
+                                                             @Part() MultipartBody.Part[] images, @HeaderMap Map<String, String> headers);
+
+
 }

@@ -1,0 +1,46 @@
+apply plugin: 'jacoco'
+jacoco {
+    toolVersion = "0.8.5" //指定jacoco的版本
+    reportsDir = file("$buildDir/JacocoReport") //指定jacoco生成报告的文件夹
+}
+
+tasks.withType(Test) {
+    jacoco.includeNoLocationClasses = true
+}
+
+android {
+    buildTypes {
+        debug {
+            //打开覆盖率统计开关
+            testCoverageEnabled = true
+        }
+    }
+}
+
+//依赖于testDebugUnitTest任务
+task jacocoTestReport(type: JacocoReport, dependsOn: 'testDebugUnitTest') {
+    group = "reporting" //指定task的分组
+    reports {
+        xml.enabled = true //开启xml报告
+        html.enabled = true //开启html报告
+    }
+
+    //过滤的路径
+    def fileFilters = [
+            '**/R.class',
+            '**/R$*.class',
+            '**/BuildConfig.*',
+            '**/Manifest*.*',
+            'com/android/**/*.class'
+    ]
+    //需要统计的class地址
+    def javaDebugTree = fileTree(dir: "${buildDir}/intermediates/javac/debug", excludes: fileFilters)
+    def kotlinDebugTree = fileTree(dir: "${buildDir}/tmp/kotlin-classes/debug", excludes: fileFilters)
+
+    //需要统计的源码地址
+    sourceDirectories = files(['src/main/java'])
+    classDirectories = files([javaDebugTree, kotlinDebugTree])
+    //结果文件
+    executionData = files("${buildDir}/jacoco/testDebugUnitTest.exec")
+}
+

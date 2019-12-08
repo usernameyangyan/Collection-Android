@@ -54,11 +54,11 @@ public class DefaultArrowRefreshHeaderView extends BasePullToRefreshView impleme
 		mRefrehsContainer = mContainer.findViewById(R.id.refresh_time_container);
 
 		//把刷新头部的高度初始化为0
-		LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+		LayoutParams lp = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
 		lp.setMargins(0, 0, 0, 0);
 		this.setLayoutParams(lp);
 		this.setPadding(0, 0, 0, 0);
-		addView(mContainer, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0));
+		addView(mContainer, new LayoutParams(LayoutParams.MATCH_PARENT, 0));
 		setGravity(Gravity.BOTTOM);
 
 		arrowIv = mContainer.findViewById(R.id.refresh_arrow);

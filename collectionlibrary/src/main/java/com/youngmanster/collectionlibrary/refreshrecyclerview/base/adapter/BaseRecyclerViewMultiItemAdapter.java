@@ -151,7 +151,7 @@ public abstract class BaseRecyclerViewMultiItemAdapter<T extends BaseMultiItemEn
 	}
 
 	public interface onItemLongClickListener{
-		boolean onItemLongClick(View view,int position);
+		boolean onItemLongClick(View view, int position);
 	}
 
 	public void setOnItemClickListener(OnItemClickListener onItemClickListener) {

@@ -1,6 +1,8 @@
 apply plugin: 'com.android.application'
+apply from: 'jacoco.gradle'
 apply from : "config.gradle"
 apply plugin: 'realm-android'
+
 
 def getDate() {
     def date = new Date()
@@ -15,7 +17,7 @@ android {
         minSdkVersion app.minSdkVersion
         targetSdkVersion app.targetSdkVersion
         versionCode app.versionCode
-        versionName VERSION_NAME
+        versionName app.versionName
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
         multiDexEnabled true
@@ -44,6 +46,12 @@ android {
         }
         debug {
 //            signingConfig signingConfigs.release
+        }
+    }
+
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
         }
     }
 
@@ -100,4 +108,8 @@ dependencies {
     annotationProcessor thirdDependencies.butterknifeCompiler
     implementation thirdDependencies.multidex
     implementation project(':collectionlibrary')
+
+//    //单元测试
+    testImplementation 'junit:junit:4.12'
+    testImplementation "org.robolectric:robolectric:4.3.1"
 }

@@ -2,10 +2,13 @@ package com.youngmanster.collectionlibrary.network;
 
 import com.youngmanster.collectionlibrary.network.rx.RxObservableListener;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
+import okhttp3.MediaType;
 import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 
 /**
  * Created by yangyan
@@ -26,6 +29,7 @@ public class RequestBuilder<T> {
     private RxObservableListener<T> rxObservableListener;
     private Map<String, Object> requestParam;
     private MultipartBody.Part part;
+    private MultipartBody.Part []parts;
     private boolean isDiskCacheNetworkSaveReturn;
     private Map<String,String> headers;
 
@@ -54,7 +58,10 @@ public class RequestBuilder<T> {
         DEFAULT_POST,
         JSON_PARAM_POST,
         FIELDMAP_POST,
-        ONE_MULTIPART_POST
+        //单张图片上传
+        ONE_MULTIPART_POST,
+        //多张图片上传
+        MULTIPLE_MULTIPART_POST
     }
 
     public RequestBuilder(RxObservableListener<T> rxObservableListener) {
@@ -161,9 +168,29 @@ public class RequestBuilder<T> {
         return part;
     }
 
-    public RequestBuilder setPart(MultipartBody.Part part) {
+    public RequestBuilder setImagePath(String key,String imagePath) {
+        File file = new File(imagePath);
+        RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
+        MultipartBody.Part part = MultipartBody.Part.createFormData(key, file.getName(), requestFile);
         this.part = part;
         return this;
+    }
+
+
+    public RequestBuilder setImagePaths(String key,String []imagePaths) {
+
+        parts =new MultipartBody.Part[imagePaths.length];
+        for(int i=0;i<imagePaths.length;i++){
+            File file = new File(imagePaths[i]);
+            RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
+            MultipartBody.Part part = MultipartBody.Part.createFormData(key, file.getName(), requestFile);
+            parts[i]=part;
+        }
+        return this;
+    }
+
+    public MultipartBody.Part[] getParts() {
+        return parts;
     }
 
     public boolean isUserCommonClass() {

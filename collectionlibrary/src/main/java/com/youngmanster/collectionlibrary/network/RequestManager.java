@@ -132,6 +132,20 @@ public class RequestManager extends DataManagerImpl {
                 }
             }
 
+		}else if(builder.getHttpType() == RequestBuilder.HttpType.MULTIPLE_MULTIPART_POST){
+			if (isCache) {
+				if(builder.getHeaders()!=null&&builder.getHeaders().size()>0){
+					return RetrofitManager.getWithoutHeaderApiService(RequestService.class).getObservableWithImagesWithHeaders(builder.getUrl(), builder.getRequestParam(),builder.getParts(),builder.getHeaders());
+				}else{
+					return RetrofitManager.getApiService(RequestService.class).getObservableWithImages(builder.getUrl(), builder.getRequestParam(),builder.getParts());
+				}
+			}else{
+				if(builder.getHeaders()!=null&&builder.getHeaders().size()>0){
+					return RetrofitManager.getNoCacheAndWithoutHeadersApiService(RequestService.class).getObservableWithImagesWithHeaders(builder.getUrl(), builder.getRequestParam(),builder.getParts(),builder.getHeaders());
+				}else{
+					return RetrofitManager.getNoCacheApiService(RequestService.class).getObservableWithImages(builder.getUrl(), builder.getRequestParam(),builder.getParts());
+				}
+			}
 		}else if(builder.getHttpType() == RequestBuilder.HttpType.JSON_PARAM_POST){
 
 			Set set = builder.getRequestParam().keySet();
@@ -146,8 +160,10 @@ public class RequestManager extends DataManagerImpl {
 				stringBuilder.append("\"");
 				stringBuilder.append(":");
 
-				if((builder.getRequestParam().get(key).toString().charAt(0)=='['&&(builder.getRequestParam().get(key).toString().charAt(builder.getRequestParam().get(key).toString().length()-1)==']'))||
-						(builder.getRequestParam().get(key).toString().charAt(0)=='{'&&(builder.getRequestParam().get(key).toString().charAt(builder.getRequestParam().get(key).toString().length()-1)=='}'))){
+				if(builder.getRequestParam().get(key)!=null &&
+						!builder.getRequestParam().get(key).toString().equals("")&&(
+						(builder.getRequestParam().get(key).toString().charAt(0)=='['&&(builder.getRequestParam().get(key).toString().charAt(builder.getRequestParam().get(key).toString().length()-1)==']'))||
+								(builder.getRequestParam().get(key).toString().charAt(0)=='{'&&(builder.getRequestParam().get(key).toString().charAt(builder.getRequestParam().get(key).toString().length()-1)=='}')))){
 					stringBuilder.append(builder.getRequestParam().get(key));
 				}else{
 					stringBuilder.append("\"");

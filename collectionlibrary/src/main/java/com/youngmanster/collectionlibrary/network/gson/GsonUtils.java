@@ -39,7 +39,7 @@ public class GsonUtils {
         if (!TextUtils.isEmpty(Config.EXPOSEPARAM)) {
             try {
                 JSONObject jsonObject = new JSONObject(reader);
-                if (TextUtils.isEmpty(jsonObject.get(Config.EXPOSEPARAM).toString())) {
+                if (!jsonObject.has(Config.EXPOSEPARAM)||TextUtils.isEmpty(jsonObject.get(Config.EXPOSEPARAM).toString())) {
                     return getGsonExpose().fromJson(reader, type);
                 } else {
                     return getGsonWithoutExpose().fromJson(reader, type);
@@ -88,17 +88,6 @@ public class GsonUtils {
     public static <T> T fromJsonNoCommonClass(String reader, Class listClass) {
         T result = (T) getGsonWithoutExpose().fromJson(reader, listClass);
         return result;
-    }
-
-    public static <ITEM> List<ITEM> transJsonArray(String reader, Class<ITEM> itemClass) {
-        JsonParser jsonParser = new JsonParser();
-        JsonArray jsonElements = jsonParser.parse(reader).getAsJsonArray();//获取JsonArray对象
-        ArrayList<ITEM> beans = new ArrayList<>();
-        for (JsonElement bean : jsonElements) {
-            ITEM bean1 = getGsonWithoutExpose().fromJson(bean, itemClass);//解析
-            beans.add(bean1);
-        }
-        return beans;
     }
 
     private static Gson gsonWithoutExpose;

@@ -60,6 +60,8 @@ dependencies {
      *  高斯模糊的Glide
      */
     implementation thirdDependencies.glideTransformation
+    implementation thirdDependencies.glide
+    annotationProcessor thirdDependencies.glideCompiler
 
     /**
      *  retrofit和rxjava

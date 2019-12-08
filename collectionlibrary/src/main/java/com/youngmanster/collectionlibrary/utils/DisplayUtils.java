@@ -6,7 +6,6 @@ import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.os.Build;
 import android.support.v4.view.ViewCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -101,6 +100,7 @@ public class DisplayUtils {
 
 	//白色可以替换成其他浅色系
 	public static void setStatusBarBlackFontBgColor(Activity activity,int bgColor) {
+
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
 			if (MIUISetStatusBarLightMode(activity.getWindow(), true)) {//MIUI
 				if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP&& Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {//5.0
@@ -117,7 +117,7 @@ public class DisplayUtils {
 				activity.getWindow().setStatusBarColor(activity.getResources().getColor(bgColor));
 				activity.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
 			}else{
-				setStatusBarColor(activity,R.color.black);
+				setStatusBarColor(activity, R.color.black);
 			}
 		}
 	}
@@ -219,7 +219,7 @@ public class DisplayUtils {
 			act.getWindow().setStatusBarColor(Color.TRANSPARENT);
 			return true;
 		}else{
-			setStatusBarColor(act,R.color.black);
+			setStatusBarColor(act, R.color.black);
 			return false;
 		}
 	}
