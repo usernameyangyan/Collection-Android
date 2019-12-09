@@ -1,6 +1,7 @@
 package com.youngmanster.collection.activity;
 
 import com.youngmanster.collection.BuildConfig;
+import com.youngmanster.collection.common.AppApplication;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -17,7 +18,7 @@ import static org.junit.Assert.assertNotNull;
  * Describe:
  */
 @RunWith(RobolectricTestRunner.class)
-@Config(sdk = { 21 })
+@Config(application = AppApplication.class,sdk = 21)
 public class MainActivityTest {
     private MainActivity mainActivity;
 
