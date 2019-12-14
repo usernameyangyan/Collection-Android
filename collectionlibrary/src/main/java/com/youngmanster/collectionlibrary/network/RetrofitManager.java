@@ -5,8 +5,10 @@ import android.text.TextUtils;
 import com.youngmanster.collectionlibrary.config.Config;
 import com.youngmanster.collectionlibrary.network.interceptor.BasicParamsInterceptor;
 import com.youngmanster.collectionlibrary.utils.LogUtils;
+
 import java.io.File;
 import java.util.concurrent.TimeUnit;
+
 import okhttp3.Cache;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -26,53 +28,59 @@ public class RetrofitManager {
     private static Retrofit mNoCacheRetrofit;
     private static Retrofit mNoCacheRetrofitWithoutHeaders;
 
+    /**************************************获取OKHttp******************************************/
+
+    public static OkHttpClient getOkHttpClient(boolean isCache, boolean isHeaders){
+        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        //如果不是在正式包，添加拦截 打印响应json
+        if (Config.DEBUG) {
+            HttpLoggingInterceptor logging = new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
+                @Override
+                public void log(String message) {
+                    LogUtils.info("RetrofitManager", "收到响应: " + message);
+                }
+            });
+
+            logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+            builder.addInterceptor(logging);
+
+        }
+
+        if(isHeaders&& Config.HEADERS!=null&& Config.HEADERS.size()>0){
+            BasicParamsInterceptor basicParamsInterceptor=new BasicParamsInterceptor.Builder()
+                    .addHeaderParamsMap(Config.HEADERS)
+                    .build();
+
+            builder.addInterceptor(basicParamsInterceptor);
+        }
+
+        if (isCache&&!TextUtils.isEmpty(Config.URL_CACHE) && Config.CONTEXT != null) {
+            //设置缓存
+            File httpCacheDirectory = new File(Config.URL_CACHE);
+            builder.cache(new Cache(httpCacheDirectory, Config.MAX_MEMORY_SIZE));
+            builder.addInterceptor(RequestManager.getInterceptor());
+        }
+
+        OkHttpClient okHttpClient = builder.
+                connectTimeout(Config.CONNECT_TIMEOUT_SECONDS, TimeUnit.SECONDS)
+                .readTimeout(Config.READ_TIMEOUT_SECONDS, TimeUnit.SECONDS)
+                .writeTimeout(Config.WRITE_TIMEOUT_SECONDS, TimeUnit.SECONDS)
+                .build();
+
+        return okHttpClient;
+
+    }
+
 
     /***************************************************************设置缓存**************************************************************/
     private static Retrofit getRetrofit() {
 
         if (mRetrofit == null) {
-            OkHttpClient.Builder builder = new OkHttpClient.Builder();
-            //如果不是在正式包，添加拦截 打印响应json
-            if (Config.DEBUG) {
-                HttpLoggingInterceptor logging = new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
-                    @Override
-                    public void log(String message) {
-                        LogUtils.info("RetrofitManager", "收到响应: " + message);
-                    }
-                });
-
-                logging.setLevel(HttpLoggingInterceptor.Level.BODY);
-                builder.addInterceptor(logging);
-
-            }
-
-
-            if(Config.HEADERS!=null&&Config.HEADERS.size()>0){
-                BasicParamsInterceptor basicParamsInterceptor=new BasicParamsInterceptor.Builder()
-                        .addHeaderParamsMap(Config.HEADERS)
-                        .build();
-
-                builder.addInterceptor(basicParamsInterceptor);
-            }
-
-
-            if (!TextUtils.isEmpty(Config.URL_CACHE) && Config.CONTEXT != null) {
-                //设置缓存
-                File httpCacheDirectory = new File(Config.URL_CACHE);
-                builder.cache(new Cache(httpCacheDirectory, Config.MAX_MEMORY_SIZE));
-                builder.addInterceptor(RequestManager.getInterceptor());
-            }
-
-            OkHttpClient okHttpClient = builder.
-                    connectTimeout(Config.CONNECT_TIMEOUT_SECONDS, TimeUnit.SECONDS)
-                    .readTimeout(Config.READ_TIMEOUT_SECONDS, TimeUnit.SECONDS)
-                    .writeTimeout(Config.WRITE_TIMEOUT_SECONDS, TimeUnit.SECONDS)
-                    .build();
 
             mRetrofit = new Retrofit.Builder()
                     .baseUrl(Config.URL_DOMAIN)
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                    .client(okHttpClient)
+                    .client(getOkHttpClient(true,true))
                     .build();
         }
 
@@ -84,37 +92,11 @@ public class RetrofitManager {
     private static Retrofit getRetrofitWithoutHeader() {
 
         if (mWithoutHeadersRetrofit == null) {
-            OkHttpClient.Builder builder = new OkHttpClient.Builder();
-            //如果不是在正式包，添加拦截 打印响应json
-            if (Config.DEBUG) {
-                HttpLoggingInterceptor logging = new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
-                    @Override
-                    public void log(String message) {
-                        LogUtils.info("RetrofitManager", "收到响应: " + message);
-                    }
-                });
-
-                logging.setLevel(HttpLoggingInterceptor.Level.BODY);
-                builder.addInterceptor(logging);
-
-            }
-            if (!TextUtils.isEmpty(Config.URL_CACHE) && Config.CONTEXT != null) {
-                //设置缓存
-                File httpCacheDirectory = new File(Config.URL_CACHE);
-                builder.cache(new Cache(httpCacheDirectory, Config.MAX_MEMORY_SIZE));
-                builder.addInterceptor(RequestManager.getInterceptor());
-            }
-
-            OkHttpClient okHttpClient = builder.
-                    connectTimeout(Config.CONNECT_TIMEOUT_SECONDS, TimeUnit.SECONDS)
-                    .readTimeout(Config.READ_TIMEOUT_SECONDS, TimeUnit.SECONDS)
-                    .writeTimeout(Config.WRITE_TIMEOUT_SECONDS, TimeUnit.SECONDS)
-                    .build();
 
             mWithoutHeadersRetrofit = new Retrofit.Builder()
                     .baseUrl(Config.URL_DOMAIN)
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                    .client(okHttpClient)
+                    .client(getOkHttpClient(true,false))
                     .build();
         }
 
@@ -122,45 +104,15 @@ public class RetrofitManager {
     }
 
 
-
     /***************************************************************没有设置缓存**************************************************************/
     private static Retrofit getNoCacheRetrofit() {
 
         if (mNoCacheRetrofit == null) {
-            OkHttpClient.Builder builder = new OkHttpClient.Builder();
-            //如果不是在正式包，添加拦截 打印响应json
-            if (Config.DEBUG) {
-                HttpLoggingInterceptor logging = new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
-                    @Override
-                    public void log(String message) {
-                        LogUtils.info("RetrofitManager", "收到响应: " + message);
-                    }
-                });
-
-                logging.setLevel(HttpLoggingInterceptor.Level.BODY);
-                builder.addInterceptor(logging);
-            }
-
-
-            if(Config.HEADERS!=null&&Config.HEADERS.size()>0){
-                BasicParamsInterceptor basicParamsInterceptor=new BasicParamsInterceptor.Builder()
-                        .addHeaderParamsMap(Config.HEADERS)
-                        .build();
-
-                builder.addInterceptor(basicParamsInterceptor);
-            }
-
-            OkHttpClient okHttpClient = builder.
-                    connectTimeout(Config.CONNECT_TIMEOUT_SECONDS, TimeUnit.SECONDS)
-                    .readTimeout(Config.READ_TIMEOUT_SECONDS, TimeUnit.SECONDS)
-                    .writeTimeout(Config.WRITE_TIMEOUT_SECONDS, TimeUnit.SECONDS)
-                    .build();
-
             mNoCacheRetrofit = new Retrofit.Builder()
                     .baseUrl(Config.URL_DOMAIN)
                     .addConverterFactory(GsonConverterFactory.create())
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                    .client(okHttpClient)
+                    .client(getOkHttpClient(false,true))
                     .build();
         }
 
@@ -172,31 +124,11 @@ public class RetrofitManager {
     private static Retrofit getNoCacheRetrofitWithoutHeaders() {
 
         if (mNoCacheRetrofitWithoutHeaders == null) {
-            OkHttpClient.Builder builder = new OkHttpClient.Builder();
-            //如果不是在正式包，添加拦截 打印响应json
-            if (Config.DEBUG) {
-                HttpLoggingInterceptor logging = new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
-                    @Override
-                    public void log(String message) {
-                        LogUtils.info("RetrofitManager", "收到响应: " + message);
-                    }
-                });
-
-                logging.setLevel(HttpLoggingInterceptor.Level.BODY);
-                builder.addInterceptor(logging);
-            }
-
-            OkHttpClient okHttpClient = builder.
-                    connectTimeout(Config.CONNECT_TIMEOUT_SECONDS, TimeUnit.SECONDS)
-                    .readTimeout(Config.READ_TIMEOUT_SECONDS, TimeUnit.SECONDS)
-                    .writeTimeout(Config.WRITE_TIMEOUT_SECONDS, TimeUnit.SECONDS)
-                    .build();
-
             mNoCacheRetrofitWithoutHeaders = new Retrofit.Builder()
                     .baseUrl(Config.URL_DOMAIN)
                     .addConverterFactory(GsonConverterFactory.create())
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                    .client(okHttpClient)
+                    .client(getOkHttpClient(false,false))
                     .build();
         }
 
