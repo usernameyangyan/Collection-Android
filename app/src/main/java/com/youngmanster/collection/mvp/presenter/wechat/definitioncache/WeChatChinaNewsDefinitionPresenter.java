@@ -26,15 +26,16 @@ public class WeChatChinaNewsDefinitionPresenter extends WeChatChinaNewsContract.
 		RequestBuilder resultRequestBuilder = new RequestBuilder<>(new RxObservableListener<Result<List<WeChatNews>>>(mView) {
 			@Override
 			public void onNext(Result<List<WeChatNews>> result) {
-				mView.refreshUI(result.getNewslist());
+				mView.refreshUI(result.getResult());
 			}
 		}).setFilePathAndFileName(filePath, fileName)
 				.setTransformClass(WeChatNews.class)
-				.setUrl(ApiUrl.URL_WETCHAT_CHINA_NEWS)
+				.setUrl(ApiUrl.URL_WETCHAT_FEATURED)
 				.setRequestParam(ApiClient.getRequiredBaseParam())
 				.setHttpTypeAndReqType(RequestBuilder.HttpType.DEFAULT_GET, RequestBuilder.ReqType.DISK_CACHE_LIST_LIMIT_TIME)
-				.setParam("page", page)
-				.setParam("num", num);
+				.setParam("page",page)
+				.setParam("type","video")
+				.setParam("count",num);
 
 		rxManager.addObserver(DataManager.getInstance(DataManager.DataType.RETROFIT).httpRequest(resultRequestBuilder));
 	}

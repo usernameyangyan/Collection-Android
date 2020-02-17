@@ -24,11 +24,11 @@ public class WeChatFeaturedAdapter extends BaseRecyclerViewAdapter<WeChatNews>{
 
 	@Override
 	protected void convert(BaseViewHolder baseViewHolder, WeChatNews weChatNews) {
-		baseViewHolder.setText(R.id.weChatTitleTv,weChatNews.getTitle())
-				.setText(R.id.weChatNameTv,weChatNews.getDescription())
-				.setText(R.id.weChatTimeTv,weChatNews.getCtime());
+		baseViewHolder.setText(R.id.weChatTitleTv,weChatNews.getName())
+				.setText(R.id.weChatNameTv,weChatNews.getText())
+				.setText(R.id.weChatTimeTv,weChatNews.getPasstime());
 
 		ImageView imageView=baseViewHolder.getView(R.id.weChatIv);
-		GlideUtils.loadImg(mContext,weChatNews.getPicUrl(),R.mipmap.ic_bttom_loading_01,imageView);
+		GlideUtils.loadImg(mContext,weChatNews.getThumbnail(),R.mipmap.ic_bttom_loading_01,imageView);
 	}
 }

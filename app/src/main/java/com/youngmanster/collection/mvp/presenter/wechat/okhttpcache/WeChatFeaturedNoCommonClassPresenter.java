@@ -24,7 +24,7 @@ public class WeChatFeaturedNoCommonClassPresenter extends WeChatFeaturedContract
 		RequestBuilder<WeChatNewsResult> resultRequestBuilder = new RequestBuilder<>(new RxObservableListener<WeChatNewsResult>(mView) {
 			@Override
 			public void onNext(WeChatNewsResult result) {
-				mView.refreshUI(result.getNewslist());
+				mView.refreshUI(result.getResult());
 			}
 		});
 

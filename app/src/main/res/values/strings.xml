@@ -24,9 +24,9 @@
 	<string name="google_refresh">Google刷新</string>
 
 	<string name="news_title">新闻资讯</string>
-	<string name="world_news">国际新闻</string>
-	<string name="guonei_news">国内新闻</string>
-	<string name="nba_news">NBA新闻</string>
+	<string name="world_news">资讯1</string>
+	<string name="guonei_news">资讯2</string>
+	<string name="nba_news">资讯3</string>
 	<string name="all_title">MVP+RxJava+Retrofit</string>
 
 	<string name="fen_ye_cache">分页缓存</string>

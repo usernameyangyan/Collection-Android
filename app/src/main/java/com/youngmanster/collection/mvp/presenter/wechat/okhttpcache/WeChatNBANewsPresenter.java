@@ -24,16 +24,17 @@ public class WeChatNBANewsPresenter extends WeChatNBANewsContract.Presenter {
         RequestBuilder<Result<List<WeChatNews>>> resultRequestBuilder = new RequestBuilder<>(new RxObservableListener<Result<List<WeChatNews>>>(mView) {
             @Override
             public void onNext(Result<List<WeChatNews>> result) {
-                mView.refreshUI(result.getNewslist());
+                mView.refreshUI(result.getResult());
             }
         });
 
         resultRequestBuilder
-                .setUrl(ApiUrl.URL_WETCHAT_NBA_NEWS)
+                .setUrl(ApiUrl.URL_WETCHAT_FEATURED)
                 .setRequestParam(ApiClient.getRequiredBaseParam())
                 .setTransformClass(WeChatNews.class)
                 .setParam("page",page)
-                .setParam("num",num);
+                .setParam("type","video")
+                .setParam("count",num);
 
         rxManager.addObserver(DataManager.getInstance(DataManager.DataType.RETROFIT).httpRequest(resultRequestBuilder));
     }

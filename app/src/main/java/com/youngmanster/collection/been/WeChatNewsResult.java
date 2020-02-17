@@ -11,8 +11,8 @@ import java.util.List;
 
 public class WeChatNewsResult {
 	private int code;
-	private String msg;
-	private List<WeChatNews> newslist;
+	private String message;
+	private List<WeChatNews> result;
 
 	public int getCode() {
 		return code;
@@ -22,19 +22,19 @@ public class WeChatNewsResult {
 		this.code = code;
 	}
 
-	public String getMsg() {
-		return msg;
+	public String getMessage() {
+		return message;
 	}
 
-	public void setMsg(String msg) {
-		this.msg = msg;
+	public void setMessage(String message) {
+		this.message = message;
 	}
 
-	public List<WeChatNews> getNewslist() {
-		return newslist;
+	public List<WeChatNews> getResult() {
+		return result;
 	}
 
-	public void setNewslist(List<WeChatNews> newslist) {
-		this.newslist = newslist;
+	public void setResult(List<WeChatNews> result) {
+		this.result = result;
 	}
 }

@@ -23,13 +23,14 @@ public class WeChatChinaNewsPresenter extends WeChatChinaNewsContract.Presenter 
 		RequestBuilder resultRequestBuilder = new RequestBuilder<>(new RxObservableListener<Result<List<WeChatNews>>>(mView) {
 			@Override
 			public void onNext(Result<List<WeChatNews>> result) {
-				mView.refreshUI(result.getNewslist());
+				mView.refreshUI(result.getResult());
 			}
-		}).setUrl(ApiUrl.URL_WETCHAT_CHINA_NEWS)
+		}).setUrl(ApiUrl.URL_WETCHAT_FEATURED)
 				.setTransformClass(WeChatNews.class)
 				.setRequestParam(ApiClient.getRequiredBaseParam())
-				.setParam("page", page)
-				.setParam("num", num);
+				.setParam("page",page)
+				.setParam("type","video")
+				.setParam("count",num);
 
 
 		rxManager.addObserver(DataManager.getInstance(DataManager.DataType.RETROFIT).httpRequest(resultRequestBuilder));

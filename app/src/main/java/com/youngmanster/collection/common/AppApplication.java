@@ -42,7 +42,7 @@ public class AppApplication extends Application{
 		//Retrofit配置
 		Config.URL_CACHE=AppConfig.URL_CACHE;
 		Config.MClASS= Result.class;
-		Config.URL_DOMAIN="http://api.tianapi.com/";
+		Config.URL_DOMAIN="https://api.apiopen.top/";
 		//SharePreference配置
 		Config.USER_CONFIG="Collection_User";
 		Config.realmVersion=2;

@@ -22,7 +22,7 @@ public class WeChatFeaturedPresenter extends WeChatFeaturedContract.Presenter {
 		RequestBuilder<Result<List<WeChatNews>>> resultRequestBuilder = new RequestBuilder<>(new RxObservableListener<Result<List<WeChatNews>>>(mView) {
 			@Override
 			public void onNext(Result<List<WeChatNews>> result) {
-				mView.refreshUI(result.getNewslist());
+				mView.refreshUI(result.getResult());
 			}
 		});
 
@@ -31,7 +31,9 @@ public class WeChatFeaturedPresenter extends WeChatFeaturedContract.Presenter {
 				.setTransformClass(WeChatNews.class)
 				.setRequestParam(ApiClient.getRequiredBaseParam())
 				.setParam("page",page)
-				.setParam("num",num);
+				.setParam("type","video")
+				.setParam("count",num);
+
 
 		rxManager.addObserver(DataManager.getInstance(DataManager.DataType.RETROFIT).httpRequest(resultRequestBuilder));
 

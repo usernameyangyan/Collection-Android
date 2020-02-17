@@ -17,6 +17,7 @@ import com.youngmanster.collection.R;
 import com.youngmanster.collectionlibrary.base.fragmet.IBaseFragment;
 import com.youngmanster.collectionlibrary.mvp.BasePresenter;
 import com.youngmanster.collectionlibrary.utils.DisplayUtils;
+import com.youngmanster.collectionlibrary.utils.ToastUtils;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -60,20 +61,7 @@ public abstract class BaseFragment<T extends BasePresenter> extends IBaseFragmen
      * @param msg 显示的消息
      */
     public void showToast(final String msg) {
-        if (getActivity() != null) {
-            getActivity().runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    if (toast == null) {
-                        toast = Toast.makeText(getActivity(), msg, Toast.LENGTH_SHORT);
-                    } else {
-                        toast.setText(msg);
-                        toast.setDuration(Toast.LENGTH_SHORT);
-                    }
-                    toast.show();
-                }
-            });
-        }
+        ToastUtils.showToast(getActivity(),msg);
     }
 
     /**
