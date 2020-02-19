@@ -42,17 +42,17 @@ Collection聚合了项目搭建的一些基本模块，节约开发者时间，�
 > 1.增加自定义控件TabLayout。
 
 ####  v1.2.6
-> 1.RxJava的依赖更新。
-> 2.修正RecyclerView头部布局不能铺满问题。
-> 3.PopupWindow的使用。
-> 4.DisplayUtils工具类对状态栏的修改。
+> 1.RxJava的依赖更新。  
+> 2.修正RecyclerView头部布局不能铺满问题。  
+> 3.PopupWindow的使用。   
+> 4.DisplayUtils工具类对状态栏的修改。    
 
 
 ####  v1.2.5
-> 1.修正Retrofit DEFAULT_POST请求方式指向错误。      
-> 2.Retrofit 数据解析兼容没有公用been类，可以指定公用been类和不指定公用been类、或者混合使用。   
-> 3.Realm增加数据迁移（数据库字段增加或移除）。   
-> 4.增加几种通用的Dialog弹窗，提供方法自定义。   
+> 1.修正Retrofit DEFAULT_POST请求方式指向错误。            
+> 2.Retrofit 数据解析兼容没有公用been类，可以指定公用been类和不指定公用been类、或者混合使用。      
+> 3.Realm增加数据迁移（数据库字段增加或移除）。     
+> 4.增加几种通用的Dialog弹窗，提供方法自定义。     
 > 5.提供几种比较常用的Utils工具类。   
 
 ####  v1.2.4
