@@ -1,25 +1,34 @@
 package com.youngmanster.collection.been;
 
-import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
+
+import com.youngmanster.collectionlibrary.data.database.Column;
 
 /**
  * Created by yangyan
  * on 2018/4/16.
  */
 
-public class User extends RealmObject {
-	@PrimaryKey
-	private String id;
+public class User {
+	@Column(isPrimaryKey =true)
+	private int id;
 	private String name;
 	private int age;
 	private String address;
+	private String str;
 
-	public String getId() {
+	public String getStr() {
+		return str;
+	}
+
+	public void setStr(String str) {
+		this.str = str;
+	}
+
+	public int getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 

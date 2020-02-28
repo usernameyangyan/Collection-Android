@@ -1,4 +1,6 @@
 package com.youngmanster.collection.activity.base.activity;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.ImageView;
 
 import com.youngmanster.collection.R;
@@ -41,5 +43,10 @@ public class TransparentStatusBarActivity extends BaseActivity {
 	@Override
 	public void requestData() {
 
+	}
+
+	@Override
+	public boolean isShowCustomActionBar() {
+		return false;
 	}
 }

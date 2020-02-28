@@ -10,7 +10,6 @@ import com.youngmanster.collection.R;
 import com.youngmanster.collection.adapter.recyclerview.PullToRecyclerViewAdapter;
 import com.youngmanster.collection.base.BaseActivity;
 import com.youngmanster.collection.mvp.ui.wechat.activity.WeChatFeaturedActivity;
-import com.youngmanster.collection.mvp.ui.wechat.activity.WeChatNewsActivity;
 import com.youngmanster.collection.mvp.ui.wechat.activity.WeChatNewsDefinitionActivity;
 import com.youngmanster.collectionlibrary.permission.PermissionManager;
 import com.youngmanster.collectionlibrary.refreshrecyclerview.base.adapter.BaseRecyclerViewAdapter;
@@ -48,8 +47,7 @@ public class MVPActivity extends BaseActivity implements BaseRecyclerViewAdapter
 	@Override
 	public void init() {
 
-		setTitleContent(getString(R.string.all_title));
-		showHomeAsUp(R.mipmap.ic_back_btn);
+		defineActionBarConfig.setTitle(getString(R.string.all_title));
 
 		permissionManager=PermissionManager.with(this)
 				.setNecessaryPermissions(PERMISSIONS);
@@ -64,9 +62,8 @@ public class MVPActivity extends BaseActivity implements BaseRecyclerViewAdapter
 
 	@Override
 	public void requestData() {
-		listData.add("Activity中实现MVP+RxJava+Retrofit+OkHttp的缓存机制");
-		listData.add("Fragment中实现MVP+RxJava+Retrofit+OkHttp的缓存机制");
-		listData.add("Fragment中实现MVP+RxJava+Retrofit+自定义磁盘缓存机制");
+		listData.add("实现MVP+RxJava+Retrofit+OkHttp的缓存机制");
+		listData.add("实现MVP+RxJava+Retrofit+自定义磁盘缓存机制");
 		refreshUI();
 	}
 	public void refreshUI() {
@@ -93,10 +90,6 @@ public class MVPActivity extends BaseActivity implements BaseRecyclerViewAdapter
 				startActivity(intent);
 				break;
 			case 1:
-				intent=new Intent(this, WeChatNewsActivity.class);
-				startActivity(intent);
-				break;
-			case 2:
 				intent=new Intent(this, WeChatNewsDefinitionActivity.class);
 				startActivity(intent);
 				break;

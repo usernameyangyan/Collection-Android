@@ -1,16 +1,24 @@
 package com.youngmanster.collectionlibrary.base.fragmet;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
+import com.youngmanster.collectionlibrary.R;
+import com.youngmanster.collectionlibrary.base.activity.IBaseActivity;
 import com.youngmanster.collectionlibrary.base.helper.ExtraTransaction;
 import com.youngmanster.collectionlibrary.base.helper.SupportFragmentDelegate;
 import com.youngmanster.collectionlibrary.base.helper.SupportHelper;
@@ -32,6 +40,11 @@ public abstract class IBaseFragment<T extends BasePresenter> extends Fragment im
     final SupportFragmentDelegate mDelegate = new SupportFragmentDelegate(this);
     protected FragmentActivity _mActivity;
 
+    private FrameLayout frame_caption_container;
+    private FrameLayout frame_content_container;
+    public View customBar;
+    public DefaultDefineActionBarConfig defineActionBarConfig;
+
 
     /***********************************************************生命周期回调**************************************************/
     @Override
@@ -44,12 +57,42 @@ public abstract class IBaseFragment<T extends BasePresenter> extends Fragment im
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mainView=inflater.inflate(getLayoutId(), container, false);
-        mPresenter= ClassGetUtil.getClass(this,0);
+        mainView=inflater.inflate(R.layout.collection_library_default_base_fragment,container,false);
+        frame_caption_container=mainView.findViewById(R.id.frame_caption_container);
+        frame_content_container=mainView.findViewById(R.id.frame_content_container);
 
+        if (getLayoutId() != 0) {
+            addContainerFrame(getLayoutId());
+        }else{
+            throw new IllegalArgumentException("请设置getLayoutId");
+        }
+
+        mPresenter= ClassGetUtil.getClass(this,0);
         if(mPresenter!=null){
             mPresenter.setV(this);
         }
+
+        defineActionBarConfig=new DefaultDefineActionBarConfig();
+        boolean isShowCustomActionBar = isShowCustomActionBar();
+        int customRes = setCustomActionBar();
+        if (isShowCustomActionBar) {
+            if (customBar != null) {
+                customBar=LayoutInflater.from(getActivity())
+                        .inflate(customRes, frame_caption_container, false);
+                frame_caption_container.addView(customBar);
+            } else {
+                View defaultBar = LayoutInflater.from(getActivity())
+                        .inflate(R.layout.collection_library_default_common_toolbar, frame_caption_container, false);
+                frame_caption_container.addView(defaultBar);
+                defineActionBarConfig.defaultDefineView=defaultBar;
+            }
+
+            frame_caption_container.setVisibility(View.VISIBLE);
+        } else {
+            frame_caption_container.setVisibility(View.GONE);
+        }
+
+
         return mainView;
     }
 
@@ -123,6 +166,122 @@ public abstract class IBaseFragment<T extends BasePresenter> extends Fragment im
     public void onHiddenChanged(boolean hidden) {
         super.onHiddenChanged(hidden);
         mDelegate.onHiddenChanged(hidden);
+    }
+
+
+    /**
+     * 设置自定义ActionBar
+     */
+
+    public class DefaultDefineActionBarConfig {
+        View defaultDefineView;
+
+        public DefaultDefineActionBarConfig hideBackBtn(){
+            if(defaultDefineView==null){
+                return this;
+            }else{
+                defaultDefineView.findViewById(R.id.btnBack).setVisibility(View.GONE);
+                return this;
+            }
+
+        }
+
+        public DefaultDefineActionBarConfig setBarBackgroundColor(Context context, int bgColor) {
+            if(defaultDefineView==null){
+                return this;
+            }else{
+                defaultDefineView.findViewById(R.id.common_bar_panel).setBackgroundColor(ContextCompat.getColor(context,bgColor));
+                return this;
+            }
+        }
+
+        public DefaultDefineActionBarConfig setBarHeight(int height) {
+            if(defaultDefineView==null){
+                return this;
+            }else{
+                defaultDefineView.findViewById(R.id.common_bar_panel).getLayoutParams().height = height;
+                return this;
+            }
+        }
+
+        public DefaultDefineActionBarConfig setBackIcon(int resId) {
+
+
+            if(defaultDefineView==null){
+                return this;
+            }else{
+                ((ImageView)defaultDefineView.findViewById(R.id.btnBack)).setImageResource(resId);
+                if(resId != 0){
+                    defaultDefineView.findViewById(R.id.btnBack).setVisibility(View.VISIBLE);
+                }
+                return this;
+            }
+        }
+
+        public DefaultDefineActionBarConfig setTitleColor(Context context, int color) {
+
+            if(defaultDefineView==null){
+                return this;
+            }else{
+                ((TextView)defaultDefineView.findViewById(R.id.titleTv)).setTextColor((ContextCompat.getColor(context,color)));
+                return this;
+            }
+        }
+
+        public DefaultDefineActionBarConfig setTitleSize(Float size) {
+
+            if(defaultDefineView==null){
+                return this;
+            }else{
+                ((TextView)defaultDefineView.findViewById(R.id.titleTv)).setTextSize(size);
+                return this;
+            }
+        }
+
+        public DefaultDefineActionBarConfig setTitle(String con) {
+            if(defaultDefineView==null){
+                return this;
+            }else{
+                ((TextView)defaultDefineView.findViewById(R.id.titleTv)).setText(con);
+                return this;
+            }
+        }
+
+        public DefaultDefineActionBarConfig setBackClick(View.OnClickListener onListener){
+            if(defaultDefineView==null){
+                return this;
+            }else{
+                defaultDefineView.findViewById(R.id.btnBack).setOnClickListener(onListener);
+                return this;
+            }
+        }
+    }
+
+    /**
+     * add the children layout
+     *
+     * @param layoutResID
+     */
+    private void addContainerFrame(int layoutResID) {
+        View view = LayoutInflater.from(getActivity()).inflate(layoutResID, frame_content_container, false);
+        frame_content_container.addView(view);
+    }
+
+    /**
+     * 显示默认顶部Title栏
+     */
+
+    public boolean isShowCustomActionBar() {
+        return false;
+    }
+
+
+    /**
+     * 设置自定义ActionBar
+     */
+
+    public int setCustomActionBar() {
+        return 0;
     }
 
     /**
@@ -282,9 +441,6 @@ public abstract class IBaseFragment<T extends BasePresenter> extends Fragment im
     }
 
     /**
-     * 类似  {@link Activity#onActivityResult(int, int, Intent)}
-     * <p>
-     * Similar to {@link Activity#onActivityResult(int, int, Intent)}
      *
      * @see #(, int)
      */
@@ -295,9 +451,6 @@ public abstract class IBaseFragment<T extends BasePresenter> extends Fragment im
 
     /**
      * 在start(TargetFragment,LaunchMode)时,启动模式为SingleTask/SingleTop, 回调TargetFragment的该方法
-     * 类似 {@link Activity#onNewIntent(Intent)}
-     * <p>
-     * Similar to {@link Activity#onNewIntent(Intent)}
      *
      * @param args putNewBundle(Bundle newBundle)
      * @see #(int)

@@ -1,0 +1,22 @@
+<resources>
+
+    <string name="collection_pull_to_refresh">Pull down to refresh</string>
+    <string name="collection_release_refresh">Release refresh</string>
+    <string name="collection_refresh_done">Refresh complete</string>
+    <string name="collection_refreshing">Refreshing...</string>
+    <string name="collection_last_refresh_time">Last updated：</string>
+    <string name="collection_loading_more">loading...</string>
+    <string name="collection_no_more_data">No more data</string>
+    <string name="collection_dialog_submit">Determine</string>
+    <string name="collection_dialog_cancel">Cancel</string>
+    <string name="collection_dialog_waiting">Please wait...</string>
+
+    <string name="collection_refresh_just">just a moment ago</string>
+    <string name="collection_refresh_seconds_ago">&#160;seconds ago</string>
+    <string name="collection_refresh_minutes_ago">&#160;minutes ago</string>
+    <string name="collection_refresh_hours_ago">&#160;hours ago</string>
+    <string name="collection_refresh_days_ago">&#160;days ago</string>
+    <string name="collection_refresh_months_ago">&#160;months ago</string>
+    <string name="collection_refresh_years_ago">&#160;years ago</string>
+
+</resources>

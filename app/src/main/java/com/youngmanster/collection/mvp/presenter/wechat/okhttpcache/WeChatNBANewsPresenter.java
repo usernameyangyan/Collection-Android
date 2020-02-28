@@ -2,10 +2,9 @@ package com.youngmanster.collection.mvp.presenter.wechat.okhttpcache;
 
 import com.youngmanster.collection.been.Result;
 import com.youngmanster.collection.been.wechat.WeChatNews;
-import com.youngmanster.collection.http.ApiClient;
 import com.youngmanster.collection.http.ApiUrl;
 import com.youngmanster.collection.mvp.contract.wechat.okhttpcache.WeChatNBANewsContract;
-import com.youngmanster.collectionlibrary.db.DataManager;
+import com.youngmanster.collectionlibrary.data.DataManager;
 import com.youngmanster.collectionlibrary.network.RequestBuilder;
 import com.youngmanster.collectionlibrary.network.rx.RxObservableListener;
 
@@ -30,12 +29,11 @@ public class WeChatNBANewsPresenter extends WeChatNBANewsContract.Presenter {
 
         resultRequestBuilder
                 .setUrl(ApiUrl.URL_WETCHAT_FEATURED)
-                .setRequestParam(ApiClient.getRequiredBaseParam())
                 .setTransformClass(WeChatNews.class)
                 .setParam("page",page)
                 .setParam("type","video")
                 .setParam("count",num);
 
-        rxManager.addObserver(DataManager.getInstance(DataManager.DataType.RETROFIT).httpRequest(resultRequestBuilder));
+        rxManager.addObserver(DataManager.DataForHttp.httpRequest(resultRequestBuilder));
     }
 }

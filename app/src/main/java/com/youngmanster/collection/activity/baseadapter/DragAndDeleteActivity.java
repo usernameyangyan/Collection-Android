@@ -35,8 +35,7 @@ public class DragAndDeleteActivity extends BaseActivity implements BaseRecyclerV
 	@Override
 	public void init() {
 
-		setTitleContent(getString(R.string.activity_drag_delete_title));
-		showHomeAsUp(R.mipmap.ic_back_btn);
+		defineActionBarConfig.setTitle(getString(R.string.activity_drag_delete_title));
 
 		LinearLayoutManager layoutManager = new LinearLayoutManager(this);
 		layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -65,14 +64,12 @@ public class DragAndDeleteActivity extends BaseActivity implements BaseRecyclerV
 
 
 	@Override
-	public void onDragAndDeleteFinished() {
+	public void onMoveComplete() {
+		ToastUtils.showToast(this, "移动操作完成");
+	}
 
-		mRecyclerView.postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				dragAndDeleteAdapter.notifyDataSetChanged();
-				ToastUtils.showToast(DragAndDeleteActivity.this,"操作完成");
-			}
-		},300);
+	@Override
+	public void onDeleteComplete() {
+		ToastUtils.showToast(this, "删除操作完成");
 	}
 }

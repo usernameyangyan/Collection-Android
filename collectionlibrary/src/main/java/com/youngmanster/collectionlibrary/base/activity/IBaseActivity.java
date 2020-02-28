@@ -1,12 +1,20 @@
 package com.youngmanster.collectionlibrary.base.activity;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
+import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.youngmanster.collectionlibrary.R;
 import com.youngmanster.collectionlibrary.base.fragmet.BaseSupportFragment;
 import com.youngmanster.collectionlibrary.base.fragmet.FragmentAnimator;
 import com.youngmanster.collectionlibrary.base.helper.ExtraTransaction;
@@ -14,8 +22,6 @@ import com.youngmanster.collectionlibrary.base.helper.SupportActivityDelegate;
 import com.youngmanster.collectionlibrary.base.helper.SupportHelper;
 import com.youngmanster.collectionlibrary.mvp.BasePresenter;
 import com.youngmanster.collectionlibrary.mvp.ClassGetUtil;
-
-import java.util.List;
 
 /**
  * Created by yangyan
@@ -26,6 +32,11 @@ public abstract class IBaseActivity<T extends BasePresenter> extends AppCompatAc
 	public T mPresenter;
 
 	private boolean isFirst = false;
+	private FrameLayout frame_caption_container;
+	private FrameLayout frame_content_container;
+	public View customBar;
+
+	public DefaultDefineActionBarConfig defineActionBarConfig;
 
 	final SupportActivityDelegate mDelegate = new SupportActivityDelegate(this);
 
@@ -34,14 +45,49 @@ public abstract class IBaseActivity<T extends BasePresenter> extends AppCompatAc
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mDelegate.onCreate(savedInstanceState);
+		setContentView(R.layout.collection_library_default_base_activity);
+
+		frame_caption_container=findViewById(R.id.frame_caption_container);
+		frame_content_container=findViewById(R.id.frame_content_container);
+
 		if (getLayoutId() != 0) {
-			setContentView(getLayoutId());
+			addContainerFrame(getLayoutId());
+		}else{
+			throw new IllegalArgumentException("请设置getLayoutId");
 		}
 
 		mPresenter = ClassGetUtil.getClass(this, 0);
 
 		if (mPresenter != null) {
 			mPresenter.setV(this);
+		}
+
+		defineActionBarConfig=new DefaultDefineActionBarConfig();
+		boolean isShowActionBar = isShowSystemActionBar();
+		boolean isShowCustomActionBar = isShowCustomActionBar();
+		int customRes = setCustomActionBar();
+		if (!isShowActionBar) {//如果系统ActionBar隐藏并且自定义Bar显示
+			getSupportActionBar().hide();
+			if (isShowCustomActionBar) {
+				if (customRes !=0) {
+					customBar=LayoutInflater.from(this)
+							.inflate(customRes, frame_caption_container, false);
+					frame_caption_container.addView(customBar);
+				} else {
+					View defaultBar = LayoutInflater.from(this)
+							.inflate(R.layout.collection_library_default_common_toolbar, frame_caption_container, false);
+
+					frame_caption_container.addView(defaultBar);
+
+					defineActionBarConfig.defaultDefineView=defaultBar;
+				}
+
+				frame_caption_container.setVisibility(View.VISIBLE);
+			} else {
+				frame_caption_container.setVisibility(View.GONE);
+			}
+		} else {//如果系统ActionBar显示那么自定义Bar隐藏
+			frame_caption_container.setVisibility(View.GONE);
 		}
 	}
 
@@ -68,6 +114,17 @@ public abstract class IBaseActivity<T extends BasePresenter> extends AppCompatAc
 		if (mPresenter != null) {
 			mPresenter.onDestroy();
 		}
+	}
+
+
+	/**
+	 * add the children layout
+	 *
+	 * @param layoutResID
+	 */
+	private void addContainerFrame(int layoutResID) {
+		View view = LayoutInflater.from(this).inflate(layoutResID,frame_content_container , false);
+		frame_content_container.addView(view);
 	}
 
 	/**
@@ -100,6 +157,121 @@ public abstract class IBaseActivity<T extends BasePresenter> extends AppCompatAc
 	 * 请求数据
 	 */
 	public abstract void requestData();
+
+
+	/**
+	 * 是否显示系统ActionBar
+	 */
+	public boolean isShowSystemActionBar() {
+		return false;
+	}
+
+	/**
+	 * 显示默认顶部Title栏
+	 */
+
+	public boolean isShowCustomActionBar() {
+		return true;
+	}
+
+	/**
+	 * 设置自定义ActionBar
+	 */
+
+	public int setCustomActionBar() {
+		return 0;
+	}
+
+
+	/**
+	 * 设置自定义ActionBar
+	 */
+
+
+	public class DefaultDefineActionBarConfig {
+		View defaultDefineView;
+
+		public DefaultDefineActionBarConfig hideBackBtn(){
+			if(defaultDefineView==null){
+				return this;
+			}else{
+				defaultDefineView.findViewById(R.id.btnBack).setVisibility(View.GONE);
+				return this;
+			}
+
+		}
+
+		public DefaultDefineActionBarConfig setBarBackgroundColor(Context context, int bgColor) {
+			if(defaultDefineView==null){
+				return this;
+			}else{
+				defaultDefineView.findViewById(R.id.common_bar_panel).setBackgroundColor(ContextCompat.getColor(context,bgColor));
+				return this;
+			}
+		}
+
+		public DefaultDefineActionBarConfig setBarHeight(int height) {
+			if(defaultDefineView==null){
+				return this;
+			}else{
+				defaultDefineView.findViewById(R.id.common_bar_panel).getLayoutParams().height = height;
+				return this;
+			}
+		}
+
+		public DefaultDefineActionBarConfig setBackIcon(int resId) {
+
+
+			if(defaultDefineView==null){
+				return this;
+			}else{
+				((ImageView)defaultDefineView.findViewById(R.id.btnBack)).setImageResource(resId);
+				if(resId != 0){
+					defaultDefineView.findViewById(R.id.btnBack).setVisibility(View.VISIBLE);
+				}
+				return this;
+			}
+		}
+
+		public DefaultDefineActionBarConfig setTitleColor(Context context, int color) {
+
+			if(defaultDefineView==null){
+				return this;
+			}else{
+				((TextView)defaultDefineView.findViewById(R.id.titleTv)).setTextColor((ContextCompat.getColor(context,color)));
+				return this;
+			}
+		}
+
+		public DefaultDefineActionBarConfig setTitleSize(Float size) {
+
+			if(defaultDefineView==null){
+				return this;
+			}else{
+				((TextView)defaultDefineView.findViewById(R.id.titleTv)).setTextSize(size);
+				return this;
+			}
+		}
+
+		public DefaultDefineActionBarConfig setTitle(String con) {
+			if(defaultDefineView==null){
+				return this;
+			}else{
+				((TextView)defaultDefineView.findViewById(R.id.titleTv)).setText(con);
+				return this;
+			}
+		}
+
+		public DefaultDefineActionBarConfig setBackClick(View.OnClickListener onListener){
+			if(defaultDefineView==null){
+				return this;
+			}else{
+				defaultDefineView.findViewById(R.id.btnBack).setOnClickListener(onListener);
+				return this;
+			}
+		}
+	}
+
 
 
 	@Override

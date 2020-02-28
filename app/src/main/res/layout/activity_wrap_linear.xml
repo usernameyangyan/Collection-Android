@@ -3,9 +3,8 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <include layout="@layout/common_toolbar"/>
 
-    <com.youngmanster.collectionlibrary.customview.wraplayout.AutoLinefeedLayout
+    <com.youngmanster.collectionlibrary.customview.wraplayout.AutoLineLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
@@ -29,6 +28,6 @@
             android:text="12345678901211212121212121313131"/>
 
 
-    </com.youngmanster.collectionlibrary.customview.wraplayout.AutoLinefeedLayout>
+    </com.youngmanster.collectionlibrary.customview.wraplayout.AutoLineLayout>
 
 </LinearLayout>

@@ -25,8 +25,7 @@ public class PopupMenuActivity extends BaseActivity {
 
 	@Override
 	public void init() {
-		setTitleContent(getString(R.string.popup_title));
-		showHomeAsUp(R.mipmap.ic_back_btn);
+		defineActionBarConfig.setTitle(getString(R.string.popup_title));
 	}
 
 	@Override

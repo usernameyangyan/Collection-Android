@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<resources>
+
+    <string name="collection_pull_to_refresh">下拉刷新</string>
+    <string name="collection_release_refresh">釋放刷新</string>
+    <string name="collection_refresh_done">刷新完成</string>
+    <string name="collection_refreshing">正在刷新...</string>
+    <string name="collection_last_refresh_time">上次更新時間：</string>
+    <string name="collection_loading_more">正在加載...</string>
+    <string name="collection_no_more_data">沒有更多數據</string>
+    <string name="collection_dialog_submit">確定</string>
+    <string name="collection_dialog_cancel">取消</string>
+    <string name="collection_dialog_waiting">請稍等...</string>
+
+    <string name="collection_refresh_just">剛剛</string>
+    <string name="collection_refresh_seconds_ago">秒前</string>
+    <string name="collection_refresh_minutes_ago">分鐘前</string>
+    <string name="collection_refresh_hours_ago">小時前</string>
+    <string name="collection_refresh_days_ago">天前</string>
+    <string name="collection_refresh_months_ago">月前</string>
+    <string name="collection_refresh_years_ago">年前</string>
+</resources>

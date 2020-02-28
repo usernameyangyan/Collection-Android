@@ -140,7 +140,8 @@ public abstract class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<Ba
 	 */
 
 	public interface OnDragAndDeleteListener {
-		void onDragAndDeleteFinished();
+		void onMoveComplete();
+		void onDeleteComplete();
 	}
 
 	public void setDragAndDeleteListener(OnDragAndDeleteListener onDragAndDeleteListener){
@@ -151,12 +152,15 @@ public abstract class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<Ba
 	public void onItemDelete(int position) {
 		mDatas.remove(position);
 		notifyItemRemoved(position);
+		onDragAndDeleteListener.onDeleteComplete();
 	}
 
+	private boolean isMove=false;
 	@Override
 	public void onItemMove(int fromPosition, int toPosition) {
 		Collections.swap(mDatas,fromPosition,toPosition);//交换数据
 		notifyItemMoved(fromPosition,toPosition);
+		isMove=true;
 	}
 
 	@Override
@@ -165,8 +169,9 @@ public abstract class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter<Ba
 
 	@Override
 	public void onItemFinish() {
-		if(onDragAndDeleteListener!=null){
-			onDragAndDeleteListener.onDragAndDeleteFinished();
+		if(isMove){
+			isMove=false;
+			onDragAndDeleteListener.onMoveComplete();
 		}
 	}
 }

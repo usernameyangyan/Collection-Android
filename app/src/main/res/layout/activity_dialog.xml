@@ -4,7 +4,6 @@
 			  android:layout_width="match_parent"
 			  android:layout_height="match_parent">
 
-	<include layout="@layout/common_toolbar"/>
 
 	<android.support.v4.widget.NestedScrollView
 		android:layout_width="match_parent"
@@ -38,14 +37,6 @@
 				android:layout_marginRight="30dp"
 				android:layout_marginLeft="30dp"
 				android:text="@string/dialog_sample_3"
-				android:layout_marginTop="30dp"/>
-			<Button
-				android:id="@+id/dialog_btn4"
-				android:layout_width="match_parent"
-				android:layout_height="wrap_content"
-				android:layout_marginRight="30dp"
-				android:layout_marginLeft="30dp"
-				android:text="@string/dialog_sample_4"
 				android:layout_marginTop="30dp"/>
 			<Button
 				android:id="@+id/dialog_btn5"

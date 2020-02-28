@@ -9,7 +9,7 @@ import com.youngmanster.collection.base.BaseActivity;
 import com.youngmanster.collection.fragment.recyclerview.FragmentDefaultRefreshAndLoading;
 import com.youngmanster.collection.fragment.recyclerview.FragmentDefinitionRefreshAndLoading;
 import com.youngmanster.collection.fragment.recyclerview.FragmentGoogleRefreshAndLoading;
-import com.youngmanster.collection.widget.CollectionViewPager;
+import com.youngmanster.collectionlibrary.customview.CollectionViewPager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,8 +47,7 @@ public class RefreshActivity extends BaseActivity{
 	@Override
 	public void init() {
 
-		setTitleContent(getString(R.string.fragment_refresh_title));
-		showHomeAsUp(R.mipmap.ic_back_btn);
+		defineActionBarConfig.setTitle(getString(R.string.fragment_refresh_title));
 
 		setFragments();
 		collectionFragmentAdapter = new CollectionFragmentAdapter(getSupportFragmentManager(), fragments);

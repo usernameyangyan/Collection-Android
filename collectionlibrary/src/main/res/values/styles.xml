@@ -1,8 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
-	<dimen name="design_tab_text_size">14sp</dimen>
-	<dimen name="design_tab_text_size_2line">12sp</dimen>
-	<dimen name="design_tab_scrollable_min_width">72dp</dimen>
-	<dimen name="design_tab_max_width">264dp</dimen>
+	<!-- 定义全局activity间跳转动画 -->
+	<style name="AnimationActivity" parent="@android:style/Animation.Activity">
+		<item name="android:activityOpenEnterAnimation">@anim/push_left_in</item>
+		<item name="android:activityOpenExitAnimation">@anim/alpha_out</item>
+		<item name="android:activityCloseEnterAnimation">@anim/alpha_in</item>
+		<item name="android:activityCloseExitAnimation">@anim/push_right_out</item>
+	</style>
+
+	<!--card点击效果-->
+	<style name="CardItemClick">
+		<item name="android:foreground">?attr/selectableItemBackground</item>
+		<item name="android:stateListAnimator" tools:targetApi="lollipop">@drawable/lift_on_touch</item>
+	</style>
+
 </resources>

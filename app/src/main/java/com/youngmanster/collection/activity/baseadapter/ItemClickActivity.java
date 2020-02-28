@@ -37,8 +37,7 @@ public class ItemClickActivity extends BaseActivity implements BaseRecyclerViewA
 	@Override
 	public void init() {
 
-		setTitleContent(getString(R.string.activity_item_click_title));
-		showHomeAsUp(R.mipmap.ic_back_btn);
+		defineActionBarConfig.setTitle(getString(R.string.activity_item_click_title));
 
 
 		LinearLayoutManager layoutManager = new LinearLayoutManager(this);

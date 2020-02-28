@@ -8,7 +8,7 @@ import com.youngmanster.collection.adapter.CollectionFragmentAdapter;
 import com.youngmanster.collection.base.BaseActivity;
 import com.youngmanster.collection.mvp.ui.wechat.fragment.FragmentChinaNewsDefinition;
 import com.youngmanster.collection.mvp.ui.wechat.fragment.FragmentWorldNewsDefinition;
-import com.youngmanster.collection.widget.CollectionViewPager;
+import com.youngmanster.collectionlibrary.customview.CollectionViewPager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,8 +46,7 @@ public class WeChatNewsDefinitionActivity extends BaseActivity {
 	@Override
 	public void init() {
 
-		setTitleContent("自定义磁盘缓存");
-		showHomeAsUp(R.mipmap.ic_back_btn);
+		defineActionBarConfig.setTitle("自定义磁盘缓存");
 
 		setFragments();
 		collectionFragmentAdapter = new CollectionFragmentAdapter(getSupportFragmentManager(), fragments);

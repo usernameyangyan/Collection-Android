@@ -37,8 +37,9 @@ public class BaseUiActivity extends BaseActivity implements BaseRecyclerViewAdap
 
 	@Override
 	public void init() {
-		setTitleContent(getString(R.string.activity_base_ui_title));
-		showHomeAsUp(R.mipmap.ic_back_btn);
+
+		defineActionBarConfig.setTitle(getString(R.string.activity_base_ui_title));
+
 
 		LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
 		linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -48,7 +49,6 @@ public class BaseUiActivity extends BaseActivity implements BaseRecyclerViewAdap
 	@Override
 	public void requestData() {
 
-		mDatas.add("Base介绍");
 		mDatas.add("使用Fragment作为主要交互");
 		mDatas.add("StateView");
 		mDatas.add("Permission");
@@ -77,30 +77,26 @@ public class BaseUiActivity extends BaseActivity implements BaseRecyclerViewAdap
 	public void onItemClick(View view, int position) {
 		switch (position) {
 			case 0:
-				intent = new Intent(this, IntroductionActivity.class);
-				startActivity(intent);
-				break;
-			case 1:
 				intent = new Intent(this, UseFragmentActivity.class);
 				startActivity(intent);
 				break;
-			case 2:
+			case 1:
 				intent = new Intent(this, StateViewActivity.class);
 				startActivity(intent);
 				break;
-			case 3:
+			case 2:
 				intent = new Intent(this, PermissionActivity.class);
 				startActivity(intent);
 				break;
-			case 4:
+			case 3:
 				intent = new Intent(this, DialogActivity.class);
 				startActivity(intent);
 				break;
-			case 5:
+			case 4:
 				intent = new Intent(this, PopupWindowDemoActivity.class);
 				startActivity(intent);
 				break;
-			case 6:
+			case 5:
 				intent = new Intent(this, ChangeStatusBarActivity.class);
 				startActivity(intent);
 				break;

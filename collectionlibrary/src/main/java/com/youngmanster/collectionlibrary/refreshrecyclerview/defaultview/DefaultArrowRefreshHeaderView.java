@@ -32,11 +32,14 @@ public class DefaultArrowRefreshHeaderView extends BasePullToRefreshView impleme
 	private TextView refreshStateTv;
 	private AVLoadingIndicatorView progressView;
 	private TextView lastRefreshTimeTv;
+	private TextView timeRefresh_tv;
 	//刷新箭头装换方向动画
 	private Animation mRotateUpAnim;
 	private Animation mRotateDownAnim;
 
 	private Context context;
+
+	private boolean isDestroy = false;
 
 	public DefaultArrowRefreshHeaderView(Context context) {
 		super(context);
@@ -50,7 +53,7 @@ public class DefaultArrowRefreshHeaderView extends BasePullToRefreshView impleme
 	@Override
 	public void initView(Context context) {
 		this.context = context;
-		mContainer = LayoutInflater.from(context).inflate(R.layout.layout_default_arrow_refresh, null);
+		mContainer = LayoutInflater.from(context).inflate(R.layout.collection_library_layout_default_arrow_refresh, null);
 		mRefrehsContainer = mContainer.findViewById(R.id.refresh_time_container);
 
 		//把刷新头部的高度初始化为0
@@ -66,6 +69,14 @@ public class DefaultArrowRefreshHeaderView extends BasePullToRefreshView impleme
 		progressView = mContainer.findViewById(R.id.av_progressbar);
 		progressView.setIndicatorColor(0xffB5B5B5);
 		lastRefreshTimeTv = mContainer.findViewById(R.id.last_refresh_time);
+		timeRefresh_tv=mRefrehsContainer.findViewById(R.id.timeRefresh_tv);
+
+		if(PullToRefreshRecyclerViewUtils.loadingTextConfig!=null){
+			timeRefresh_tv.setText(PullToRefreshRecyclerViewUtils.loadingTextConfig.getCollectionLastRefreshTime());
+		}else{
+			timeRefresh_tv.setText(context.getString(R.string.collection_last_refresh_time));
+		}
+
 
 		mRotateUpAnim = new RotateAnimation(0.0f, -180.0f,
 				Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
@@ -89,6 +100,8 @@ public class DefaultArrowRefreshHeaderView extends BasePullToRefreshView impleme
 
 	@Override
 	public void destroy() {
+		isDestroy=true;
+
 		if (progressView != null) {
 			progressView = null;
 		}
@@ -104,6 +117,11 @@ public class DefaultArrowRefreshHeaderView extends BasePullToRefreshView impleme
 
 	@Override
 	public void onStateChange(int state) {
+
+		if(isDestroy){
+			return;
+		}
+
 		//下拉时状态相同不做继续保持原有的状态
 		if (state == mState) return;
 
@@ -130,22 +148,39 @@ public class DefaultArrowRefreshHeaderView extends BasePullToRefreshView impleme
 			case STATE_PULL_DOWN:
 				arrowIv.clearAnimation();
 				arrowIv.startAnimation(mRotateDownAnim);
-				refreshStateTv.setText(R.string.collection_pull_to_refresh);
+				if(PullToRefreshRecyclerViewUtils.loadingTextConfig!=null){
+					refreshStateTv.setText(PullToRefreshRecyclerViewUtils.loadingTextConfig.getCollectionPullRefreshText());
+				}else{
+					refreshStateTv.setText(R.string.collection_pull_to_refresh);
+				}
 				break;
 			case STATE_RELEASE_REFRESH:
 				//时间更新
-				lastRefreshTimeTv.setText(PullToRefreshRecyclerViewUtils.getTimeConvert(PullToRefreshRecyclerViewUtils.getLastRefreshTime(context)));
+				lastRefreshTimeTv.setText(PullToRefreshRecyclerViewUtils.getTimeConvert(context,PullToRefreshRecyclerViewUtils.getLastRefreshTime(context)));
 				arrowIv.clearAnimation();
 				arrowIv.startAnimation(mRotateUpAnim);
-				refreshStateTv.setText(R.string.collection_release_refresh);
+
+				if(PullToRefreshRecyclerViewUtils.loadingTextConfig!=null){
+					refreshStateTv.setText(PullToRefreshRecyclerViewUtils.loadingTextConfig.getCollectionPullReleaseText());
+				}else{
+					refreshStateTv.setText(R.string.collection_release_refresh);
+				}
 				break;
 			case STATE_REFRESHING:
-				lastRefreshTimeTv.setText(PullToRefreshRecyclerViewUtils.getTimeConvert(PullToRefreshRecyclerViewUtils.getLastRefreshTime(context)));
-				refreshStateTv.setText(R.string.collection_refreshing);
+				lastRefreshTimeTv.setText(PullToRefreshRecyclerViewUtils.getTimeConvert(context,PullToRefreshRecyclerViewUtils.getLastRefreshTime(context)));
+				if(PullToRefreshRecyclerViewUtils.loadingTextConfig!=null){
+					refreshStateTv.setText(PullToRefreshRecyclerViewUtils.loadingTextConfig.getCollectionRefreshing());
+				}else{
+					refreshStateTv.setText(R.string.collection_refreshing);
+				}
 				break;
 			case STATE_DONE:
 				PullToRefreshRecyclerViewUtils.saveLastRefreshTime(context, System.currentTimeMillis());
-				refreshStateTv.setText(R.string.collection_refresh_done);
+				if(PullToRefreshRecyclerViewUtils.loadingTextConfig!=null){
+					refreshStateTv.setText(PullToRefreshRecyclerViewUtils.loadingTextConfig.getCollectionRefreshDone());
+				}else{
+					refreshStateTv.setText(R.string.collection_refresh_done);
+				}
 				break;
 		}
 		mState = state;

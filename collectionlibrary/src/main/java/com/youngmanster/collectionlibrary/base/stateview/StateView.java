@@ -1,8 +1,11 @@
 package com.youngmanster.collectionlibrary.base.stateview;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.AnimationDrawable;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -25,6 +28,15 @@ import com.youngmanster.collectionlibrary.R;
  */
 
 public class StateView extends LinearLayout {
+
+	@SuppressLint("HandlerLeak")
+	private Handler handler=new Handler(){
+		@Override
+		public void handleMessage(Message msg) {
+			super.handleMessage(msg);
+			animationDrawable.start();
+		}
+	};
 
 	//当前的加载状态
 	public static final int STATE_NO_DATA = 0;
@@ -107,7 +119,7 @@ public class StateView extends LinearLayout {
 	private void setLoadingView() {
 
 		if(mLoadingView==null){
-			mLoadingView = mInflater.inflate(R.layout.library_view_loading, null);
+			mLoadingView = mInflater.inflate(R.layout.collection_library_view_loading, null);
 			LinearLayout loadMore_Ll = mLoadingView.findViewById(R.id.library_loadMore_Ll);
 			ProgressBar loadingBar = mLoadingView.findViewById(R.id.library_loadingBar);
 			ImageView loadingIv = mLoadingView.findViewById(R.id.library_loadingIv);
@@ -122,7 +134,7 @@ public class StateView extends LinearLayout {
 				loadingTv.setTextSize(TypedValue.COMPLEX_UNIT_PX, mTextSize);
 				animationDrawable = (AnimationDrawable) loadingIv.getDrawable();
 				if (animationDrawable != null) {
-					animationDrawable.start();
+					handler.sendEmptyMessage(1000);
 				}
 
 			} else {
@@ -138,7 +150,7 @@ public class StateView extends LinearLayout {
 	 */
 	private void setEmptyView() {
 		if(mEmptyView==null){
-			mEmptyView = mInflater.inflate(R.layout.library_view_empty, null);
+			mEmptyView = mInflater.inflate(R.layout.collection_library_view_empty, null);
 			ImageView emptyImage = mEmptyView.findViewById(R.id.library_empty_image);
 			TextView emptyText = mEmptyView.findViewById(R.id.library_empty_text);
 			if (null != emptyImage && mEmptyImageId != NO_ID) {
@@ -201,7 +213,7 @@ public class StateView extends LinearLayout {
 	 */
 	private void setDisConnectView() {
 		if(mDisConnectView==null){
-			mDisConnectView = mInflater.inflate(R.layout.library_view_disconnect, null);
+			mDisConnectView = mInflater.inflate(R.layout.collection_library_view_disconnect, null);
 			ImageView disConnectImage = mDisConnectView.findViewById(R.id.library_disconnect_image);
 			TextView disConnectText = mDisConnectView.findViewById(R.id.library_disconnect_text);
 			if (null != disConnectImage && mDisConnectImageId != NO_ID) {

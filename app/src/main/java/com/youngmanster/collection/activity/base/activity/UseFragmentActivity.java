@@ -1,16 +1,9 @@
 package com.youngmanster.collection.activity.base.activity;
-
-import android.content.Intent;
-import android.view.View;
-
-import com.youngmanster.collection.BuildConfig;
 import com.youngmanster.collection.R;
 import com.youngmanster.collection.activity.base.fragment.FragmentRoot;
 import com.youngmanster.collection.base.BaseActivity;
 import com.youngmanster.collectionlibrary.base.fragmet.FragmentAnimator;
-import com.youngmanster.collectionlibrary.base.helper.Fragmentation;
 import com.youngmanster.collectionlibrary.base.helper.anim.DefaultHorizontalAnimator;
-import com.youngmanster.collectionlibrary.base.helper.anim.DefaultVerticalAnimator;
 
 /**
  * @author yangyan
@@ -36,5 +29,10 @@ public class UseFragmentActivity extends BaseActivity {
     @Override
     public FragmentAnimator onCreateFragmentAnimator() {
         return new DefaultHorizontalAnimator();
+    }
+
+    @Override
+    public boolean isShowCustomActionBar() {
+        return false;
     }
 }

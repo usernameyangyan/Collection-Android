@@ -224,50 +224,6 @@ public class DisplayUtils {
 		}
 	}
 
-	/**
-	 * 设置状态栏全屏透明（状态栏字体颜色为默认黑色）
-	 * */
-
-	public static boolean setStatusBarFullTranslucentWithBlackFont(Activity act) {
-		//设置全屏透明状态栏
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP&&isCanSetStatusBarBlackFontLightMode(act)) {
-
-			act.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-			ViewGroup rootView = (ViewGroup) ((ViewGroup) act.findViewById(android.R.id.content)).getChildAt(0);
-			ViewCompat.setFitsSystemWindows(rootView, false);
-			rootView.setClipToPadding(true);
-			act.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS |
-					WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-			act.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
-			act.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-			act.getWindow().setStatusBarColor(Color.TRANSPARENT);
-			act.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-			return true;
-		}else{
-			return false;
-		}
-	}
-
-	/**
-	 * 判断状态栏是否可以设置为黑字
-	 * */
-	public static boolean isCanSetStatusBarBlackFontLightMode(Activity activity) {
-
-		if (MIUISetStatusBarLightMode(activity.getWindow(), true)) {//MIUI
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {//5.0
-				return true;
-			}
-		} else if (FlymeSetStatusBarLightMode(activity.getWindow(), true)) {//Flyme
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {//5.0
-				return true;
-			}
-		} else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {//6.0
-			return true;
-		}
-
-		return false;
-	}
-
 
 	/**
 	 * 获取状态栏的高度

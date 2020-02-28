@@ -36,8 +36,7 @@ public class StateViewActivity extends BaseActivity implements StateView.OnEmpty
 
 	@Override
 	public void init() {
-		setTitleContent(getString(R.string.activity_state_view));
-		showHomeAsUp(R.mipmap.ic_back_btn);
+		defineActionBarConfig.setTitle(getString(R.string.activity_state_view));
 
 		stateView.showViewByState(StateView.STATE_LOADING);
 		stateView.setOnEmptyViewListener(this);

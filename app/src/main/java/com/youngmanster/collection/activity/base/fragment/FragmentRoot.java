@@ -34,8 +34,7 @@ public class FragmentRoot extends BaseFragment {
 
     @Override
     public void init() {
-        setTitleContent("使用Fragment作为主要交互");
-        showHomeAsUp(R.mipmap.ic_back_btn);
+        defineActionBarConfig.setTitle("展示页面");
     }
 
     @Override
@@ -54,4 +53,8 @@ public class FragmentRoot extends BaseFragment {
 
     }
 
+    @Override
+    public boolean isShowCustomActionBar() {
+        return true;
+    }
 }

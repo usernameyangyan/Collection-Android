@@ -3,4 +3,8 @@
 	<color name="bg">#66ccf5</color>
 	<color name="white">#ffffff</color>
 	<color name="black">#000000</color>
+
+	<color name="colorPrimary">#3F51B5</color>
+	<color name="colorPrimaryDark">#3F51B5</color>
+	<color name="colorAccent">#FF4081</color>
 </resources>

@@ -5,6 +5,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.view.View;
 
+import com.youngmanster.collectionlibrary.R;
+import com.youngmanster.collectionlibrary.refreshrecyclerview.LoadingTextConfig;
+
 import java.util.Date;
 
 /**
@@ -16,6 +19,8 @@ public class PullToRefreshRecyclerViewUtils {
 
 	private static final String REFRESH_NAME = "REFRESH_KEY";
 	private static final String REFRESH_TIME_KEY = "REFRESH_TIME_KEY";
+
+	public static LoadingTextConfig loadingTextConfig;
 
 	/**
 	 * 获取上次刷新保存的时间
@@ -44,31 +49,31 @@ public class PullToRefreshRecyclerViewUtils {
 	 * @param time
 	 * @return
 	 */
-	public static String getTimeConvert(long time) {
+	public static String getTimeConvert(Context context,long time) {
 		//获取time距离当前的秒数
 		int ct = (int)((System.currentTimeMillis() - time)/1000);
 
 		if(ct <=15) {
-			return "刚刚";
+			return context.getString(R.string.collection_refresh_just);
 		}
 
 		if(ct >15 && ct < 60) {
-			return ct + "秒前";
+			return ct+context.getString(R.string.collection_refresh_seconds_ago);
 		}
 
 		if(ct >= 60 && ct < 3600) {
-			return Math.max(ct / 60,1) + "分钟前";
+			return Math.max(ct / 60,1) +context.getString(R.string.collection_refresh_minutes_ago);
 		}
 		if(ct >= 3600 && ct < 86400)
-			return ct / 3600 + "小时前";
+			return ct / 3600 + context.getString(R.string.collection_refresh_hours_ago);
 		if(ct >= 86400 && ct < 2592000){ //86400 * 30
 			int day = ct / 86400 ;
-			return day + "天前";
+			return day + context.getString(R.string.collection_refresh_days_ago);
 		}
 		if(ct >= 2592000 && ct < 31104000) { //86400 * 30
-			return ct / 2592000 + "月前";
+			return ct / 2592000 + context.getString(R.string.collection_refresh_months_ago);
 		}
-		return ct / 31104000 + "年前";
+		return ct / 31104000 + context.getString(R.string.collection_refresh_years_ago);
 	}
 
 	/**

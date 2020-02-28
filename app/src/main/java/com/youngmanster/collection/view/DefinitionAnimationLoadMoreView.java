@@ -25,6 +25,8 @@ public class DefinitionAnimationLoadMoreView extends BaseLoadMoreView {
 	//动画
 	private AnimationDrawable animationDrawable;
 
+	private boolean isDestroy = false;
+
 	public DefinitionAnimationLoadMoreView(Context context) {
 		super(context);
 	}
@@ -42,6 +44,10 @@ public class DefinitionAnimationLoadMoreView extends BaseLoadMoreView {
 
 	@Override
 	public void setState(int state) {
+
+		if(isDestroy){
+			return;
+		}
 		switch (state){
 			case STATE_LOADING:
 				loadMore_Ll.setVisibility(VISIBLE);
@@ -70,6 +76,6 @@ public class DefinitionAnimationLoadMoreView extends BaseLoadMoreView {
 	}
 	@Override
 	public void destroy() {
-
+		isDestroy=true;
 	}
 }
