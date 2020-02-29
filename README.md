@@ -71,7 +71,7 @@ Collection聚合了项目搭建的一些基本模块，节约开发者时间，�
 
 
 ###  框架的引入
->  **implementation 'com.youngman:collectionlibrary:1.2.9**
+>  **implementation 'com.youngman:collectionlibrary:1.2.9'**
 
 > Error:Could not find com.android.support:appcompat-v7:27.x.x.
 因为library的Support Repository是27.x.x,可能跟项目有所冲突，如果sdk已经装了27还是会出现同样的错误。
