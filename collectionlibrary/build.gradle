@@ -7,16 +7,13 @@ publish {
     userOrg = 'youngmanopen'
     groupId = 'com.youngman'
     artifactId = 'collectionlibrary'
-    publishVersion = '1.2.8'
-    desc = '1.更新Realm数据库依赖。  \n' +
-            '2.更新RxJava、rxandroid、retrofit、converter-gson、adapter-rxjava2依赖。  \n' +
-            '3.封装好Fragment之间的交互，项目中可以选择使用一个Activity来作为跟容器，其它实现页面统一使用fragment来实现。  \n' +
-            '4.collectionLibary中的Config配置类增加json字段过滤、网络请求超时设置、网络请求头设置（全局请求头）。    \n' +
-            '5.增加自动换行布局。  \n' +
-            '6.Realm增加按数据字段查询和删除接口。  \n' +
-            '7.网络请求类型HttpType增加json类型请求参数。  \n' +
-            '8.网络请求增加个别接口请求头设置。  \n' +
-            '9.增加适配不同手机像素。'
+    publishVersion = '1.2.9'
+    desc = '1.去掉Relam数据模块,安装包大小减少  \n' +
+            '2.对原生SQLite数据库进行封装，使用更加方便\n' +
+            '3.对DataManager的使用进行修整\n' +
+            '4.增加AutoLineLayout/TagView\n' +
+            '5.增加LinkedMultiValueMap  \n' +
+            '6.增加RxJavaUtils,可进行子/主线程数据处理切换'
     website = 'https://github.com/usernameyangyan/Collection-Android'
 }
 
