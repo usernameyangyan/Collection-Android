@@ -80,7 +80,8 @@ Collection聚合了项目搭建的一些基本模块，节约开发者时间，�
 
 ###   一、框架整体模块
 
-![](https://upload-images.jianshu.io/upload_images/4361802-ee9142582bd7f902.gif?imageMogr2/auto-orient/strip)
+![效果图](https://upload-images.jianshu.io/upload_images/4361802-5a07258d6dba41ba.gif?imageMogr2/auto-orient/strip)
+
 
 
 
@@ -106,7 +107,7 @@ Collection聚合了项目搭建的一些基本模块，节约开发者时间，�
 |destroy |内存回收|
 
 ####  1.框架默认下拉刷新、上拉加载更多样式  
-![](https://upload-images.jianshu.io/upload_images/4361802-7c0bb60941c6d2cd.gif?imageMogr2/auto-orient/strip)
+![效果图](https://upload-images.jianshu.io/upload_images/4361802-fc42ed065848f334.gif?imageMogr2/auto-orient/strip)
 
 ##### （1）布局文件  
   
@@ -123,7 +124,8 @@ Collection聚合了项目搭建的一些基本模块，节约开发者时间，�
 
 ####   2、自定义下拉刷新、上拉加载更多样式
 
-![](https://upload-images.jianshu.io/upload_images/4361802-f82f5cb5c6337625.gif?imageMogr2/auto-orient/strip)
+![效果图](https://upload-images.jianshu.io/upload_images/4361802-b41235448956a34c.gif?imageMogr2/auto-orient/strip)
+
 
 
  #####  刷新几种状态：
@@ -255,7 +257,8 @@ Collection聚合了项目搭建的一些基本模块，节约开发者时间，�
 
 #### 3、上拉加载更多配合SwipeRefreshLayout使用  
 
-![](https://upload-images.jianshu.io/upload_images/4361802-9fff844be4e24e80.gif?imageMogr2/auto-orient/strip)
+![效果图](https://upload-images.jianshu.io/upload_images/4361802-61e0148999343a50.gif?imageMogr2/auto-orient/strip)
+
 
 ##### （1）布局文件  
      <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -283,7 +286,11 @@ Collection聚合了项目搭建的一些基本模块，节约开发者时间，�
 > 由于PullToRefreshRecyclerView的下拉刷新和下拉加载更多完成时会自动刷新Adapter,而SwipeRefreshLayout刷新完成时需要手动进行notifyDataSetChanged刷新适配器。
 
 ###   4、RecyclerView添加头部、空布局
-![](https://upload-images.jianshu.io/upload_images/4361802-7d2dee5ae427379b.gif?imageMogr2/auto-orient/strip)
+![效果图](https://upload-images.jianshu.io/upload_images/4361802-d44f5743f3b59c19.gif?imageMogr2/auto-orient/strip)
+
+![效果图](https://upload-images.jianshu.io/upload_images/4361802-e1e385df413bedf9.gif?imageMogr2/auto-orient/strip)
+
+
 
     View emptyView = LayoutInflater.from(getActivity()).inflate(R.layout.layout_empty,null);
 		mRecyclerView.setEmptyView(emptyView);
@@ -299,11 +306,9 @@ Collection聚合了项目搭建的一些基本模块，节约开发者时间，�
 
 ####   5、上拉加载更多实现NoMoreData、自动刷新
 
-![](https://upload-images.jianshu.io/upload_images/4361802-31280ef470a9aa9e.gif?imageMogr2/auto-orient/strip)
+![效果图](https://upload-images.jianshu.io/upload_images/4361802-86255e77683f8322.gif?imageMogr2/auto-orient/strip)
 
 
-
-![](https://upload-images.jianshu.io/upload_images/4361802-61ccfdc7749197fe.gif?imageMogr2/auto-orient/strip)
 
 
 ##### （1）上拉加载更多数据的布局设置在上面的自定义LoadingMoreView中有介绍，如果要显示没有更多数据提示只需要在LoadMore返回数据之后设置：
@@ -409,8 +414,7 @@ Collection聚合了项目搭建的一些基本模块，节约开发者时间，�
 
 ####   2.添加Item的点击和长按事件 
 
-
-![](https://upload-images.jianshu.io/upload_images/4361802-4fd601d9420a6a67.gif?imageMogr2/auto-orient/strip)
+![效果图](https://upload-images.jianshu.io/upload_images/4361802-f984608c1191a05f.gif?imageMogr2/auto-orient/strip)
 
 ##### （1） Item点击事件实现
 
@@ -425,7 +429,8 @@ Collection聚合了项目搭建的一些基本模块，节约开发者时间，�
 
 ####   3.多布局的使用 
 
-![](https://upload-images.jianshu.io/upload_images/4361802-5a55b3b1f4c5dabe.gif?imageMogr2/auto-orient/strip)
+![效果图](https://upload-images.jianshu.io/upload_images/4361802-30e8e453a9f11439.gif?imageMogr2/auto-orient/strip)
+
 
 	
 
@@ -469,7 +474,8 @@ Collection聚合了项目搭建的一些基本模块，节约开发者时间，�
 		}
 
 ####   4.添加拖拽、滑动删除  
-![](https://upload-images.jianshu.io/upload_images/4361802-dd4b92c866022240.gif?imageMogr2/auto-orient/strip)
+![效果图](https://upload-images.jianshu.io/upload_images/4361802-e1c914c19f375bfc.gif?imageMogr2/auto-orient/strip)
+
 
 ###### 局限：只针对RecyclerView，对本框架封装的PullToRefreshRecyclerView会出现混乱。
 
@@ -497,7 +503,8 @@ Collection聚合了项目搭建的一些基本模块，节约开发者时间，�
 
 ###  四、MVP+RxJava+Retrofit的封装使用
 
-![](https://upload-images.jianshu.io/upload_images/4361802-9d5e0c7caf923c88.gif?imageMogr2/auto-orient/strip)
+![效果图](https://upload-images.jianshu.io/upload_images/4361802-f25084b0cbbf3835.gif?imageMogr2/auto-orient/strip)
+
 
 
 ####  1.在使用Retrofit请求网络之前需要进行配置，在框架中提供了了Config配置类
@@ -740,7 +747,8 @@ Collection聚合了项目搭建的一些基本模块，节约开发者时间，�
 
 ###  五、DataManager的使用(Http、Sharepreference、SQLite)
 
-![](https://upload-images.jianshu.io/upload_images/4361802-e117d127cd2dece4.gif?imageMogr2/auto-orient/strip)
+![效果图](https://upload-images.jianshu.io/upload_images/4361802-0be3986f8fab6242.gif?imageMogr2/auto-orient/strip)
+
 
 
 （1）DataManager基本属性
@@ -959,7 +967,8 @@ Collection聚合了项目搭建的一些基本模块，节约开发者时间，�
 
 #####  2.使用Fragment实现交互，只有几个Activity作为跟容器的实现方式：
 
-![](https://upload-images.jianshu.io/upload_images/4361802-8fbea66bf051313f.gif?imageMogr2/auto-orient/strip)
+![效果图](https://upload-images.jianshu.io/upload_images/4361802-1ea274fca6500343.gif?imageMogr2/auto-orient/strip)
+
 
 
 
@@ -982,7 +991,8 @@ Collection聚合了项目搭建的一些基本模块，节约开发者时间，�
 
 #####  3.StateView（数据加载页面）
 
-![](https://upload-images.jianshu.io/upload_images/4361802-5758cf74f885b66d.gif?imageMogr2/auto-orient/strip)
+![效果图](https://upload-images.jianshu.io/upload_images/4361802-aac6a842c41a5948.gif?imageMogr2/auto-orient/strip)
+
 
 | 属性 | 作用 | 
 | :-----| :---- | 
@@ -1033,6 +1043,8 @@ Collection聚合了项目搭建的一些基本模块，节约开发者时间，�
 
 ####   3.三步实现Permission(权限)设置
 
+![效果图](https://upload-images.jianshu.io/upload_images/4361802-c1768156ccaf5e37.gif?imageMogr2/auto-orient/strip)
+
 
     // 项目的必须权限，没有这些权限会影响项目的正常运行
 	private static final String[] PERMISSIONS = new String[]{
@@ -1076,6 +1088,9 @@ Collection聚合了项目搭建的一些基本模块，节约开发者时间，�
 
 ####   4.提供几种比较常用的Dialog弹框
 
+![效果图](https://upload-images.jianshu.io/upload_images/4361802-c5a27e85bf8a4209.gif?imageMogr2/auto-orient/strip)
+
+
 #####   （1）提供的常用的CommonDialog
 
 | 属性 | 作用 | 
@@ -1109,6 +1124,8 @@ Collection聚合了项目搭建的一些基本模块，节约开发者时间，�
 
 ####   5.自定义PopupWindow弹框
 
+![效果图](https://upload-images.jianshu.io/upload_images/4361802-9487fc0856a988fa.gif?imageMogr2/auto-orient/strip)
+
 - BasePopupWindow
 
 | 属性 | 作用 | 
@@ -1130,6 +1147,9 @@ Collection聚合了项目搭建的一些基本模块，节约开发者时间，�
 - 如果需要显示遮层，在构造函数通过setShowMaskView(true)设置。
 
 ###  七、CustomView的使用
+
+![效果图](https://upload-images.jianshu.io/upload_images/4361802-b2efedccefa70103.gif?imageMogr2/auto-orient/strip)
+
 
 ####   1.CommonTabLayout的使用
 | 属性 | 作用 | 
@@ -1155,6 +1175,9 @@ Collection聚合了项目搭建的一些基本模块，节约开发者时间，�
 
 ####   2.OutSideFrameTabLayout的使用
 
+![效果图](https://upload-images.jianshu.io/upload_images/4361802-aeae3839f397dece.gif?imageMogr2/auto-orient/strip)
+
+
 | 属性 | 作用 | 
 | :-----| :---- | 
 |  tab_tabIndicatorColor |设置Tab颜色| 
@@ -1176,7 +1199,13 @@ Collection聚合了项目搭建的一些基本模块，节约开发者时间，�
 #####   具体可参照例子使用。
 
 ####   3.AutoLineLayout的使用
+
+
+![效果图](https://upload-images.jianshu.io/upload_images/4361802-4d30d8dad1106c41.gif?imageMogr2/auto-orient/strip)
+
+
 - 在外层布局使用AutoLineLayout
+
 
       <com.youngmanster.collection_kotlin.base.customview.wraplayout.AutoLineLayout
         android:layout_width="match_parent"
@@ -1186,6 +1215,7 @@ Collection聚合了项目搭建的一些基本模块，节约开发者时间，�
 
 ####   4.TagView的使用
 
+![效果图](https://upload-images.jianshu.io/upload_images/4361802-6aed872b5736a86c.gif?imageMogr2/auto-orient/strip)
 
 ######   TagViewConfigBuilder
 
@@ -1231,6 +1261,9 @@ Collection聚合了项目搭建的一些基本模块，节约开发者时间，�
 *  375f代表设计稿的宽度，以dp为单位，后面需要以f（浮点型）
 
 #####  2.DisplayUtils
+
+![效果图](https://upload-images.jianshu.io/upload_images/4361802-d6c96f712f603d92.gif?imageMogr2/auto-orient/strip)
+
 
 | 属性 | 作用 | 
 | :-----| :---- | 
@@ -1298,3 +1331,4 @@ Collection聚合了项目搭建的一些基本模块，节约开发者时间，�
 
 
 #### 本文章会根据需要持续更新，建议点赞收藏，便于查看。也欢迎大家提出更多建议。
+
