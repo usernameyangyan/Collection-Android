@@ -7,13 +7,8 @@ publish {
     userOrg = 'youngmanopen'
     groupId = 'com.youngman'
     artifactId = 'collectionlibrary'
-    publishVersion = '1.2.9'
-    desc = '1.去掉Relam数据模块,安装包大小减少  \n' +
-            '2.对原生SQLite数据库进行封装，使用更加方便\n' +
-            '3.对DataManager的使用进行修整\n' +
-            '4.增加AutoLineLayout/TagView\n' +
-            '5.增加LinkedMultiValueMap  \n' +
-            '6.增加RxJavaUtils,可进行子/主线程数据处理切换'
+    publishVersion = '1.3.0'
+    desc = '状态栏修改：增加设置状态栏透明+黑色字体'
     website = 'https://github.com/usernameyangyan/Collection-Android'
 }
 
