@@ -183,6 +183,14 @@ public class SQLiteDataBase {
         return query(clazz, null, null, null, null, null, null);
     }
 
+    /**
+     * 根据条件查询表里的全部数据
+     */
+    public <T> List<T> queryAllByWhere(Class<T> clazz,String selection,
+                                       String[] selectionArgs){
+        return query(clazz, null, selection, selectionArgs, null, null, null);
+    }
+
     @SuppressLint("CheckResult")
     public <T> void queryAllBySync(final Class<T> clazz, final QueryDataCompleteListener<T> onQueryDataComplete) {
 

@@ -8,7 +8,7 @@ publish {
     groupId = 'com.youngman'
     artifactId = 'collectionlibrary'
     publishVersion = '1.3.1'
-    desc = '修复SQLite没有创建表查询异常'
+    desc = '1.修复SQLite没有创建表查询异常\n2.SQLite增加按条件查询List'
     website = 'https://github.com/usernameyangyan/Collection-Android'
 }
 

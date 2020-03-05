@@ -63,6 +63,15 @@ public class DataManager {
             return SQLiteDataBase.getInstance().queryAll(clazz);
         }
 
+
+        /**
+         * 根据条件查询表里的全部数据
+         */
+        public static  <T> List<T> queryAllByWhere(Class<T> clazz,String selection,
+                                                   String...selectionArgs) {
+            return SQLiteDataBase.getInstance().queryAllByWhere(clazz,selection,selectionArgs);
+        }
+
         public static  <T> void queryAllBySync(Class<T> clazz,SQLiteDataBase.QueryDataCompleteListener<T> onQueryDataComplete){
             SQLiteDataBase.getInstance().queryAllBySync(clazz,onQueryDataComplete);
         }
