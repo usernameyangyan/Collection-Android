@@ -3,6 +3,7 @@ package com.youngmanster.collectionlibrary.data.database;
 import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.sqlite.SQLiteException;
 
 import com.youngmanster.collectionlibrary.config.Config;
 import com.youngmanster.collectionlibrary.data.DataManager;
@@ -131,22 +132,30 @@ public class SQLiteDataBase {
             Class<T> clazz,
             String[] columns, String selection, String[] selectionArgs,
             String groupBy, String having, String orderBy) {
-        List<ResultSet> queryList =
-                db.query(
-                        SqlHelper.getBeanName(clazz.getName()),
-                        columns,
-                        selection,
-                        selectionArgs,
-                        groupBy,
-                        having,
-                        orderBy
-                );
-        if (queryList == null || queryList.isEmpty()) {
-            return null;
+
+        try {
+            List<ResultSet> queryList =
+                    db.query(
+                            SqlHelper.getBeanName(clazz.getName()),
+                            columns,
+                            selection,
+                            selectionArgs,
+                            groupBy,
+                            having,
+                            orderBy
+                    );
+            if (queryList == null || queryList.isEmpty()) {
+                return null;
+            }
+            List<T> resultList = new ArrayList<>();
+            SqlHelper.parseResultSetListToModelList(queryList, resultList, clazz);
+            return resultList;
+        }catch (SQLiteException exception){
+
         }
-        List<T> resultList = new ArrayList<>();
-        SqlHelper.parseResultSetListToModelList(queryList, resultList, clazz);
-        return resultList;
+
+        return null;
+
     }
 
     /**
