@@ -201,6 +201,26 @@ public abstract class IBaseActivity<T extends BasePresenter> extends AppCompatAc
 
 		}
 
+		public DefaultDefineActionBarConfig setBarDividingLineHeight(int height){
+			defaultDefineView.findViewById(R.id.lineView).getLayoutParams().height=height;
+			return this;
+		}
+
+		public DefaultDefineActionBarConfig setBarDividingLineColor(Context context,int color){
+			defaultDefineView.findViewById(R.id.lineView).setBackgroundColor(ContextCompat.getColor(context,color));
+			return this;
+		}
+
+		public DefaultDefineActionBarConfig setBarDividingLineShowStatus(boolean isShow){
+			if(isShow){
+				defaultDefineView.findViewById(R.id.lineView).setVisibility(View.VISIBLE);
+			}else{
+				defaultDefineView.findViewById(R.id.lineView).setVisibility(View.GONE);
+			}
+
+			return this;
+		}
+
 		public DefaultDefineActionBarConfig setBarBackgroundColor(Context context, int bgColor) {
 			if(defaultDefineView==null){
 				return this;

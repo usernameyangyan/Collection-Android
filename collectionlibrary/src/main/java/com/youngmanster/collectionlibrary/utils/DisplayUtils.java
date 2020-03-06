@@ -143,7 +143,7 @@ public class DisplayUtils {
 	 * @param dark   是否把状态栏字体及图标颜色设置为深色
 	 * @return boolean 成功执行返回true
 	 */
-	public static boolean MIUISetStatusBarLightMode(Window window, boolean dark) {
+	private static boolean MIUISetStatusBarLightMode(Window window, boolean dark) {
 		boolean result = false;
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {//5.0
@@ -178,7 +178,7 @@ public class DisplayUtils {
 	 * @param dark   是否把状态栏字体及图标颜色设置为深色
 	 * @return boolean 成功执行返回true
 	 */
-	public static boolean FlymeSetStatusBarLightMode(Window window, boolean dark) {
+	private static boolean FlymeSetStatusBarLightMode(Window window, boolean dark) {
 		boolean result = false;
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {//5.0
 			if (window != null) {
