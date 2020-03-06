@@ -225,23 +225,52 @@ public class SqlHelper {
                 fieldType = field.getType();
 
                 if (fieldType == Integer.class || fieldType == int.class
-                        || fieldType == Short.class|| fieldType == short.class
-                    ) {
-                    contentValues.put(field.getName(), (int)field.get(model));
-                } else if (fieldType == Long.class || fieldType == long.class) {
-                    contentValues.put(field.getName(), (Long) field.get(model));
-                } else if (fieldType == Float.class || fieldType == float.class) {
-                    contentValues.put(field.getName(), (Float)field.get(model));
-                } else if (fieldType == Double.class || fieldType == double.class) {
-                    contentValues.put(field.getName(),(Double)field.get(model));
-                } else if (fieldType == Boolean.class || fieldType == boolean.class) {
-                    if (field.getBoolean(model)) {
-                        contentValues.put(field.getName(), "1");
-                    } else {
-                        contentValues.put(field.getName(), "0");
+                        || fieldType == Short.class|| fieldType == short.class) {
+                    if(field.get(model)==null){
+                        contentValues.put(field.getName(), 0);
+                    }else{
+                        contentValues.put(field.getName(), (int)field.get(model));
                     }
+
+                } else if (fieldType == Long.class || fieldType == long.class) {
+                    if(field.get(model)==null){
+                        contentValues.put(field.getName(), 0);
+                    }else{
+                        contentValues.put(field.getName(), (Long) field.get(model));
+                    }
+
+                } else if (fieldType == Float.class || fieldType == float.class) {
+                    if(field.get(model)==null){
+                        contentValues.put(field.getName(), 0);
+                    }else{
+                        contentValues.put(field.getName(), (Float)field.get(model));
+                    }
+
+                } else if (fieldType == Double.class || fieldType == double.class) {
+                    if(field.get(model)==null){
+                        contentValues.put(field.getName(), 0);
+                    }else{
+                        contentValues.put(field.getName(),(Double)field.get(model));
+                    }
+
+                } else if (fieldType == Boolean.class || fieldType == boolean.class) {
+                    if(field.get(model)==null){
+                        contentValues.put(field.getName(), "0");
+                    }else{
+                        if (field.getBoolean(model)) {
+                            contentValues.put(field.getName(), "1");
+                        } else {
+                            contentValues.put(field.getName(), "0");
+                        }
+                    }
+
                 } else if (fieldType == String.class) {
-                    contentValues.put(field.getName(), (String)field.get(model));
+                    if(field.get(model)==null){
+                        contentValues.put(field.getName(), "");
+                    }else{
+                        contentValues.put(field.getName(), (String)field.get(model));
+                    }
+
                 }
             } catch (IllegalArgumentException e ) {
                 e.printStackTrace();
