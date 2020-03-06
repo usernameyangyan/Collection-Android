@@ -194,20 +194,18 @@ public class SQLiteDataBase {
     @SuppressLint("CheckResult")
     public <T> void queryAllBySync(final Class<T> clazz, final QueryDataCompleteListener<T> onQueryDataComplete) {
 
-        Observable.create(new ObservableOnSubscribe<List<T>>() {
+        RxJavaUtils.executeAsyncTask(new RxAsyncTask<String, List<T>>("") {
             @Override
-            public void subscribe(ObservableEmitter<List<T>> emitter) {
-                emitter.onNext(queryAll(clazz));
+            public void doInUIThread(List<T> ts) {
+                onQueryDataComplete.onQueryComplete(ts);
             }
-        })
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<List<T>>() {
-                    @Override
-                    public void accept(List<T> ts) {
-                        onQueryDataComplete.onQueryComplete(ts);
-                    }
-                });
+
+            @Override
+            public List<T> doInIOThread(String s) {
+                return queryAll(clazz);
+            }
+        });
+
     }
 
     /**
@@ -229,7 +227,12 @@ public class SQLiteDataBase {
      */
 
     public <T> boolean delete(Class<T> clazz, String whereClause, String... whereArgs) {
-        return db.delete(SqlHelper.getBeanName(clazz.getName()), whereClause, whereArgs) > 0;
+        try {
+            return db.delete(SqlHelper.getBeanName(clazz.getName()), whereClause, whereArgs) > 0;
+        }catch (SQLiteException exception){
+        }
+        return false;
+
     }
 
     /**
@@ -244,8 +247,14 @@ public class SQLiteDataBase {
      * 删除表
      */
     public <T> void deleteTable(Class<T> clazz) {
-        String dropTableSql = String.format("DROP TABLE %s", SqlHelper.getBeanName(clazz.getName()));
-        db.execSQL(dropTableSql);
+        try{
+            String dropTableSql = String.format("DROP TABLE %s", SqlHelper.getBeanName(clazz.getName()));
+            db.execSQL(dropTableSql);
+        }catch (SQLiteException e){
+
+        }
+
+
     }
 
     /**
@@ -253,14 +262,22 @@ public class SQLiteDataBase {
      * -1失败
      */
     public <T> boolean update(T model, String whereClause, String[] whereArgs) {
-        ContentValues contentValues = new ContentValues();
-        SqlHelper.parseModelToContentValues(model, contentValues);
-        return db.update(
-                SqlHelper.getBeanName((model).getClass().getName()),
-                contentValues,
-                whereClause,
-                whereArgs
-        ) == 1;
+
+        try {
+            ContentValues contentValues = new ContentValues();
+            SqlHelper.parseModelToContentValues(model, contentValues);
+            return db.update(
+                    SqlHelper.getBeanName((model).getClass().getName()),
+                    contentValues,
+                    whereClause,
+                    whereArgs
+            ) == 1;
+        }catch (SQLiteException e){
+
+        }
+
+        return false;
+
     }
 
     /**
@@ -273,20 +290,27 @@ public class SQLiteDataBase {
             String orderBy, int page, int pageSize
     ) {
 
-        String order = orderBy;
+        try {
+            String order = orderBy;
 
-        if (orderBy == null) {
-            order = SqlHelper.getPrimaryKey(clazz);
+            if (orderBy == null) {
+                order = SqlHelper.getPrimaryKey(clazz);
+            }
+
+            PagingList<ResultSet> queryList = db.pagingQuery(
+                    SqlHelper.getBeanName(clazz.getName()), columns, selection, selectionArgs,
+                    groupBy, having, order, page, pageSize);
+
+            PagingList<T> resultList = new PagingList<>();
+            resultList.setTotalSize(queryList.getTotalSize());
+            SqlHelper.parseResultSetListToModelList(queryList, resultList, clazz);
+            return resultList;
+        }catch (SQLiteException e){
+
         }
 
-        PagingList<ResultSet> queryList = db.pagingQuery(
-                SqlHelper.getBeanName(clazz.getName()), columns, selection, selectionArgs,
-                groupBy, having, order, page, pageSize);
+        return null;
 
-        PagingList<T> resultList = new PagingList<>();
-        resultList.setTotalSize(queryList.getTotalSize());
-        SqlHelper.parseResultSetListToModelList(queryList, resultList, clazz);
-        return resultList;
     }
 
     public <T> PagingList<T> queryOfPageByWhere(
@@ -311,7 +335,14 @@ public class SQLiteDataBase {
      */
 
     public List<ResultSet> execQuerySQL(String sql) {
-        return db.execQuerySQL(sql);
+        try {
+            return db.execQuerySQL(sql);
+        }catch (SQLiteException e){
+
+        }
+
+        return null;
+
     }
 
 
@@ -319,41 +350,47 @@ public class SQLiteDataBase {
      * 更新表
      */
     public <T> void updateTable(final Class<T> clazz) {
-        int newTableVersion = SqlHelper.getTableVersion();
-        int curTableVersion = getCurTableVersion();
-        if (newTableVersion != curTableVersion) {
-            DBTransaction.transact(db, new DBTransaction.DBTransactionInterface() {
-                @Override
-                public void onTransact() {
-                    List<ResultSet> rs = db.query("sqlite_master", new String[]{"sql"}, "type=? AND name=?", new String[]{"table", SqlHelper.getBeanName(clazz.getName())});
 
-                    String curTableSql = rs.get(0).getStringValue("sql");
-                    Map<String, Boolean> curColumns = getTableColumnsInfo(curTableSql);
+        try {
+            int newTableVersion = SqlHelper.getTableVersion();
+            int curTableVersion = getCurTableVersion();
+            if (newTableVersion != curTableVersion) {
+                DBTransaction.transact(db, new DBTransaction.DBTransactionInterface() {
+                    @Override
+                    public void onTransact() {
+                        List<ResultSet> rs = db.query("sqlite_master", new String[]{"sql"}, "type=? AND name=?", new String[]{"table", SqlHelper.getBeanName(clazz.getName())});
 
-                    List<ColumnInfo> newColumnInfos = getTableColumnInfos(clazz);
-                    int newColumnSize = newColumnInfos.size();
-                    ColumnInfo newColumnInfo;
-                    String newColumnName;
-                    String sql;
+                        String curTableSql = rs.get(0).getStringValue("sql");
+                        Map<String, Boolean> curColumns = getTableColumnsInfo(curTableSql);
 
-                    for (int index = 0; index < newColumnSize; ++index) {
-                        newColumnInfo = newColumnInfos.get(index);
-                        newColumnName = newColumnInfo.getName().toLowerCase();
-                        if (curColumns.containsKey(newColumnName)) {
-                            curColumns.put(newColumnName, false);
-                        } else {
-                            sql = SqlHelper.getAddColumnSql(SqlHelper.getBeanName(clazz.getName()), newColumnInfo);
-                            db.execSQL(sql);
+                        List<ColumnInfo> newColumnInfos = getTableColumnInfos(clazz);
+                        int newColumnSize = newColumnInfos.size();
+                        ColumnInfo newColumnInfo;
+                        String newColumnName;
+                        String sql;
+
+                        for (int index = 0; index < newColumnSize; ++index) {
+                            newColumnInfo = newColumnInfos.get(index);
+                            newColumnName = newColumnInfo.getName().toLowerCase();
+                            if (curColumns.containsKey(newColumnName)) {
+                                curColumns.put(newColumnName, false);
+                            } else {
+                                sql = SqlHelper.getAddColumnSql(SqlHelper.getBeanName(clazz.getName()), newColumnInfo);
+                                db.execSQL(sql);
+                            }
                         }
+
+
+                        DataManager.DataForSharePreferences.saveObject(
+                                SqlHelper.PREFS_TABLE_VERSION_KEY,
+                                Config.SQLITE_DB_VERSION);
                     }
+                });
+            }
+        }catch (SQLiteException e){
 
-
-                    DataManager.DataForSharePreferences.saveObject(
-                            SqlHelper.PREFS_TABLE_VERSION_KEY,
-                            Config.SQLITE_DB_VERSION);
-                }
-            });
         }
+
     }
 
 

@@ -28,6 +28,7 @@ public abstract class BasePopupWindow extends PopupWindow {
 	private WindowManager windowManager;
 	private int popupWidth;
 	private int popupHeight;
+	private boolean touch_dismiss;
 
 	public BasePopupWindow(Context context) {
 		this.context=context;
@@ -62,11 +63,25 @@ public abstract class BasePopupWindow extends PopupWindow {
 			popupView.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					dismiss();
+					if(touch_dismiss){
+						dismiss();
+					}
 				}
 			});
 		}
 
+	}
+
+	public void setTouchDismiss(boolean touch_dismiss){
+		this.touch_dismiss=touch_dismiss;
+	}
+
+	public void showPopup(int gravity){
+		View anchor=((Activity)context).findViewById(android.R.id.content);
+		if(isShowMaskView){
+			addMask(anchor.getWindowToken());
+		}
+		this.showAtLocation(anchor,gravity,0,0);
 	}
 
 
