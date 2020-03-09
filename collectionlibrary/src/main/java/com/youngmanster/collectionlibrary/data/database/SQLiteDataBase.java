@@ -133,28 +133,22 @@ public class SQLiteDataBase {
             String[] columns, String selection, String[] selectionArgs,
             String groupBy, String having, String orderBy) {
 
-        try {
-            List<ResultSet> queryList =
-                    db.query(
-                            SqlHelper.getBeanName(clazz.getName()),
-                            columns,
-                            selection,
-                            selectionArgs,
-                            groupBy,
-                            having,
-                            orderBy
-                    );
-            if (queryList == null || queryList.isEmpty()) {
-                return null;
-            }
-            List<T> resultList = new ArrayList<>();
-            SqlHelper.parseResultSetListToModelList(queryList, resultList, clazz);
-            return resultList;
-        }catch (SQLiteException exception){
-
+        List<ResultSet> queryList =
+                db.query(
+                        SqlHelper.getBeanName(clazz.getName()),
+                        columns,
+                        selection,
+                        selectionArgs,
+                        groupBy,
+                        having,
+                        orderBy
+                );
+        if (queryList == null || queryList.isEmpty()) {
+            return null;
         }
-
-        return null;
+        List<T> resultList = new ArrayList<>();
+        SqlHelper.parseResultSetListToModelList(queryList, resultList, clazz);
+        return resultList;
 
     }
 
@@ -227,11 +221,7 @@ public class SQLiteDataBase {
      */
 
     public <T> boolean delete(Class<T> clazz, String whereClause, String... whereArgs) {
-        try {
-            return db.delete(SqlHelper.getBeanName(clazz.getName()), whereClause, whereArgs) > 0;
-        }catch (SQLiteException exception){
-        }
-        return false;
+        return db.delete(SqlHelper.getBeanName(clazz.getName()), whereClause, whereArgs) > 0;
 
     }
 
@@ -247,14 +237,8 @@ public class SQLiteDataBase {
      * 删除表
      */
     public <T> void deleteTable(Class<T> clazz) {
-        try{
-            String dropTableSql = String.format("DROP TABLE %s", SqlHelper.getBeanName(clazz.getName()));
-            db.execSQL(dropTableSql);
-        }catch (SQLiteException e){
-
-        }
-
-
+        String dropTableSql = String.format("DROP TABLE %s", SqlHelper.getBeanName(clazz.getName()));
+        db.execSQL(dropTableSql);
     }
 
     /**
@@ -263,20 +247,14 @@ public class SQLiteDataBase {
      */
     public <T> boolean update(T model, String whereClause, String[] whereArgs) {
 
-        try {
-            ContentValues contentValues = new ContentValues();
-            SqlHelper.parseModelToContentValues(model, contentValues);
-            return db.update(
-                    SqlHelper.getBeanName((model).getClass().getName()),
-                    contentValues,
-                    whereClause,
-                    whereArgs
-            ) == 1;
-        }catch (SQLiteException e){
-
-        }
-
-        return false;
+        ContentValues contentValues = new ContentValues();
+        SqlHelper.parseModelToContentValues(model, contentValues);
+        return db.update(
+                SqlHelper.getBeanName((model).getClass().getName()),
+                contentValues,
+                whereClause,
+                whereArgs
+        ) == 1;
 
     }
 
@@ -290,26 +268,21 @@ public class SQLiteDataBase {
             String orderBy, int page, int pageSize
     ) {
 
-        try {
-            String order = orderBy;
+        String order = orderBy;
 
-            if (orderBy == null) {
-                order = SqlHelper.getPrimaryKey(clazz);
-            }
-
-            PagingList<ResultSet> queryList = db.pagingQuery(
-                    SqlHelper.getBeanName(clazz.getName()), columns, selection, selectionArgs,
-                    groupBy, having, order, page, pageSize);
-
-            PagingList<T> resultList = new PagingList<>();
-            resultList.setTotalSize(queryList.getTotalSize());
-            SqlHelper.parseResultSetListToModelList(queryList, resultList, clazz);
-            return resultList;
-        }catch (SQLiteException e){
-
+        if (orderBy == null) {
+            order = SqlHelper.getPrimaryKey(clazz);
         }
 
-        return null;
+        PagingList<ResultSet> queryList = db.pagingQuery(
+                SqlHelper.getBeanName(clazz.getName()), columns, selection, selectionArgs,
+                groupBy, having, order, page, pageSize);
+
+        PagingList<T> resultList = new PagingList<>();
+        resultList.setTotalSize(queryList.getTotalSize());
+        SqlHelper.parseResultSetListToModelList(queryList, resultList, clazz);
+        return resultList;
+
 
     }
 
@@ -335,13 +308,7 @@ public class SQLiteDataBase {
      */
 
     public List<ResultSet> execQuerySQL(String sql) {
-        try {
-            return db.execQuerySQL(sql);
-        }catch (SQLiteException e){
-
-        }
-
-        return null;
+        return db.execQuerySQL(sql);
 
     }
 

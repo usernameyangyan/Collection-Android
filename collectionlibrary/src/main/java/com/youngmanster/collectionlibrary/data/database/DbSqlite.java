@@ -60,7 +60,6 @@ public class DbSqlite {
 			openDB();
 			return mSQLiteDatabase.update(table, values, whereClause, whereArgs);
 		} catch (Exception ex) {
-			ex.printStackTrace();
 			return -1;
 		}
 	}
@@ -137,8 +136,7 @@ public class DbSqlite {
 			openDB();
 			return mSQLiteDatabase.delete(table, whereClause, whereArgs);
 		} catch (SQLException ex) {
-			ex.printStackTrace();
-			throw ex;
+			return -1;
 		}
 	}
 
@@ -169,8 +167,7 @@ public class DbSqlite {
 				return resultList;
 			}
 		} catch (SQLException ex) {
-			ex.printStackTrace();
-			throw ex;
+			return null;
 		} finally {
 			if(cursor!=null)
 				cursor.close();
@@ -243,8 +240,7 @@ public class DbSqlite {
 				return resultList;
 			}
 		} catch (SQLException ex) {
-			ex.printStackTrace();
-			throw ex;
+			return null;
 		} finally {
 			if(cursor!=null)
 				cursor.close();
@@ -266,8 +262,7 @@ public class DbSqlite {
 			mSQLiteDatabase.execSQL(sql, bindArgs);
 			return true;
 		} catch (SQLException ex) {
-			ex.printStackTrace();
-			throw ex;
+			return false;
 		}
 	}
 
@@ -290,8 +285,7 @@ public class DbSqlite {
 			parseCursorToResult(cursor, resultList);
 			return resultList;
 		}catch(SQLException ex) {
-			ex.printStackTrace();
-			throw ex;
+			return null;
 		}finally{
 			if(cursor!=null)
 				cursor.close();
