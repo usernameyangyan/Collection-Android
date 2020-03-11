@@ -49,6 +49,11 @@ public class LoadingTextConfig {
         collection_no_more_data=context.getString(R.string.collection_no_more_data);
     }
 
+    /***
+     * 设置下拉完成提示
+     * @param text
+     * @return
+     */
     public LoadingTextConfig setCollectionRefreshDone(String text){
         collection_refresh_done=text;
         return this;
@@ -58,6 +63,11 @@ public class LoadingTextConfig {
         return collection_refresh_done;
     }
 
+    /***
+     * 设置正在刷新提示
+     * @param text
+     * @return
+     */
     public LoadingTextConfig setCollectionRefreshing(String text){
         collection_refreshing=text;
         return this;
@@ -66,6 +76,12 @@ public class LoadingTextConfig {
     public String getCollectionRefreshing(){
         return collection_refreshing;
     }
+
+    /**
+     * 设置刷新时间提示
+     * @param text
+     * @return
+     */
 
     public LoadingTextConfig setCollectionLastRefreshTimeTip(String text){
         collection_last_refresh_time=text;
@@ -76,6 +92,11 @@ public class LoadingTextConfig {
         return collection_last_refresh_time;
     }
 
+    /**
+     * 设置正在加载更多提示
+     * @param text
+     * @return
+     */
     public LoadingTextConfig setCollectionLoadingMore(String text){
         collection_loading_more=text;
         return this;
@@ -85,6 +106,11 @@ public class LoadingTextConfig {
         return collection_loading_more;
     }
 
+    /**
+     * 设置加载更多没有数据提示
+     * @param text
+     * @return
+     */
     public LoadingTextConfig setCollectionNoMoreData(String text){
         collection_no_more_data=text;
         return this;
@@ -94,6 +120,11 @@ public class LoadingTextConfig {
         return collection_no_more_data;
     }
 
+    /***
+     * 设置下拉过程时的提示
+     * @param text
+     * @return
+     */
     public LoadingTextConfig setCollectionPullDownRefreshText(String text){
         collection_pull_to_refresh=text;
         return this;
@@ -103,6 +134,11 @@ public class LoadingTextConfig {
         return collection_pull_to_refresh;
     }
 
+    /**
+     * 设置下拉到底时的提示
+     * @param text
+     * @return
+     */
     public LoadingTextConfig setCollectionPullReleaseText(String text){
         collection_release_refresh=text;
         return this;
