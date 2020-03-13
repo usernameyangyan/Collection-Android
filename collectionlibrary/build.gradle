@@ -8,7 +8,7 @@ publish {
     groupId = 'com.youngman'
     artifactId = 'collectionlibrary'
     publishVersion = '1.3.2'
-    desc = '1.修复状态栏黑字透明导致底部虚拟按钮透明问题  \n2.增加PopupWindow点击返回按钮不消失'
+    desc = '修复状态栏透明导致底部虚拟按钮透明问题'
     website = 'https://github.com/usernameyangyan/Collection-Android'
 }
 

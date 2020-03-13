@@ -29,9 +29,9 @@ public class TransparentStatusBarActivity extends BaseActivity {
 	@Override
 	public void init() {
 
-//		DisplayUtils.setStatusBarFullTranslucentWithBlackFont(this);
+		DisplayUtils.setStatusBarFullTranslucentWithBlackFont(this);
 
-		DisplayUtils.setStatusBarFullTranslucent(this);
+//		DisplayUtils.setStatusBarFullTranslucent(this);
 
 		GlideUtils.loadImg(this,
 				"https://gss2.bdstatic.com/9fo3dSag_xI4khGkpoWK1HF6hhy/baike/c0%3Dbaike272%2C5%2C5%2C272%2C90/sign=06f0367c57b5c9ea76fe0bb1b450dd65/d1a20cf431adcbef44627e71a0af2edda3cc9f76.jpg",
