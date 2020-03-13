@@ -17,7 +17,8 @@ import okhttp3.RequestBody;
 
 public class RequestBuilder<T> {
 
-    private ReqType reqType=ReqType.DEFAULT_CACHE_LIST;
+    private ReqType reqType= ReqType.DEFAULT_CACHE_LIST;
+    private ReqMode reqMode= ReqMode.ASYNCHRONOUS;
     private Class clazz;
     private String url;
     private String filePath;
@@ -25,13 +26,13 @@ public class RequestBuilder<T> {
     private int limtHours=1;
     private boolean isUserCommonClass=true;
     private boolean isReturnOriginJson=false;
-    private HttpType httpType=HttpType.DEFAULT_GET;
+    private HttpType httpType= HttpType.DEFAULT_GET;
     private RxObservableListener<T> rxObservableListener;
     private Map<String, Object> requestParam;
     private MultipartBody.Part part;
     private MultipartBody.Part []parts;
     private boolean isDiskCacheNetworkSaveReturn;
-    private Map<String,String> headers;
+    private Map<String, String> headers;
 
     public enum ReqType {
         //没有缓存
@@ -64,6 +65,11 @@ public class RequestBuilder<T> {
         MULTIPLE_MULTIPART_POST
     }
 
+    public enum ReqMode{
+        ASYNCHRONOUS, //异步
+        SYNCHRONIZATION //同步
+    }
+
     public RequestBuilder(RxObservableListener<T> rxObservableListener) {
         this.rxObservableListener = rxObservableListener;
         requestParam = new HashMap<>();
@@ -89,7 +95,7 @@ public class RequestBuilder<T> {
         return url;
     }
 
-    public RequestBuilder setFilePathAndFileName(String filePath,String fileName) {
+    public RequestBuilder setFilePathAndFileName(String filePath, String fileName) {
         this.filePath = filePath;
         this.fileName=fileName;
         return this;
@@ -150,7 +156,7 @@ public class RequestBuilder<T> {
         return isDiskCacheNetworkSaveReturn;
     }
 
-    public RequestBuilder setHttpTypeAndReqType(HttpType httpType,ReqType reqType) {
+    public RequestBuilder setHttpTypeAndReqType(HttpType httpType, ReqType reqType) {
         this.httpType = httpType;
         this.reqType = reqType;
         return this;
@@ -168,7 +174,7 @@ public class RequestBuilder<T> {
         return part;
     }
 
-    public RequestBuilder setImagePath(String key,String imagePath) {
+    public RequestBuilder setImagePath(String key, String imagePath) {
         File file = new File(imagePath);
         RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
         MultipartBody.Part part = MultipartBody.Part.createFormData(key, file.getName(), requestFile);
@@ -177,7 +183,7 @@ public class RequestBuilder<T> {
     }
 
 
-    public RequestBuilder setImagePaths(String key,String []imagePaths) {
+    public RequestBuilder setImagePaths(String key, String[]imagePaths) {
 
         parts =new MultipartBody.Part[imagePaths.length];
         for(int i=0;i<imagePaths.length;i++){
@@ -208,6 +214,16 @@ public class RequestBuilder<T> {
 
     public RequestBuilder setReturnOriginJson(boolean returnOriginJson) {
         isReturnOriginJson = returnOriginJson;
+        return this;
+    }
+
+
+    public ReqMode getReqMode() {
+        return reqMode;
+    }
+
+    public RequestBuilder setReqMode(ReqMode reqMode) {
+        this.reqMode = reqMode;
         return this;
     }
 

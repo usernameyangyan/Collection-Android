@@ -1,5 +1,6 @@
 package com.youngmanster.collectionlibrary.network;
 
+import android.annotation.SuppressLint;
 import android.text.TextUtils;
 
 import com.youngmanster.collectionlibrary.config.Config;
@@ -7,6 +8,7 @@ import com.youngmanster.collectionlibrary.db.impl.DataManagerImpl;
 import com.youngmanster.collectionlibrary.network.gson.GsonUtils;
 import com.youngmanster.collectionlibrary.network.rx.RxSchedulers;
 import com.youngmanster.collectionlibrary.network.rx.RxSubscriber;
+import com.youngmanster.collectionlibrary.network.synchronization.OkHttpUtils;
 import com.youngmanster.collectionlibrary.utils.FileUtils;
 import com.youngmanster.collectionlibrary.utils.LogUtils;
 import com.youngmanster.collectionlibrary.utils.NetworkUtils;
@@ -39,38 +41,46 @@ public class RequestManager extends DataManagerImpl {
 
 	public <T> DisposableObserver<ResponseBody> request(RequestBuilder<T> builder) {
 
-		if (builder.getReqType() == RequestBuilder.ReqType.NO_CACHE_MODEL) {
-			Observable<ResponseBody> observable = getRetrofit(builder, false);
-			return loadOnlyNetWorkModel(builder, observable);
-		} else if (builder.getReqType() == RequestBuilder.ReqType.No_CACHE_LIST) {
-			Observable<ResponseBody> observable = getRetrofit(builder, false);
-			return loadOnlyNetWorkList(builder, observable);
-		} else if (builder.getReqType() == RequestBuilder.ReqType.DEFAULT_CACHE_MODEL) {
-			Observable<ResponseBody> observable = getRetrofit(builder, true);
-			return loadOnlyNetWorkModel(builder, observable);
-		} else if (builder.getReqType() == RequestBuilder.ReqType.DEFAULT_CACHE_LIST) {
-			Observable<ResponseBody> observable = getRetrofit(builder, true);
-			return loadOnlyNetWorkList(builder, observable);
-		} else if (builder.getReqType() == RequestBuilder.ReqType.DISK_CACHE_LIST_LIMIT_TIME) {
-			Observable<ResponseBody> observable = getRetrofit(builder, false);
-			return loadFormDiskResultListLimitTime(builder, observable);
-		} else if (builder.getReqType() == RequestBuilder.ReqType.DISK_CACHE_MODEL_LIMIT_TIME) {
-			Observable<ResponseBody> observable = getRetrofit(builder, false);
-			return loadFormDiskModeLimitTime(builder, observable);
-		} else if (builder.getReqType() == RequestBuilder.ReqType.DISK_CACHE_NO_NETWORK_LIST) {
-			Observable<ResponseBody> observable = getRetrofit(builder, false);
-			return loadNoNetWorkWithCacheResultList(builder, observable);
-		} else if (builder.getReqType() == RequestBuilder.ReqType.DISK_CACHE_NO_NETWORK_MODEL) {
-			Observable<ResponseBody> observable = getRetrofit(builder, false);
-			return loadNoNetWorkWithCacheModel(builder, observable);
-		} else if (builder.getReqType() == RequestBuilder.ReqType.DISK_CACHE_NETWORK_SAVE_RETURN_MODEL) {
-			Observable<ResponseBody> observable = getRetrofit(builder, false);
-			return loadOnlyNetWorkSaveModel(builder, observable);
-		} else if (builder.getReqType() == RequestBuilder.ReqType.DISK_CACHE_NETWORK_SAVE_RETURN_LIST) {
-			Observable<ResponseBody> observable = getRetrofit(builder, false);
-			return loadOnlyNetWorkSaveList(builder, observable);
+		if(builder.getReqMode()== RequestBuilder.ReqMode.ASYNCHRONOUS){
+			if (builder.getReqType() == RequestBuilder.ReqType.NO_CACHE_MODEL) {
+				Observable<ResponseBody> observable = getRetrofit(builder, false);
+				return loadOnlyNetWorkModel(builder, observable);
+			} else if (builder.getReqType() == RequestBuilder.ReqType.No_CACHE_LIST) {
+				Observable<ResponseBody> observable = getRetrofit(builder, false);
+				return loadOnlyNetWorkList(builder, observable);
+			} else if (builder.getReqType() == RequestBuilder.ReqType.DEFAULT_CACHE_MODEL) {
+				Observable<ResponseBody> observable = getRetrofit(builder, true);
+				return loadOnlyNetWorkModel(builder, observable);
+			} else if (builder.getReqType() == RequestBuilder.ReqType.DEFAULT_CACHE_LIST) {
+				Observable<ResponseBody> observable = getRetrofit(builder, true);
+				return loadOnlyNetWorkList(builder, observable);
+			} else if (builder.getReqType() == RequestBuilder.ReqType.DISK_CACHE_LIST_LIMIT_TIME) {
+				Observable<ResponseBody> observable = getRetrofit(builder, false);
+				return loadFormDiskResultListLimitTime(builder, observable);
+			} else if (builder.getReqType() == RequestBuilder.ReqType.DISK_CACHE_MODEL_LIMIT_TIME) {
+				Observable<ResponseBody> observable = getRetrofit(builder, false);
+				return loadFormDiskModeLimitTime(builder, observable);
+			} else if (builder.getReqType() == RequestBuilder.ReqType.DISK_CACHE_NO_NETWORK_LIST) {
+				Observable<ResponseBody> observable = getRetrofit(builder, false);
+				return loadNoNetWorkWithCacheResultList(builder, observable);
+			} else if (builder.getReqType() == RequestBuilder.ReqType.DISK_CACHE_NO_NETWORK_MODEL) {
+				Observable<ResponseBody> observable = getRetrofit(builder, false);
+				return loadNoNetWorkWithCacheModel(builder, observable);
+			} else if (builder.getReqType() == RequestBuilder.ReqType.DISK_CACHE_NETWORK_SAVE_RETURN_MODEL) {
+				Observable<ResponseBody> observable = getRetrofit(builder, false);
+				return loadOnlyNetWorkSaveModel(builder, observable);
+			} else if (builder.getReqType() == RequestBuilder.ReqType.DISK_CACHE_NETWORK_SAVE_RETURN_LIST) {
+				Observable<ResponseBody> observable = getRetrofit(builder, false);
+				return loadOnlyNetWorkSaveList(builder, observable);
+			}
+			return null;
+		}else{
+			OkHttpUtils.requestSyncData(builder);
+			return null;
 		}
-		return null;
+
+
+
 	}
 
 	private <T> Observable<ResponseBody> getRetrofit(RequestBuilder<T> builder, boolean isCache) {
@@ -204,6 +214,7 @@ public class RequestManager extends DataManagerImpl {
 	 * 设置缓存时间，没超过设置的时间不请求网络，只返回缓存数据
 	 * 返回List
 	 */
+	@SuppressLint("CheckResult")
 	public <T> DisposableObserver<ResponseBody> loadFormDiskResultListLimitTime(final RequestBuilder<T> builder, Observable<ResponseBody> observable) {
 
 
@@ -217,11 +228,11 @@ public class RequestManager extends DataManagerImpl {
 					if(builder.isReturnOriginJson()){
 						a= (T) json;
 					}else if(Config.MClASS==null){
-						a=GsonUtils.fromJsonNoCommonClass(json, builder.getTransformClass());
+						a= GsonUtils.fromJsonNoCommonClass(json, builder.getTransformClass());
 					}else if(!builder.isUserCommonClass()){
-						a=GsonUtils.fromJsonNoCommonClass(json, builder.getTransformClass());
+						a= GsonUtils.fromJsonNoCommonClass(json, builder.getTransformClass());
 					}else{
-						a=GsonUtils.fromJsonArray(json, builder.getTransformClass());
+						a= GsonUtils.fromJsonArray(json, builder.getTransformClass());
 					}
 					builder.getRxObservableListener().onNext(a);
 				}
@@ -251,11 +262,11 @@ public class RequestManager extends DataManagerImpl {
 						if(builder.isReturnOriginJson()){
 							a= (T) json[0];
 						}else if(Config.MClASS==null){
-							a=GsonUtils.fromJsonNoCommonClass(json[0], builder.getTransformClass());
+							a= GsonUtils.fromJsonNoCommonClass(json[0], builder.getTransformClass());
 						}else if(!builder.isUserCommonClass()){
-							a=GsonUtils.fromJsonNoCommonClass(json[0], builder.getTransformClass());
+							a= GsonUtils.fromJsonNoCommonClass(json[0], builder.getTransformClass());
 						}else{
-							a=GsonUtils.fromJsonArray(json[0], builder.getTransformClass());
+							a= GsonUtils.fromJsonArray(json[0], builder.getTransformClass());
 						}
 						builder.getRxObservableListener().onNext(a);
 					}
@@ -290,11 +301,11 @@ public class RequestManager extends DataManagerImpl {
 					if(builder.isReturnOriginJson()){
 						a= (T) json;
 					}else if(Config.MClASS==null){
-						a=GsonUtils.fromJsonNoCommonClass(json, builder.getTransformClass());
+						a= GsonUtils.fromJsonNoCommonClass(json, builder.getTransformClass());
 					}else if(!builder.isUserCommonClass()){
-						a=GsonUtils.fromJsonNoCommonClass(json, builder.getTransformClass());
+						a= GsonUtils.fromJsonNoCommonClass(json, builder.getTransformClass());
 					}else{
-						a=GsonUtils.fromJsonObject(json, builder.getTransformClass());
+						a= GsonUtils.fromJsonObject(json, builder.getTransformClass());
 					}
 					builder.getRxObservableListener().onNext(a);
 
@@ -325,11 +336,11 @@ public class RequestManager extends DataManagerImpl {
 						if(builder.isReturnOriginJson()){
 							a= (T) json[0];
 						}else if(Config.MClASS==null){
-							a=GsonUtils.fromJsonNoCommonClass(json[0], builder.getTransformClass());
+							a= GsonUtils.fromJsonNoCommonClass(json[0], builder.getTransformClass());
 						}else if(!builder.isUserCommonClass()){
-							a=GsonUtils.fromJsonNoCommonClass(json[0], builder.getTransformClass());
+							a= GsonUtils.fromJsonNoCommonClass(json[0], builder.getTransformClass());
 						}else{
-							a=GsonUtils.fromJsonObject(json[0], builder.getTransformClass());
+							a= GsonUtils.fromJsonObject(json[0], builder.getTransformClass());
 						}
 						builder.getRxObservableListener().onNext(a);
 					}
@@ -364,11 +375,11 @@ public class RequestManager extends DataManagerImpl {
 						if(builder.isReturnOriginJson()){
 							a= (T) json;
 						} else if(Config.MClASS==null){
-							a=GsonUtils.fromJsonNoCommonClass(json, builder.getTransformClass());
+							a= GsonUtils.fromJsonNoCommonClass(json, builder.getTransformClass());
 						}else if(!builder.isUserCommonClass()){
-							a=GsonUtils.fromJsonNoCommonClass(json, builder.getTransformClass());
+							a= GsonUtils.fromJsonNoCommonClass(json, builder.getTransformClass());
 						}else{
-							a=GsonUtils.fromJsonArray(json, builder.getTransformClass());
+							a= GsonUtils.fromJsonArray(json, builder.getTransformClass());
 						}
 						emitter.onNext(a);
 
@@ -480,7 +491,7 @@ public class RequestManager extends DataManagerImpl {
 				}else if(!builder.isUserCommonClass()){
 					a = GsonUtils.fromJsonNoCommonClass(json[0], builder.getTransformClass());
 				}else{
-					a =GsonUtils.fromJsonObject(json[0], builder.getTransformClass());
+					a = GsonUtils.fromJsonObject(json[0], builder.getTransformClass());
 				}
 				builder.getRxObservableListener().onNext(a);
 			}
