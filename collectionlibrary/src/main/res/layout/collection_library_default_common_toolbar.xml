@@ -39,6 +39,7 @@
         android:id="@+id/lineView"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="#E5E5E5"/>
+        android:background="#E5E5E5"
+        android:visibility="gone"/>
 
 </LinearLayout>

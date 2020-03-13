@@ -22,6 +22,7 @@ import com.youngmanster.collectionlibrary.base.helper.SupportActivityDelegate;
 import com.youngmanster.collectionlibrary.base.helper.SupportHelper;
 import com.youngmanster.collectionlibrary.mvp.BasePresenter;
 import com.youngmanster.collectionlibrary.mvp.ClassGetUtil;
+import com.youngmanster.collectionlibrary.utils.AndroidWorkaroundUtils;
 
 /**
  * Created by yangyan
@@ -54,6 +55,10 @@ public abstract class IBaseActivity<T extends BasePresenter> extends AppCompatAc
 			addContainerFrame(getLayoutId());
 		}else{
 			throw new IllegalArgumentException("请设置getLayoutId");
+		}
+
+		if(isDealDeviceHasNavigationBar()){
+			AndroidWorkaroundUtils.assistActivity(findViewById(android.R.id.content));
 		}
 
 		mPresenter = ClassGetUtil.getClass(this, 0);
@@ -180,6 +185,14 @@ public abstract class IBaseActivity<T extends BasePresenter> extends AppCompatAc
 
 	public int setCustomActionBar() {
 		return 0;
+	}
+
+	/***
+	 * 实现处理底部虚拟按钮
+	 * @return
+	 */
+	public boolean isDealDeviceHasNavigationBar() {
+		return true;
 	}
 
 

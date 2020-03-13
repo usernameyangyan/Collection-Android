@@ -76,6 +76,12 @@ public abstract class BasePopupWindow extends PopupWindow {
 		this.touch_dismiss=touch_dismiss;
 	}
 
+	public void setOnBackPressDismiss(boolean onBackPressDismiss){
+		setFocusable(onBackPressDismiss);
+		setOutsideTouchable(onBackPressDismiss);
+		setBackgroundDrawable(new ColorDrawable());
+	}
+
 	public void showPopup(int gravity){
 		View anchor=((Activity)context).findViewById(android.R.id.content);
 		if(isShowMaskView){
