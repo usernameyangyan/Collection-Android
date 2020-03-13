@@ -34,8 +34,7 @@ public class CustomViewActivity extends BaseActivity implements BaseRecyclerView
 
 	@Override
 	public void init() {
-		setTitleContent(getString(R.string.custom_view_title));
-		showHomeAsUp(R.mipmap.ic_back_btn);
+		defineActionBarConfig.setTitle(getString(R.string.custom_view_title));
 
 		LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
 		linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -47,7 +46,8 @@ public class CustomViewActivity extends BaseActivity implements BaseRecyclerView
 
 		mDatas.add("CommonTabLayout");
 		mDatas.add("OutSideFrameTabLayout");
-		mDatas.add("AutoLinefeedLayout");
+		mDatas.add("AutoLineLayout");
+		mDatas.add("TagView");
 		refreshUI();
 	}
 
@@ -79,6 +79,10 @@ public class CustomViewActivity extends BaseActivity implements BaseRecyclerView
 				break;
 			case 2:
 				intent = new Intent(this, WrapLinearLayoutActivity.class);
+				startActivity(intent);
+				break;
+			case 3:
+				intent = new Intent(this, TagViewActivity.class);
 				startActivity(intent);
 				break;
 		}

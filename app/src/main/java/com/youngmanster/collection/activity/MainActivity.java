@@ -12,7 +12,7 @@ import com.youngmanster.collection.activity.recyclerview.RecyclerViewActivity;
 import com.youngmanster.collection.adapter.MainViewAdapter;
 import com.youngmanster.collection.base.BaseActivity;
 import com.youngmanster.collection.customview.activity.CustomViewActivity;
-import com.youngmanster.collection.db.activity.DataManagerActivity;
+import com.youngmanster.collection.data.activity.DataManagerActivity;
 import com.youngmanster.collection.mvp.ui.MVPActivity;
 import com.youngmanster.collectionlibrary.refreshrecyclerview.base.adapter.BaseRecyclerViewAdapter;
 import com.youngmanster.collectionlibrary.refreshrecyclerview.pulltorefresh.PullToRefreshRecyclerView;
@@ -44,8 +44,9 @@ public class MainActivity extends BaseActivity implements BaseRecyclerViewAdapte
 
 	@Override
 	public void init() {
-
-		setTitleContent(getString(R.string.activity_main_title));
+		defineActionBarConfig
+				.hideBackBtn()
+				.setTitle(getString(R.string.activity_main_title));
 
 		GridLayoutManager layoutManager = new GridLayoutManager(this, 2);
 		mRecyclerView.setLayoutManager(layoutManager);
@@ -75,11 +76,11 @@ public class MainActivity extends BaseActivity implements BaseRecyclerViewAdapte
 
 	@Override
 	public void onBackPressedSupport() {
-		super.onBackPressedSupport();
+
 		if (System.currentTimeMillis() > currentTime) {
 			ToastUtils.showToast(MainActivity.this,"再按一次即可退出");
 		} else {
-			super.onBackPressed();
+			super.onBackPressedSupport();
 		}
 		currentTime = System.currentTimeMillis() + 2000;
 	}

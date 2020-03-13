@@ -4,7 +4,6 @@ import android.content.Context;
 
 import java.util.Map;
 
-import io.realm.RealmMigration;
 
 /**
  * 使用项目需要的配置
@@ -31,11 +30,7 @@ public class Config {
     public static Class MClASS;
     public static String EXPOSEPARAM;
     /**SharePreference**/
-    public static String USER_CONFIG;
-    /**Realm**/
-    public static RealmMigration realmMigration;
-    public static int realmVersion=0;
-    public static String realmName="myRealm.realm";
+    public static String USER_CONFIG="collection_android_library_user_config";
 
     /***请求接口超时设定**/
     public static int CONNECT_TIMEOUT_SECONDS=60;
@@ -44,4 +39,8 @@ public class Config {
 
     /***设置全局请求头***/
     public static Map<String,String> HEADERS;
+
+    /*****数据库设置**/
+    public static String SQLITE_DB_NAME="collection_android_library.db";
+    public static int SQLITE_DB_VERSION=0;
 }

@@ -60,7 +60,7 @@ public abstract class BaseDialog {
 		if(mainView!=null){
 			builder.setView(mainView);
 		}
-		initUI();
+		onViewCreated();
 		alertDialog = builder.create();
 
 		alertDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
@@ -107,8 +107,8 @@ public abstract class BaseDialog {
 
 	/**
 	 * 点击返回键可以取消
-	 * */
-	public void setDialogCancel(boolean isCancel){
+	 */
+	public void setOnBackPressDialogCancel(boolean isCancel) {
 		if (alertDialog != null) {
 			alertDialog.setCanceledOnTouchOutside(isCancel);
 		}
@@ -122,7 +122,7 @@ public abstract class BaseDialog {
 		this.height = DisplayUtils.dip2px(context, height);
 	}
 
-	protected abstract void initUI();
+	protected abstract void onViewCreated();
 
 
 	public interface DismissListener{

@@ -13,8 +13,8 @@ import java.io.Serializable;
 public class Result<T> implements Serializable {
 
 	private int code;
-	private String msg;
-	private T newslist;
+	private String message;
+	private T result;
 
 	public int getCode() {
 		return code;
@@ -24,19 +24,19 @@ public class Result<T> implements Serializable {
 		this.code = code;
 	}
 
-	public String getMsg() {
-		return msg;
+	public String getMessage() {
+		return message;
 	}
 
-	public void setMsg(String msg) {
-		this.msg = msg;
+	public void setMessage(String message) {
+		this.message = message;
 	}
 
-	public T getNewslist() {
-		return newslist;
+	public T getResult() {
+		return result;
 	}
 
-	public void setNewslist(T newslist) {
-		this.newslist = newslist;
+	public void setResult(T result) {
+		this.result = result;
 	}
 }

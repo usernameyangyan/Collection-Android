@@ -8,7 +8,7 @@ import com.youngmanster.collection.adapter.CollectionFragmentAdapter;
 import com.youngmanster.collection.base.BaseActivity;
 import com.youngmanster.collection.fragment.recyclerview.FragmentAutoRefresh;
 import com.youngmanster.collection.fragment.recyclerview.FragmentNoMoreData;
-import com.youngmanster.collection.widget.CollectionViewPager;
+import com.youngmanster.collectionlibrary.customview.CollectionViewPager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,8 +43,7 @@ public class NoMoreDateAndAutoRefreshActivity extends BaseActivity{
 
 	@Override
 	public void init() {
-		setTitleContent(getString(R.string.fragment_auto_title));
-		showHomeAsUp(R.mipmap.ic_back_btn);
+		defineActionBarConfig.setTitle(getString(R.string.fragment_auto_title));
 
 		setFragments();
 		collectionFragmentAdapter = new CollectionFragmentAdapter(getSupportFragmentManager(), fragments);

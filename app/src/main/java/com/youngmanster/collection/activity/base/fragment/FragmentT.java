@@ -33,8 +33,8 @@ public class FragmentT extends BaseFragment {
 
     @Override
     public void init() {
-        setTitleContent("跳转页面");
-        showHomeAsUp(R.mipmap.ic_back_btn);
+
+        defineActionBarConfig.setTitle("跳转页面");
     }
 
     @Override
@@ -42,4 +42,8 @@ public class FragmentT extends BaseFragment {
 
     }
 
+    @Override
+    public boolean isShowCustomActionBar() {
+        return true;
+    }
 }

@@ -38,7 +38,7 @@ public class CustomizeDialog extends BaseDialog implements BaseRecyclerViewAdapt
 	}
 
 	@Override
-	protected void initUI() {
+	protected void onViewCreated() {
 		ButterKnife.bind(this,mainView);
 		rv_Item.setLayoutManager(new LinearLayoutManager(context));
 		for(int i=0;i<10;i++){

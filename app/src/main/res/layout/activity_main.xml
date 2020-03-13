@@ -5,8 +5,6 @@
     android:background="@color/color_bg"
     android:orientation="vertical">
 
-    <include layout="@layout/common_toolbar" />
-
     <com.youngmanster.collectionlibrary.refreshrecyclerview.pulltorefresh.PullToRefreshRecyclerView
         android:id="@+id/recycler_rv"
         android:layout_width="match_parent"

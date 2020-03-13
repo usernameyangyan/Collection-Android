@@ -5,14 +5,13 @@ import android.content.Context;
 
 import com.youngmanster.collection.BuildConfig;
 import com.youngmanster.collection.been.Result;
-import com.youngmanster.collection.db.CustomMigration;
+import com.youngmanster.collection.been.User;
 import com.youngmanster.collectionlibrary.config.Config;
-import com.youngmanster.collectionlibrary.network.RequestManager;
+import com.youngmanster.collectionlibrary.data.DataManager;
+import com.youngmanster.collectionlibrary.data.database.SQLiteVersionMigrate;
+import com.youngmanster.collectionlibrary.refreshrecyclerview.LoadingTextConfig;
+import com.youngmanster.collectionlibrary.refreshrecyclerview.pulltorefresh.PullToRefreshRecyclerViewUtils;
 import com.youngmanster.collectionlibrary.utils.LogUtils;
-
-import io.realm.DynamicRealm;
-import io.realm.RealmMigration;
-import io.realm.RealmSchema;
 
 /**
  * Created by yangyan
@@ -21,12 +20,24 @@ import io.realm.RealmSchema;
 
 public class AppApplication extends Application{
 
-	private CustomMigration customMigration=new CustomMigration();
 
 	@Override
 	public void onCreate() {
 		super.onCreate();
 		config();
+
+		SQLiteVersionMigrate sqLiteVersionMigrate=new SQLiteVersionMigrate();
+		sqLiteVersionMigrate.setMigrateListener(new SQLiteVersionMigrate.MigrateListener() {
+			@Override
+			public void onMigrate(int oldVersion, int newVersion) {
+				for (int i=oldVersion;i<=newVersion;i++){
+					if(i==2){
+
+					}
+
+				}
+			}
+		});
 	}
 
 	@Override
@@ -42,11 +53,9 @@ public class AppApplication extends Application{
 		//Retrofit配置
 		Config.URL_CACHE=AppConfig.URL_CACHE;
 		Config.MClASS= Result.class;
-		Config.URL_DOMAIN="http://api.tianapi.com/";
+		Config.URL_DOMAIN="https://api.apiopen.top/";
 		//SharePreference配置
 		Config.USER_CONFIG="Collection_User";
-		Config.realmVersion=2;
-		Config.realmName="realm.realm";
-		Config.realmMigration=customMigration;
+		Config.SQLITE_DB_VERSION=0;
 	}
 }

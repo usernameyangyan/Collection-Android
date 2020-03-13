@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <include layout="@layout/common_toolbar" />
     
     <android.support.design.widget.TabLayout
         android:id="@+id/tabLayout"
@@ -21,7 +20,7 @@
 
     </android.support.design.widget.TabLayout>
 
-    <com.youngmanster.collection.widget.CollectionViewPager
+    <com.youngmanster.collectionlibrary.customview.CollectionViewPager
         android:id="@+id/collectionVp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>

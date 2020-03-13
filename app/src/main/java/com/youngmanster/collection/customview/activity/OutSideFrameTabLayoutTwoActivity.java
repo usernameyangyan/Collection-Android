@@ -42,8 +42,7 @@ public class OutSideFrameTabLayoutTwoActivity extends BaseActivity {
 
     @Override
     public void init() {
-        setTitleContent(getString(R.string.tab_Indicator_title));
-        showHomeAsUp(R.mipmap.ic_back_btn);
+        defineActionBarConfig.setTitle(getString(R.string.tab_Indicator_title));
 
         initData();
 

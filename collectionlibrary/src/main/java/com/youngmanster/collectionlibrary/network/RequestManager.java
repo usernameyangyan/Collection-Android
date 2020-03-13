@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.text.TextUtils;
 
 import com.youngmanster.collectionlibrary.config.Config;
-import com.youngmanster.collectionlibrary.db.impl.DataManagerImpl;
 import com.youngmanster.collectionlibrary.network.gson.GsonUtils;
 import com.youngmanster.collectionlibrary.network.rx.RxSchedulers;
 import com.youngmanster.collectionlibrary.network.rx.RxSubscriber;
@@ -36,7 +35,23 @@ import okhttp3.ResponseBody;
  * on 2018/3/23.
  */
 
-public class RequestManager extends DataManagerImpl {
+public class RequestManager{
+
+	private static RequestManager requestManager;
+
+	public static RequestManager getInstance() {
+		if (requestManager == null) {
+			synchronized (RequestManager.class) {
+				if (requestManager == null) {
+					requestManager = new RequestManager();
+				}
+			}
+		}
+
+		return requestManager;
+	}
+
+	private RequestManager(){}
 
 
 	public <T> DisposableObserver<ResponseBody> request(RequestBuilder<T> builder) {
@@ -744,7 +759,6 @@ public class RequestManager extends DataManagerImpl {
 		return interceptor;
 	}
 
-	@Override
 	public <T> DisposableObserver<ResponseBody> httpRequest(RequestBuilder<T> requestBuilder) {
 		return request(requestBuilder);
 	}

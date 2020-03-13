@@ -37,8 +37,7 @@ public class RecyclerViewActivity extends BaseActivity implements BaseRecyclerVi
 	@Override
 	public void init() {
 
-		setTitleContent(getString(R.string.activity_pull_refresh_title));
-		showHomeAsUp(R.mipmap.ic_back_btn);
+		defineActionBarConfig.setTitle(getString(R.string.activity_pull_refresh_title));
 
 		LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
 		linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);

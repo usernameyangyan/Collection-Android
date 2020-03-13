@@ -1,5 +1,6 @@
 package com.youngmanster.collectionlibrary.utils;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.LinearLayout;
 
 import com.youngmanster.collectionlibrary.R;
 
@@ -141,7 +143,7 @@ public class DisplayUtils {
 	 * @param dark   是否把状态栏字体及图标颜色设置为深色
 	 * @return boolean 成功执行返回true
 	 */
-	public static boolean MIUISetStatusBarLightMode(Window window, boolean dark) {
+	private static boolean MIUISetStatusBarLightMode(Window window, boolean dark) {
 		boolean result = false;
 
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {//5.0
@@ -176,7 +178,7 @@ public class DisplayUtils {
 	 * @param dark   是否把状态栏字体及图标颜色设置为深色
 	 * @return boolean 成功执行返回true
 	 */
-	public static boolean FlymeSetStatusBarLightMode(Window window, boolean dark) {
+	private static boolean FlymeSetStatusBarLightMode(Window window, boolean dark) {
 		boolean result = false;
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {//5.0
 			if (window != null) {
@@ -209,64 +211,75 @@ public class DisplayUtils {
 	/**
 	 * 设置状态栏全屏透明（状态栏字体颜色为默认）
 	 * */
-	public static boolean setStatusBarFullTranslucent(Activity act) {
-		//设置全屏透明状态栏
+	public static void setStatusBarFullTranslucent(Activity act) {
+		transparentStatusBar(act);
+	}
+
+
+	public static void setStatusBarFullTranslucentWithBlackFont(Activity activity){
+		if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
+			return;
+		}
+
+		setStatusBarBlackFontBgColor(activity,android.R.color.transparent);
+		transparentStatusBar(activity);
+		addTranslucentView(activity);
+	}
+
+
+	/**
+	 * 使状态栏透明
+	 */
+	@TargetApi(Build.VERSION_CODES.KITKAT)
+	private static void transparentStatusBar(Activity activity) {
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-			act.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS |
-					WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-			act.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
-			act.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-			act.getWindow().setStatusBarColor(Color.TRANSPARENT);
-			return true;
-		}else{
-			setStatusBarColor(act, R.color.black);
-			return false;
+			activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+			activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+			activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+			activity.getWindow().setStatusBarColor(Color.TRANSPARENT);
+		} else {
+			activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
 		}
 	}
 
 	/**
-	 * 设置状态栏全屏透明（状态栏字体颜色为默认黑色）
-	 * */
+	 * 添加半透明矩形条
+	 *
+	 * @param activity       需要设置的 activity
+	 */
 
-	public static boolean setStatusBarFullTranslucentWithBlackFont(Activity act) {
-		//设置全屏透明状态栏
-		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP&&isCanSetStatusBarBlackFontLightMode(act)) {
+	private static void addTranslucentView(Activity activity){
+		ViewGroup contentView = activity.findViewById(android.R.id.content);
+		View fakeTranslucentView = contentView.findViewById(R.id.statusbarutil_translucent_view);
 
-			act.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-			ViewGroup rootView = (ViewGroup) ((ViewGroup) act.findViewById(android.R.id.content)).getChildAt(0);
-			ViewCompat.setFitsSystemWindows(rootView, false);
-			rootView.setClipToPadding(true);
-			act.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS |
-					WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-			act.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
-			act.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-			act.getWindow().setStatusBarColor(Color.TRANSPARENT);
-			act.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-			return true;
-		}else{
-			return false;
+		if (fakeTranslucentView != null) {
+			if (fakeTranslucentView.getVisibility() == View.GONE) {
+				fakeTranslucentView.setVisibility(View.VISIBLE);
+			}
+			fakeTranslucentView.setBackgroundColor(Color.argb(0, 0, 0, 0));
+		} else {
+			contentView.addView(createTranslucentStatusBarView(activity));
 		}
 	}
+
 
 	/**
-	 * 判断状态栏是否可以设置为黑字
-	 * */
-	public static boolean isCanSetStatusBarBlackFontLightMode(Activity activity) {
-
-		if (MIUISetStatusBarLightMode(activity.getWindow(), true)) {//MIUI
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {//5.0
-				return true;
-			}
-		} else if (FlymeSetStatusBarLightMode(activity.getWindow(), true)) {//Flyme
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {//5.0
-				return true;
-			}
-		} else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {//6.0
-			return true;
-		}
-
-		return false;
+	 * 创建半透明矩形 View
+	 * @return 半透明 View
+	 */
+	private static View createTranslucentStatusBarView(Activity activity){
+		// 绘制一个和状态栏一样高的矩形
+		View statusBarView =new  View(activity);
+		ViewGroup.LayoutParams params = new LinearLayout.LayoutParams(
+				ViewGroup.LayoutParams.MATCH_PARENT,
+				getStatusBarHeight(activity)
+		);
+		statusBarView.setLayoutParams(params);
+		statusBarView.setBackgroundColor(Color.argb(0, 0, 0, 0));
+		statusBarView.setId(R.id.statusbarutil_translucent_view);
+		return statusBarView;
 	}
+
 
 
 	/**

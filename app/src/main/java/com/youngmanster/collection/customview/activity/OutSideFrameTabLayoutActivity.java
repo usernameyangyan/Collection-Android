@@ -34,8 +34,7 @@ public class OutSideFrameTabLayoutActivity extends BaseActivity implements BaseR
 
     @Override
     public void init() {
-        setTitleContent(getString(R.string.custom_tab_diff));
-        showHomeAsUp(R.mipmap.ic_back_btn);
+        defineActionBarConfig.setTitle(getString(R.string.custom_tab_diff));
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);

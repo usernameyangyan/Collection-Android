@@ -8,7 +8,7 @@ import com.youngmanster.collection.adapter.CollectionFragmentAdapter;
 import com.youngmanster.collection.base.BaseActivity;
 import com.youngmanster.collection.mvp.ui.wechat.fragment.FragmentWeChatFeaturedCommonClass;
 import com.youngmanster.collection.mvp.ui.wechat.fragment.FragmentWeChatFeaturedNoCommonClass;
-import com.youngmanster.collection.widget.CollectionViewPager;
+import com.youngmanster.collectionlibrary.customview.CollectionViewPager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,8 +46,7 @@ public class WeChatFeaturedActivity extends BaseActivity{
 	@Override
 	public void init() {
 
-		setTitleContent(getString(R.string.activity_wechat_title));
-		showHomeAsUp(R.mipmap.ic_back_btn);
+		defineActionBarConfig.setTitle(getString(R.string.activity_wechat_title));
 
 		setFragments();
 		collectionFragmentAdapter = new CollectionFragmentAdapter(getSupportFragmentManager(), fragments);

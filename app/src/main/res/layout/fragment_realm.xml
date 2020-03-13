@@ -22,7 +22,7 @@
 		android:id="@+id/saveBtn"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:text="保存一个User信息"
+		android:text="插入一条User数据"
 		android:layout_marginTop="10dp"
 		android:layout_marginLeft="20dp"
 		android:layout_marginRight="20dp"/>
@@ -32,7 +32,25 @@
 		android:id="@+id/queryBtn"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:text="查询User信息"
+		android:text="查询User数据"
+		android:layout_marginTop="10dp"
+		android:layout_marginLeft="20dp"
+		android:layout_marginRight="20dp"/>
+
+	<Button
+		android:id="@+id/btn1"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:text="异步批量插入User数据"
+		android:layout_marginTop="10dp"
+		android:layout_marginLeft="20dp"
+		android:layout_marginRight="20dp"/>
+
+	<Button
+		android:id="@+id/btn2"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:text="异步查询全部User全部数据"
 		android:layout_marginTop="10dp"
 		android:layout_marginLeft="20dp"
 		android:layout_marginRight="20dp"/>

@@ -14,86 +14,51 @@ import android.widget.Toast;
 
 public class ToastUtils {
 
-	private static Toast mShortToast;
-	private static Toast mLongToast;
-
 	public static void showToast(Context context, String message) {
-		if (mShortToast == null) {
-			mShortToast = Toast.makeText(context.getApplicationContext(), message, Toast.LENGTH_SHORT);
-		}
-		mShortToast.setText(message);
-		mShortToast.show();
-
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
 	}
 
 	public static void showToast(Context context,int strResId) {
 		String text = context.getString(strResId);
-		if (mShortToast == null) {
-			mShortToast = Toast.makeText(context.getApplicationContext(), text, Toast.LENGTH_SHORT);
-		}
-		mShortToast.setText(text);
-		mShortToast.show();
-
+        Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
 	}
 
 	public static void showLongToast(Context context, String message) {
-		if (mLongToast == null) {
-			mLongToast = Toast.makeText(context.getApplicationContext(), message, Toast.LENGTH_LONG);
-		}
-		mLongToast.setText(message);
-		mLongToast.show();
+        Toast.makeText(context, message, Toast.LENGTH_LONG).show();
 	}
 
 	public static void showLongToast(Context context,int strResId) {
 		String text = context.getString(strResId);
-		if (mLongToast == null) {
-			mLongToast = Toast.makeText(context.getApplicationContext(), text, Toast.LENGTH_LONG);
-		}
-		mLongToast.setText(text);
-		mLongToast.show();
+        Toast.makeText(context, text, Toast.LENGTH_LONG).show();
 	}
 
 
 
     public static void showToast(Context context, String message,int gravity) {
-        if (mShortToast == null) {
-            mShortToast = Toast.makeText(context.getApplicationContext(), message, Toast.LENGTH_SHORT);
-        }
-        setGravity(mShortToast,gravity);
-        mShortToast.setText(message);
-        mShortToast.show();
-
+        Toast toast=Toast.makeText(context, message, Toast.LENGTH_SHORT);
+        setGravity(toast,gravity);
+        toast.show();
     }
 
     public static void showToast(Context context,int strResId,int gravity) {
         String text = context.getString(strResId);
-        if (mShortToast == null) {
-            mShortToast = Toast.makeText(context.getApplicationContext(), text, Toast.LENGTH_SHORT);
-        }
-        setGravity(mShortToast,gravity);
-        mShortToast.setText(text);
-        mShortToast.show();
+        Toast toast=Toast.makeText(context, text, Toast.LENGTH_SHORT);
+        setGravity(toast,gravity);
+        toast.show();
 
     }
 
     public static void showLongToast(Context context, String message,int gravity) {
-        if (mLongToast == null) {
-            mLongToast = Toast.makeText(context.getApplicationContext(), message, Toast.LENGTH_LONG);
-        }
-        setGravity(mLongToast,gravity);
-        mLongToast.setText(message);
-        mLongToast.show();
+        Toast toast=Toast.makeText(context, message, Toast.LENGTH_LONG);
+        setGravity(toast,gravity);
+        toast.show();
     }
 
     public static void showLongToast(Context context,int strResId,int gravity) {
         String text = context.getString(strResId);
-        if (mLongToast == null) {
-            mLongToast = Toast.makeText(context.getApplicationContext(), text, Toast.LENGTH_LONG);
-        }
-
-        setGravity(mLongToast,gravity);
-        mLongToast.setText(text);
-        mLongToast.show();
+        Toast toast=Toast.makeText(context, text, Toast.LENGTH_LONG);
+        setGravity(toast,gravity);
+        toast.show();
     }
 
 

@@ -1,5 +1,4 @@
 apply plugin: 'com.android.library'
-apply plugin: 'realm-android'
 apply from : "config.gradle"
 apply plugin: 'com.novoda.bintray-release'
 
@@ -8,16 +7,8 @@ publish {
     userOrg = 'youngmanopen'
     groupId = 'com.youngman'
     artifactId = 'collectionlibrary'
-    publishVersion = '1.2.8'
-    desc = '1.更新Realm数据库依赖。  \n' +
-            '2.更新RxJava、rxandroid、retrofit、converter-gson、adapter-rxjava2依赖。  \n' +
-            '3.封装好Fragment之间的交互，项目中可以选择使用一个Activity来作为跟容器，其它实现页面统一使用fragment来实现。  \n' +
-            '4.collectionLibary中的Config配置类增加json字段过滤、网络请求超时设置、网络请求头设置（全局请求头）。    \n' +
-            '5.增加自动换行布局。  \n' +
-            '6.Realm增加按数据字段查询和删除接口。  \n' +
-            '7.网络请求类型HttpType增加json类型请求参数。  \n' +
-            '8.网络请求增加个别接口请求头设置。  \n' +
-            '9.增加适配不同手机像素。'
+    publishVersion = '1.3.1'
+    desc = '1.修复SQLite没有创建表查询异常\n2.SQLite增加按条件查询List\n3.增加PopupWindow显示位置设置\n4.解决SQLit内容为null报错'
     website = 'https://github.com/usernameyangyan/Collection-Android'
 }
 
@@ -41,7 +32,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-
 }
 
 dependencies {

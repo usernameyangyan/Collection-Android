@@ -27,8 +27,7 @@ public class DialogActivity extends BaseActivity {
 
 	@Override
 	public void init() {
-		setTitleContent(getString(R.string.dialog_title));
-		showHomeAsUp(R.mipmap.ic_back_btn);
+		defineActionBarConfig.setTitle(getString(R.string.dialog_title));
 	}
 
 	@Override
@@ -36,7 +35,7 @@ public class DialogActivity extends BaseActivity {
 
 	}
 
-	@OnClick({R.id.dialog_btn1, R.id.dialog_btn2, R.id.dialog_btn3, R.id.dialog_btn4, R.id.dialog_btn5, R.id.dialog_btn6})
+	@OnClick({R.id.dialog_btn1, R.id.dialog_btn2, R.id.dialog_btn3, R.id.dialog_btn5, R.id.dialog_btn6})
 	public void onMenuClick(View view) {
 		switch (view.getId()) {
 			case R.id.dialog_btn1:
@@ -75,27 +74,6 @@ public class DialogActivity extends BaseActivity {
 				});
 				commonDialog.show();
 				break;
-			case R.id.dialog_btn4:
-				commonDialog = new CommonDialog(this, CommonDialog.DIALOG_DISPLAY_ADVERTISING, "广告图", "这是一个广告图的Dialog样式", "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1526872907&di=cace2736f732d0d1716aadbf489e0361&imgtype=jpg&er=1&src=http%3A%2F%2Fscimg.jb51.net%2Fallimg%2F161205%2F106-161205161K5161.jpg", new CommonDialog.OnDialogClickListener() {
-					@Override
-					public void onDialogClick(int state) {
-						switch (state) {
-							case CommonDialog.ONCLICK_LEFT:
-								ToastUtils.showToast(DialogActivity.this,"点击了取消按钮");
-								break;
-							case CommonDialog.ONCLICK_RIGHT:
-								ToastUtils.showToast(DialogActivity.this,"点击了确定按钮");
-								break;
-						}
-					}
-				}, new CommonDialog.OnAdvertisingClickLister() {
-					@Override
-					public void onAdvertisingClick() {
-						ToastUtils.showToast(DialogActivity.this,"点击了图片");
-					}
-				});
-				commonDialog.show();
-				break;
 			case R.id.dialog_btn5:
 				commonDialog = new CommonDialog(this, CommonDialog.DIALOG_CHOICE_ITEM, "单项选择", items, new CommonDialog.OnDialogClickListener() {
 					@Override
@@ -119,7 +97,7 @@ public class DialogActivity extends BaseActivity {
 				CustomizeDialog customizeDialog=new CustomizeDialog(this);
 				//如果需要设置dialog的高度
 				customizeDialog.setDialogHeight(350);
-				customizeDialog.setDialogCancel(false);
+				customizeDialog.setOnBackPressDialogCancel(false);
 				customizeDialog.show();
 				break;
 		}

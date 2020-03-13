@@ -16,8 +16,7 @@ public class WrapLinearLayoutActivity extends BaseActivity {
 
     @Override
     public void init() {
-        setTitleContent("AutoLinefeedLayout");
-        showHomeAsUp(R.mipmap.ic_back_btn);
+        defineActionBarConfig.setTitle("AutoLineLayout");
     }
 
     @Override

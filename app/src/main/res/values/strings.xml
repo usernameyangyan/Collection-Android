@@ -24,9 +24,9 @@
 	<string name="google_refresh">Google刷新</string>
 
 	<string name="news_title">新闻资讯</string>
-	<string name="world_news">国际新闻</string>
-	<string name="guonei_news">国内新闻</string>
-	<string name="nba_news">NBA新闻</string>
+	<string name="world_news">资讯1</string>
+	<string name="guonei_news">资讯2</string>
+	<string name="nba_news">资讯3</string>
 	<string name="all_title">MVP+RxJava+Retrofit</string>
 
 	<string name="fen_ye_cache">分页缓存</string>
@@ -41,8 +41,8 @@
 	<string name="data_manager_title">DataManager</string>
 
 	<string name="retrofit_manager">Retrofit</string>
-	<string name="sharePreference_manager">SharePreference</string>
-	<string name="realm_manager">Realm</string>
+	<string name="sharePreference_manager">SP</string>
+	<string name="realm_manager">SQLite</string>
 	<string name="sharepreference_tip">这里只提供一个事例，具体的使用文档有详细说明</string>
 
 	<string name="use_common_result">公用Result类</string>
@@ -52,9 +52,8 @@
 	<string name="dialog_sample_1">实例一：默认样式</string>
 	<string name="dialog_sample_2">实例二：Loading样式</string>
 	<string name="dialog_sample_3">实例三：修改按钮提示</string>
-	<string name="dialog_sample_4">实例四：显示广告图</string>
-	<string name="dialog_sample_5">实例五：单选选择</string>
-	<string name="dialog_sample_6">实例六：自定义样式</string>
+	<string name="dialog_sample_5">实例四：单选选择</string>
+	<string name="dialog_sample_6">实例五：自定义样式</string>
 
 	<string name="status_bar_title">修改状态栏</string>
 	<string name="status_bar_bg">状态栏背景颜色</string>

@@ -17,10 +17,6 @@ import android.widget.TextView;
 
 import com.youngmanster.collectionlibrary.R;
 import com.youngmanster.collectionlibrary.utils.DisplayUtils;
-import com.youngmanster.collectionlibrary.utils.LogUtils;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by yangyan on 2018/7/9.
@@ -129,7 +125,7 @@ public class OutSideFrameTabLayout extends FrameLayout implements ViewPager.OnPa
         this.mTabCount = mViewPager.getAdapter().getCount();
         View tabView;
         for (int i = 0; i < mTabCount; i++) {
-            tabView = View.inflate(mContext, R.layout.design_layout_tab_text, null);
+            tabView = View.inflate(mContext, R.layout.collection_library_design_layout_tab_text, null);
             CharSequence pageTitle = mViewPager.getAdapter().getPageTitle(i);
             addTab(i, pageTitle.toString(), tabView);
         }

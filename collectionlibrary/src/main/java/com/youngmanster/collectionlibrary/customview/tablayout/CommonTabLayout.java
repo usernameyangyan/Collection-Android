@@ -199,7 +199,7 @@ public class CommonTabLayout extends HorizontalScrollView implements ViewPager.O
             this.mTabCount = mViewPager.getAdapter().getCount();
             View tabView;
             for (int i = 0; i < mTabCount; i++) {
-                tabView = View.inflate(mContext, R.layout.design_layout_tab_text, null);
+                tabView = View.inflate(mContext, R.layout.collection_library_design_layout_tab_text, null);
                 CharSequence pageTitle = mViewPager.getAdapter().getPageTitle(i);
                 addTab(i, pageTitle.toString(), tabView);
             }

@@ -26,8 +26,8 @@ public class StatusBarColorActivity extends BaseActivity {
 
 	@Override
 	public void init() {
-		setTitleContent(getString(R.string.status_bar_bg));
-		showHomeAsUp(R.mipmap.ic_back_btn);
+		defineActionBarConfig.setTitle(getString(R.string.status_bar_bg));
+
 		type=getIntent().getIntExtra("type",0);
 		if(type==0){
 			DisplayUtils.setStatusBarBlackFontBgColor(this,colors[0]);

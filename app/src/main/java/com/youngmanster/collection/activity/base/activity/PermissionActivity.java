@@ -32,8 +32,7 @@ public class PermissionActivity extends BaseActivity{
 
 	@Override
 	public void init() {
-		setTitleContent(getString(R.string.activity_permission));
-		showHomeAsUp(R.mipmap.ic_back_btn);
+		defineActionBarConfig.setTitle(getString(R.string.activity_permission));
 	}
 
 	@Override

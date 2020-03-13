@@ -28,6 +28,7 @@ public abstract class BasePopupWindow extends PopupWindow {
 	private WindowManager windowManager;
 	private int popupWidth;
 	private int popupHeight;
+	private boolean touch_dismiss;
 
 	public BasePopupWindow(Context context) {
 		this.context=context;
@@ -62,11 +63,25 @@ public abstract class BasePopupWindow extends PopupWindow {
 			popupView.setOnClickListener(new View.OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					dismiss();
+					if(touch_dismiss){
+						dismiss();
+					}
 				}
 			});
 		}
 
+	}
+
+	public void setTouchDismiss(boolean touch_dismiss){
+		this.touch_dismiss=touch_dismiss;
+	}
+
+	public void showPopup(int gravity){
+		View anchor=((Activity)context).findViewById(android.R.id.content);
+		if(isShowMaskView){
+			addMask(anchor.getWindowToken());
+		}
+		this.showAtLocation(anchor,gravity,0,0);
 	}
 
 
@@ -105,16 +120,7 @@ public abstract class BasePopupWindow extends PopupWindow {
 		maskView = new View(context);
 		maskView.setBackgroundColor(0x7f000000);
 		maskView.setFitsSystemWindows(false);
-		maskView.setOnKeyListener(new View.OnKeyListener() {
-			@Override
-			public boolean onKey(View v, int keyCode, KeyEvent event) {
-				if (keyCode == KeyEvent.KEYCODE_BACK) {
-					removeMask();
-					return true;
-				}
-				return false;
-			}
-		});
+
 		/**
 		 * 通过WindowManager的addView方法创建View，产生出来的View根据WindowManager.LayoutParams属性不同，效果也就不同了。
 		 * 比如创建系统顶级窗口，实现悬浮窗口效果！

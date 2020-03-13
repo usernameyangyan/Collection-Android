@@ -34,8 +34,7 @@ public class MultipleItemActivity extends BaseActivity{
 	@Override
 	public void init() {
 
-		setTitleContent(getString(R.string.activity_multiple_title));
-		showHomeAsUp(R.mipmap.ic_back_btn);
+		defineActionBarConfig.setTitle(getString(R.string.activity_multiple_title));
 
 		LinearLayoutManager layoutManager = new LinearLayoutManager(this);
 		layoutManager.setOrientation(LinearLayoutManager.VERTICAL);

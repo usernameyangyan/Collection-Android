@@ -37,8 +37,7 @@ public class BaseAdapterActivity extends BaseActivity implements BaseRecyclerVie
 	@Override
 	public void init() {
 
-		setTitleContent(getString(R.string.activity_base_adapter_title));
-		showHomeAsUp(R.mipmap.ic_back_btn);
+		defineActionBarConfig.setTitle(getString(R.string.activity_base_adapter_title));
 
 		View header= LayoutInflater.from(this).inflate(R.layout.layout_base_adapter_header,null);
 

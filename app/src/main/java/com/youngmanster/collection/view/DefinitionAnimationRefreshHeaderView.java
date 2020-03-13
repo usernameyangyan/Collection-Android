@@ -28,6 +28,8 @@ public class DefinitionAnimationRefreshHeaderView extends BasePullToRefreshView 
     private Animation wheelAnimation,sunAnimation;  //轮子、太阳动画
     private Animation backAnimationOne,backAnimationTwo;    //两张背景图动画
 
+    private boolean isDestroy = false;
+
     public DefinitionAnimationRefreshHeaderView(Context context) {
         super(context);
         onStateChangeListener=this;
@@ -94,6 +96,9 @@ public class DefinitionAnimationRefreshHeaderView extends BasePullToRefreshView 
 
     @Override
     public void destroy() {
+
+        isDestroy=true;
+
         if(backAnimationOne!=null){
             backAnimationOne.cancel();
             backAnimationOne=null;
@@ -118,6 +123,10 @@ public class DefinitionAnimationRefreshHeaderView extends BasePullToRefreshView 
 
     @Override
     public void onStateChange(int state) {
+
+        if(isDestroy){
+            return;
+        }
         //下拉时状态相同不做继续保持原有的状态
         if (state == mState) return ;
         //根据状态进行动画显示
