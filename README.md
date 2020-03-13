@@ -1,6 +1,6 @@
 ## Collection
 
-![Travis](https://img.shields.io/badge/release-1.3.0-green.svg)
+![Travis](https://img.shields.io/badge/release-1.3.1-green.svg)
 ![Travis](https://img.shields.io/badge/llicense-MIT-green.svg)
 ![Travis](https://img.shields.io/badge/build-passing-green.svg)
 
@@ -26,6 +26,15 @@ Collection聚合了项目搭建的一些基本模块，节约开发者时间，�
 
 
 ###  更新说明
+
+####   v1.3.1
+> 1.修复SQLite没有创建表查询异常
+
+> 2.SQLite增加按条件查询List
+
+> 3.增加PopupWindow显示位置设置
+
+> 4.解决SQLit内容为null报错
 
 ####   v1.3.0
 >  状态栏修改：增加设置状态栏透明+黑色字体
@@ -75,7 +84,7 @@ Collection聚合了项目搭建的一些基本模块，节约开发者时间，�
 
 
 ###  框架的引入
->  **implementation 'com.youngman:collectionlibrary:1.3.0'**
+>  **implementation 'com.youngman:collectionlibrary:1.3.1'**
 
 > Error:Could not find com.android.support:appcompat-v7:27.x.x.
 因为library的Support Repository是27.x.x,可能跟项目有所冲突，如果sdk已经装了27还是会出现同样的错误。
