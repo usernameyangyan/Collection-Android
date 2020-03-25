@@ -1,6 +1,6 @@
 ## Collection
 
-![Travis](https://img.shields.io/badge/release-1.3.1-green.svg)
+![Travis](https://img.shields.io/badge/release-1.3.4-green.svg)
 ![Travis](https://img.shields.io/badge/llicense-MIT-green.svg)
 ![Travis](https://img.shields.io/badge/build-passing-green.svg)
 
@@ -27,7 +27,7 @@ Collection聚合了项目搭建的一些基本模块，节约开发者时间，�
 
 ###  更新说明
 
-####   v1.3.1
+####   v1.3.4
 > 1.修复SQLite没有创建表查询异常
 
 > 2.SQLite增加按条件查询List
