@@ -23,6 +23,8 @@ public class RequestBuilder<T> {
     private String url;
     private String filePath;
     private String fileName;
+    private String saveDownFilePath;
+    private String saveDownFileName;
     private int limtHours=1;
     private boolean isUserCommonClass=true;
     private boolean isReturnOriginJson=false;
@@ -35,6 +37,7 @@ public class RequestBuilder<T> {
     private Map<String, String> headers;
 
     public enum ReqType {
+        DOWNLOAD_FILE_MODEL,
         //没有缓存
         NO_CACHE_MODEL,
         No_CACHE_LIST,
@@ -62,7 +65,8 @@ public class RequestBuilder<T> {
         //单张图片上传
         ONE_MULTIPART_POST,
         //多张图片上传
-        MULTIPLE_MULTIPART_POST
+        MULTIPLE_MULTIPART_POST,
+        DOWNLOAD_FILE_GET,
     }
 
     public enum ReqMode{
@@ -93,6 +97,21 @@ public class RequestBuilder<T> {
 
     public String getUrl() {
         return url;
+    }
+
+
+    public RequestBuilder setSaveDownloadFilePathAndFileName(String filePath, String fileName){
+        this.saveDownFilePath=filePath;
+        this.saveDownFileName=fileName;
+        return this;
+    }
+
+    public String getSaveDownloadFilePath() {
+        return saveDownFilePath;
+    }
+
+    public String getSaveDownloadFileName() {
+        return saveDownFileName;
     }
 
     public RequestBuilder setFilePathAndFileName(String filePath, String fileName) {

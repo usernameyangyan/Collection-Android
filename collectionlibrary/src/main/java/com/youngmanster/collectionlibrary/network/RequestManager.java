@@ -1,19 +1,24 @@
 package com.youngmanster.collectionlibrary.network;
 
 import android.annotation.SuppressLint;
+import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.youngmanster.collectionlibrary.config.Config;
 import com.youngmanster.collectionlibrary.network.gson.GsonUtils;
+import com.youngmanster.collectionlibrary.network.progress.DownloadFileHelper;
 import com.youngmanster.collectionlibrary.network.rx.RxSchedulers;
 import com.youngmanster.collectionlibrary.network.rx.RxSubscriber;
 import com.youngmanster.collectionlibrary.network.synchronization.OkHttpUtils;
 import com.youngmanster.collectionlibrary.utils.FileUtils;
 import com.youngmanster.collectionlibrary.utils.LogUtils;
 import com.youngmanster.collectionlibrary.utils.NetworkUtils;
+import com.youngmanster.collectionlibrary.utils.ThreadPoolManager;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -57,7 +62,10 @@ public class RequestManager{
 	public <T> DisposableObserver<ResponseBody> request(RequestBuilder<T> builder) {
 
 		if(builder.getReqMode()== RequestBuilder.ReqMode.ASYNCHRONOUS){
-			if (builder.getReqType() == RequestBuilder.ReqType.NO_CACHE_MODEL) {
+			if(builder.getReqType() == RequestBuilder.ReqType.DOWNLOAD_FILE_MODEL){
+				Observable<ResponseBody> observable = getRetrofit(builder, false);
+				return downloadFile(builder, observable);
+			}else if (builder.getReqType() == RequestBuilder.ReqType.NO_CACHE_MODEL) {
 				Observable<ResponseBody> observable = getRetrofit(builder, false);
 				return loadOnlyNetWorkModel(builder, observable);
 			} else if (builder.getReqType() == RequestBuilder.ReqType.No_CACHE_LIST) {
@@ -145,30 +153,30 @@ public class RequestManager{
 		}else if(builder.getHttpType() == RequestBuilder.HttpType.ONE_MULTIPART_POST){
             if (isCache) {
                 if(builder.getHeaders()!=null&&builder.getHeaders().size()>0){
-                    return RetrofitManager.getWithoutHeaderApiService(RequestService.class).getObservableWithImageWithHeaders(builder.getUrl(), builder.getRequestParam(),builder.getPart(),builder.getHeaders());
+                    return RetrofitManager.getWithoutHeaderApiService(RequestService.class).uploadFileWithHeaders(builder.getUrl(), builder.getRequestParam(),builder.getPart(),builder.getHeaders());
                 }else{
-                    return RetrofitManager.getApiService(RequestService.class).getObservableWithImage(builder.getUrl(), builder.getRequestParam(),builder.getPart());
+                    return RetrofitManager.getApiService(RequestService.class).uploadFile(builder.getUrl(), builder.getRequestParam(),builder.getPart());
                 }
             }else{
                 if(builder.getHeaders()!=null&&builder.getHeaders().size()>0){
-                    return RetrofitManager.getNoCacheAndWithoutHeadersApiService(RequestService.class).getObservableWithImageWithHeaders(builder.getUrl(), builder.getRequestParam(),builder.getPart(),builder.getHeaders());
+                    return RetrofitManager.getNoCacheAndWithoutHeadersApiService(RequestService.class).uploadFileWithHeaders(builder.getUrl(), builder.getRequestParam(),builder.getPart(),builder.getHeaders());
                 }else{
-                    return RetrofitManager.getNoCacheApiService(RequestService.class).getObservableWithImage(builder.getUrl(), builder.getRequestParam(),builder.getPart());
+                    return RetrofitManager.getNoCacheApiService(RequestService.class).uploadFile(builder.getUrl(), builder.getRequestParam(),builder.getPart());
                 }
             }
 
 		}else if(builder.getHttpType() == RequestBuilder.HttpType.MULTIPLE_MULTIPART_POST){
 			if (isCache) {
 				if(builder.getHeaders()!=null&&builder.getHeaders().size()>0){
-					return RetrofitManager.getWithoutHeaderApiService(RequestService.class).getObservableWithImagesWithHeaders(builder.getUrl(), builder.getRequestParam(),builder.getParts(),builder.getHeaders());
+					return RetrofitManager.getWithoutHeaderApiService(RequestService.class).uploadFileWithHeaders(builder.getUrl(), builder.getRequestParam(),builder.getParts(),builder.getHeaders());
 				}else{
-					return RetrofitManager.getApiService(RequestService.class).getObservableWithImages(builder.getUrl(), builder.getRequestParam(),builder.getParts());
+					return RetrofitManager.getApiService(RequestService.class).uploadFile(builder.getUrl(), builder.getRequestParam(),builder.getParts());
 				}
 			}else{
 				if(builder.getHeaders()!=null&&builder.getHeaders().size()>0){
-					return RetrofitManager.getNoCacheAndWithoutHeadersApiService(RequestService.class).getObservableWithImagesWithHeaders(builder.getUrl(), builder.getRequestParam(),builder.getParts(),builder.getHeaders());
+					return RetrofitManager.getNoCacheAndWithoutHeadersApiService(RequestService.class).uploadFileWithHeaders(builder.getUrl(), builder.getRequestParam(),builder.getParts(),builder.getHeaders());
 				}else{
-					return RetrofitManager.getNoCacheApiService(RequestService.class).getObservableWithImages(builder.getUrl(), builder.getRequestParam(),builder.getParts());
+					return RetrofitManager.getNoCacheApiService(RequestService.class).uploadFile(builder.getUrl(), builder.getRequestParam(),builder.getParts());
 				}
 			}
 		}else if(builder.getHttpType() == RequestBuilder.HttpType.JSON_PARAM_POST){
@@ -176,21 +184,20 @@ public class RequestManager{
 			Set set = builder.getRequestParam().keySet();
 			StringBuilder stringBuilder=new StringBuilder();
 			stringBuilder.append("{");
-			for(Iterator iter = set.iterator(); iter.hasNext();)
-			{
+			for (Object o : set) {
 
-				String key=(String)iter.next();
+				String key = (String) o;
 				stringBuilder.append("\"");
 				stringBuilder.append(key);
 				stringBuilder.append("\"");
 				stringBuilder.append(":");
 
-				if(builder.getRequestParam().get(key)!=null &&
-						!builder.getRequestParam().get(key).toString().equals("")&&(
-						(builder.getRequestParam().get(key).toString().charAt(0)=='['&&(builder.getRequestParam().get(key).toString().charAt(builder.getRequestParam().get(key).toString().length()-1)==']'))||
-								(builder.getRequestParam().get(key).toString().charAt(0)=='{'&&(builder.getRequestParam().get(key).toString().charAt(builder.getRequestParam().get(key).toString().length()-1)=='}')))){
+				if (builder.getRequestParam().get(key) != null &&
+						!builder.getRequestParam().get(key).toString().equals("") && (
+						(builder.getRequestParam().get(key).toString().charAt(0) == '[' && (builder.getRequestParam().get(key).toString().charAt(builder.getRequestParam().get(key).toString().length() - 1) == ']')) ||
+								(builder.getRequestParam().get(key).toString().charAt(0) == '{' && (builder.getRequestParam().get(key).toString().charAt(builder.getRequestParam().get(key).toString().length() - 1) == '}')))) {
 					stringBuilder.append(builder.getRequestParam().get(key));
-				}else{
+				} else {
 					stringBuilder.append("\"");
 					stringBuilder.append(builder.getRequestParam().get(key));
 					stringBuilder.append("\"");
@@ -216,6 +223,10 @@ public class RequestManager{
                     return RetrofitManager.getNoCacheApiService(RequestService.class).getObservableWithQueryJsonParam(builder.getUrl(),body);
                 }
 			}
+		}else if(builder.getHttpType() == RequestBuilder.HttpType.DOWNLOAD_FILE_GET){
+			Map<String,String> header=new HashMap<>();
+			header.put("Accept-Encoding","identity");
+			return RetrofitManager.getNoCacheApiService(RequestService.class).downloadFile(builder.getUrl(),header);
 		}
 		return null;
 	}
@@ -230,14 +241,14 @@ public class RequestManager{
 	 * 返回List
 	 */
 	@SuppressLint("CheckResult")
-	public <T> DisposableObserver<ResponseBody> loadFormDiskResultListLimitTime(final RequestBuilder<T> builder, Observable<ResponseBody> observable) {
+	private <T> DisposableObserver<ResponseBody> loadFormDiskResultListLimitTime(final RequestBuilder<T> builder, Observable<ResponseBody> observable) {
 
 
 		if (!FileUtils.isCacheDataFailure(builder.getFilePath() + "/" + builder.getFileName(), builder.getLimtHours())) {
 
 			Observable.create(new ObservableOnSubscribe<T>() {
 				@Override
-				public void subscribe(ObservableEmitter<T> emitter) throws Exception {
+				public void subscribe(ObservableEmitter<T> emitter) {
 					String json = FileUtils.ReadTxtFile(builder.getFilePath() + "/" + builder.getFileName());
 					T a;
 					if(builder.isReturnOriginJson()){
@@ -251,18 +262,14 @@ public class RequestManager{
 					}
 					builder.getRxObservableListener().onNext(a);
 				}
-			}).subscribe(new Consumer<T>() {
-				@Override
-				public void accept(T t) throws Exception {
-
-				}
 			});
 
 			return null;
 		}
 
 		final String[] json = new String[1];
-		DisposableObserver<ResponseBody> observer = observable.compose(RxSchedulers.<ResponseBody>io_main())
+
+		return observable.compose(RxSchedulers.<ResponseBody>io_main())
 				.doOnNext(new Consumer<ResponseBody>() {
 					@Override
 					public void accept(ResponseBody responseBody) throws Exception {
@@ -293,18 +300,16 @@ public class RequestManager{
 
 					@Override
 					public void _onComplete() {
-						builder.getRxObservableListener().onComplete();
 					}
 				});
-
-		return observer;
 	}
 
 	/**
 	 * 设置缓存时间，没超过设置的时间不请求网络，只返回缓存数据
 	 * 返回Model
 	 */
-	public <T> DisposableObserver<ResponseBody> loadFormDiskModeLimitTime(final RequestBuilder<T> builder, Observable<ResponseBody> observable) {
+	@SuppressLint("CheckResult")
+	private <T> DisposableObserver<ResponseBody> loadFormDiskModeLimitTime(final RequestBuilder<T> builder, Observable<ResponseBody> observable) {
 
 		if (!FileUtils.isCacheDataFailure(builder.getFilePath() + "/" + builder.getFileName(), builder.getLimtHours())) {
 
@@ -325,18 +330,14 @@ public class RequestManager{
 					builder.getRxObservableListener().onNext(a);
 
 				}
-			}).subscribe(new Consumer<T>() {
-				@Override
-				public void accept(T t) throws Exception {
-
-				}
 			});
 
 			return null;
 		}
 
 		final String[] json = new String[1];
-		DisposableObserver<ResponseBody> observer = observable.compose(RxSchedulers.<ResponseBody>io_main())
+
+		return observable.compose(RxSchedulers.<ResponseBody>io_main())
 				.doOnNext(new Consumer<ResponseBody>() {
 					@Override
 					public void accept(ResponseBody responseBody) throws Exception {
@@ -367,11 +368,8 @@ public class RequestManager{
 
 					@Override
 					public void _onComplete() {
-						builder.getRxObservableListener().onComplete();
 					}
 				});
-
-		return observer;
 	}
 
 	/**
@@ -383,7 +381,7 @@ public class RequestManager{
 
 		final Observable<T> observableC = Observable.create(new ObservableOnSubscribe<T>() {
 			@Override
-			public void subscribe(ObservableEmitter<T> emitter) throws Exception {
+			public void subscribe(ObservableEmitter<T> emitter) {
 				String json = FileUtils.ReadTxtFile(builder.getFilePath() + "/" + builder.getFileName());
 					if (!TextUtils.isEmpty(json) && !json.equals("")) {
 						T a;
@@ -408,7 +406,8 @@ public class RequestManager{
 		});
 
 		final String[] json = new String[1];
-		DisposableObserver<ResponseBody> observer = observable
+
+		return observable
 				.doOnNext(new Consumer<ResponseBody>() {
 					@Override
 					public void accept(ResponseBody responseBody) throws Exception {
@@ -434,12 +433,13 @@ public class RequestManager{
 
 					}
 
+					@SuppressLint("CheckResult")
 					@Override
 					public void _onError(NetWorkCodeException.ResponseThrowable e) {
 						LogUtils.info("1000","_onError");
 						observableC.subscribe(new Consumer<T>() {
 							@Override
-							public void accept(T t) throws Exception {
+							public void accept(T t)  {
 								builder.getRxObservableListener().onNext(t);
 							}
 						});
@@ -447,11 +447,9 @@ public class RequestManager{
 
 					@Override
 					public void _onComplete() {
-						builder.getRxObservableListener().onComplete();
+
 					}
 				});
-
-		return observer;
 	}
 
 
@@ -489,7 +487,7 @@ public class RequestManager{
 
 		final String[] json = new String[1];
 
-		DisposableObserver<ResponseBody> observer = observable.doOnNext(new Consumer<ResponseBody>() {
+		return observable.doOnNext(new Consumer<ResponseBody>() {
 			@Override
 			public void accept(ResponseBody t) throws Exception {
 				json[0]=t.string();
@@ -511,11 +509,12 @@ public class RequestManager{
 				builder.getRxObservableListener().onNext(a);
 			}
 
+			@SuppressLint("CheckResult")
 			@Override
 			public void _onError(NetWorkCodeException.ResponseThrowable e) {
 				observableC.subscribe(new Consumer<T>() {
 					@Override
-					public void accept(T t) throws Exception {
+					public void accept(T t) {
 						builder.getRxObservableListener().onNext(t);
 					}
 				});
@@ -523,11 +522,8 @@ public class RequestManager{
 
 			@Override
 			public void _onComplete() {
-				builder.getRxObservableListener().onComplete();
 			}
 		});
-
-		return observer;
 	}
 
 	/**
@@ -540,7 +536,7 @@ public class RequestManager{
 		}
 
 		final String[] json = new String[1];
-		DisposableObserver<ResponseBody> observer = observable.doOnNext(new Consumer<ResponseBody>() {
+		return observable.doOnNext(new Consumer<ResponseBody>() {
 			@Override
 			public void accept(ResponseBody t) throws Exception {
 				json[0]=t.string();
@@ -550,7 +546,7 @@ public class RequestManager{
 				.subscribeWith(new RxSubscriber<ResponseBody>() {
 					@Override
 					public void _onNext(ResponseBody t) {
-						if (builder.isDiskCacheNetworkSaveReturn() == true) {
+						if (builder.isDiskCacheNetworkSaveReturn()) {
 							T a;
 							if(builder.isReturnOriginJson()){
 								a= (T) json[0];
@@ -569,25 +565,24 @@ public class RequestManager{
 
 					@Override
 					public void _onError(NetWorkCodeException.ResponseThrowable e) {
-						if (builder.isDiskCacheNetworkSaveReturn() == true) {
+						if (builder.isDiskCacheNetworkSaveReturn()) {
 							builder.getRxObservableListener().onError(e);
 						}
 					}
 
 					@Override
 					public void _onComplete() {
-						if (builder.isDiskCacheNetworkSaveReturn() == true) {
-							builder.getRxObservableListener().onComplete();
+						if (builder.isDiskCacheNetworkSaveReturn()) {
 						}
 					}
 				});
-		return observer;
 	}
 
 
 	/**
 	 * 把结果保存到本地，根据标志是否返回数据，如果本地存在则不需要下载,返回Model
 	 */
+	@SuppressLint("CheckResult")
 	private <T> DisposableObserver<ResponseBody> loadOnlyNetWorkSaveModel(final RequestBuilder<T> builder, Observable<ResponseBody> observable) {
 
 		if (FileUtils.checkFileExists(builder.getFilePath() + "/" + builder.getFileName())) { // 已经在SD卡中存在
@@ -595,17 +590,19 @@ public class RequestManager{
 		}
 
 		final String[] json = new String[1];
-		DisposableObserver<ResponseBody> observer = observable.doOnNext(new Consumer<ResponseBody>() {
+		observable.doOnNext(new Consumer<ResponseBody>() {
 			@Override
 			public void accept(ResponseBody t) throws Exception {
-				json[0]=t.string();
+				json[0] = t.string();
 				FileUtils.WriterTxtFile(builder.getFilePath(), builder.getFileName(), json[0], false);
 			}
-		}).compose(RxSchedulers.<ResponseBody>io_main())
+		});
+		observable.compose(RxSchedulers.<ResponseBody>io_main());
+		return observable
 				.subscribeWith(new RxSubscriber<ResponseBody>() {
 					@Override
 					public void _onNext(ResponseBody t) {
-						if (builder.isDiskCacheNetworkSaveReturn() == true) {
+						if (builder.isDiskCacheNetworkSaveReturn()) {
 							T a;
 							if(builder.isReturnOriginJson()){
 								a= (T) json[0];
@@ -623,26 +620,22 @@ public class RequestManager{
 
 					@Override
 					public void _onError(NetWorkCodeException.ResponseThrowable e) {
-						if (builder.isDiskCacheNetworkSaveReturn() == true) {
+						if (builder.isDiskCacheNetworkSaveReturn()) {
 							builder.getRxObservableListener().onError(e);
 						}
 					}
 
 					@Override
 					public void _onComplete() {
-						if (builder.isDiskCacheNetworkSaveReturn() == true) {
-							builder.getRxObservableListener().onComplete();
-						}
 					}
 				});
-		return observer;
 	}
 
 	/**
 	 * 只通过网络返回数据，返回list
 	 */
 	private <T> DisposableObserver<ResponseBody> loadOnlyNetWorkList(final RequestBuilder<T> builder, Observable<ResponseBody> observable) {
-		DisposableObserver<ResponseBody> observer = observable.compose(RxSchedulers.<ResponseBody>io_main())
+		return observable.compose(RxSchedulers.<ResponseBody>io_main())
 				.subscribeWith(new RxSubscriber<ResponseBody>() {
 					@Override
 					public void _onNext(ResponseBody t) {
@@ -671,10 +664,8 @@ public class RequestManager{
 
 					@Override
 					public void _onComplete() {
-						builder.getRxObservableListener().onComplete();
 					}
 				});
-		return observer;
 	}
 
 
@@ -683,7 +674,7 @@ public class RequestManager{
 	 */
 	private <T> DisposableObserver<ResponseBody> loadOnlyNetWorkModel(final RequestBuilder<T> builder, Observable<ResponseBody> observable) {
 
-		DisposableObserver<ResponseBody> observer = observable.compose(RxSchedulers.<ResponseBody>io_main())
+		return observable.compose(RxSchedulers.<ResponseBody>io_main())
 				.subscribeWith(new RxSubscriber<ResponseBody>() {
 					@Override
 					public void _onNext(ResponseBody t) {
@@ -712,21 +703,52 @@ public class RequestManager{
 
 					@Override
 					public void _onComplete() {
-						builder.getRxObservableListener().onComplete();
 					}
 				});
-		return observer;
 	}
 
+	/****
+	 * 下载文件
+	 */
+
+	private <T> DisposableObserver<ResponseBody> downloadFile(final RequestBuilder<T> builder, Observable<ResponseBody> observable) {
+
+		return observable.compose(RxSchedulers.<ResponseBody>io_main())
+				.subscribeWith(new RxSubscriber<ResponseBody>() {
+					@SuppressLint("StaticFieldLeak")
+					@Override
+					public void _onNext(final ResponseBody t) {
+
+						ThreadPoolManager.getSingleInstance().execute(new Runnable() {
+							@Override
+							public void run() {
+								DownloadFileHelper.writeFile2Disk(t,builder);
+							}
+						});
+					}
+
+					@Override
+					public void _onError(NetWorkCodeException.ResponseThrowable e) {
+						builder.getRxObservableListener().onError(e);
+					}
+
+					@Override
+					public void _onComplete() {
+
+					}
+				});
+	}
 
 	/**
 	 * ===============================Retrofit+OkHttp的缓存机制=========================================
 	 */
 
-	public static Interceptor getInterceptor() {
-		Interceptor interceptor = new Interceptor() {
+	static Interceptor getInterceptor() {
+
+		return new Interceptor() {
+			@NonNull
 			@Override
-			public Response intercept(Chain chain) throws IOException {
+			public Response intercept(@NonNull Chain chain) throws IOException {
 
 				CacheControl.Builder cacheBuilder = new CacheControl.Builder();
 				cacheBuilder.maxAge(0, TimeUnit.SECONDS);
@@ -755,11 +777,5 @@ public class RequestManager{
 				}
 			}
 		};
-
-		return interceptor;
-	}
-
-	public <T> DisposableObserver<ResponseBody> httpRequest(RequestBuilder<T> requestBuilder) {
-		return request(requestBuilder);
 	}
 }

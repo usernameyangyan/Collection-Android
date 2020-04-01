@@ -23,15 +23,17 @@ public abstract class RxObservableListener<T> implements ObservableListener<T>{
 	protected RxObservableListener(){
 	}
 
+	@Override
+	public void onDownloadProgress(int progress) {
+
+	}
+
 	protected RxObservableListener(BaseView view, String errorMsg){
 		this.mView = view;
 		this.mErrorMsg = errorMsg;
 	}
 
-	@Override
-	public void onComplete() {
 
-	}
 
 	@Override
 	public void onError(NetWorkCodeException.ResponseThrowable e) {
