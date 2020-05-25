@@ -1,12 +1,7 @@
 package com.youngmanster.collection.activity.base.fragment;
-
-import android.os.Bundle;
 import android.view.View;
-
-import com.youngmanster.collection.BuildConfig;
 import com.youngmanster.collection.R;
 import com.youngmanster.collection.base.BaseFragment;
-
 import butterknife.OnClick;
 
 /**
@@ -16,16 +11,6 @@ import butterknife.OnClick;
  */
 public class FragmentRoot extends BaseFragment {
 
-
-
-    public static FragmentRoot newInstance() {
-
-        Bundle args = new Bundle();
-
-        FragmentRoot fragment = new FragmentRoot();
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     @Override
     public int getLayoutId() {
@@ -39,15 +24,16 @@ public class FragmentRoot extends BaseFragment {
 
     @Override
     public void requestData() {
-
     }
 
-
-    @OnClick({R.id.status_btn3})
+    @OnClick({R.id.btn1,R.id.btn2})
     public void onMenuClick(View view) {
         switch (view.getId()) {
-            case R.id.status_btn3:
-                start(FragmentT.newInstance());
+            case R.id.btn1:
+                startFragment(FragmentT.class);
+                break;
+            case R.id.btn2:
+                startFragment(FragmentT.class,true);
                 break;
         }
 

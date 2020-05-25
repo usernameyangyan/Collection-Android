@@ -15,6 +15,7 @@ import com.youngmanster.collectionlibrary.utils.DisplayUtils;
  * on 2018/5/13.
  */
 
+@Deprecated
 public abstract class BaseDialog {
 
 	private DismissListener dismissListener;

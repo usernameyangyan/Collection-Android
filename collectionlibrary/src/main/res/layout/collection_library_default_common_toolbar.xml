@@ -2,14 +2,15 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:id="@+id/common_bar_panel"
+    android:background="@color/colorPrimaryDark">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_weight="1"
-        android:id="@+id/common_bar_panel"
-        android:background="@color/colorPrimaryDark"
         android:minHeight="50dp"
+        android:id="@+id/inRootRel"
         android:layout_height="wrap_content">
         <ImageView
             android:id="@+id/btnBack"
@@ -17,8 +18,11 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:focusable="true"
-            android:visibility="gone"
-            android:theme="@style/Base.Widget.AppCompat.ActionButton" />
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:paddingLeft="17dp"
+            android:paddingRight="17dp"
+            android:visibility="gone"/>
 
         <TextView
             android:id="@+id/titleTv"

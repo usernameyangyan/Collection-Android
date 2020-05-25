@@ -74,16 +74,18 @@ public class MainActivity extends BaseActivity implements BaseRecyclerViewAdapte
 
 	private long currentTime;
 
+
 	@Override
-	public void onBackPressedSupport() {
+	public void onBackPressed() {
 
 		if (System.currentTimeMillis() > currentTime) {
 			ToastUtils.showToast(MainActivity.this,"再按一次即可退出");
 		} else {
-			super.onBackPressedSupport();
+			super.onBackPressed();
 		}
 		currentTime = System.currentTimeMillis() + 2000;
 	}
+
 
 	@Override
 	public void onDestroy() {

@@ -1,6 +1,7 @@
 package com.youngmanster.collectionlibrary.data;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 
 import com.youngmanster.collectionlibrary.config.Config;
 
@@ -16,12 +17,14 @@ public class SharePreference {
 
 
     private static SharePreference sharePreference = null;
+    private static SharedPreferences sharedPreferences;
 
      static SharePreference getInstance() {
         if (sharePreference == null) {
             synchronized (SharePreference.class) {
                 if (sharePreference == null) {
                     sharePreference = new SharePreference();
+                    sharedPreferences=Config.CONTEXT.getSharedPreferences(Config.USER_CONFIG, Context.MODE_PRIVATE);
                 }
             }
         }
@@ -37,7 +40,7 @@ public class SharePreference {
      * @return
      */
       void putString(String key, String content) {
-        Config.CONTEXT.getSharedPreferences(Config.USER_CONFIG, Context.MODE_PRIVATE)
+          sharedPreferences
                 .edit()
                 .putString(key, content)
                 .apply();
@@ -51,7 +54,8 @@ public class SharePreference {
      * @return
      */
       void putInt(String key, int content) {
-        Config.CONTEXT.getSharedPreferences(Config.USER_CONFIG, Context.MODE_PRIVATE).edit()
+          sharedPreferences
+                  .edit()
                 .putInt(key, content)
                 .apply();
     }
@@ -63,7 +67,7 @@ public class SharePreference {
      * @return
      */
       void putLong(String key, Long value) {
-        Config.CONTEXT.getSharedPreferences(Config.USER_CONFIG, Context.MODE_PRIVATE).edit()
+          sharedPreferences.edit()
                 .putLong(key, value)
                 .apply();
     }
@@ -76,7 +80,7 @@ public class SharePreference {
      * @return
      */
       void putBoolean(String key, Boolean content) {
-        Config.CONTEXT.getSharedPreferences(Config.USER_CONFIG, Context.MODE_PRIVATE).edit()
+          sharedPreferences.edit()
                 .putBoolean(
                         key,
                         content
@@ -92,7 +96,7 @@ public class SharePreference {
      * @return
      */
     void putFloat(String key, Float content) {
-        Config.CONTEXT.getSharedPreferences(Config.USER_CONFIG, Context.MODE_PRIVATE).edit()
+        sharedPreferences.edit()
                 .putFloat(
                         key,
                         content
@@ -106,28 +110,28 @@ public class SharePreference {
      * @return 失败返回null
      */
       String getString(String key, String defaultValue) {
-        return Config.CONTEXT.getSharedPreferences(Config.USER_CONFIG, Context.MODE_PRIVATE)
+        return sharedPreferences
                 .getString(key, defaultValue);
     }
 
 
     int getInt(String key, int defaultValue) {
-        return Config.CONTEXT.getSharedPreferences(Config.USER_CONFIG, Context.MODE_PRIVATE)
+        return sharedPreferences
                 .getInt(key, defaultValue);
     }
 
     Long getLong(String key, Long defaultValue) {
-        return Config.CONTEXT.getSharedPreferences(Config.USER_CONFIG, Context.MODE_PRIVATE)
+        return sharedPreferences
                 .getLong(key, defaultValue);
     }
 
     boolean getBoolean(String key, boolean defaultValue) {
-        return Config.CONTEXT.getSharedPreferences(Config.USER_CONFIG, Context.MODE_PRIVATE)
+        return sharedPreferences
                 .getBoolean(key, defaultValue);
     }
 
     float getFloat(String key, Float defaultValue) {
-        return Config.CONTEXT.getSharedPreferences(Config.USER_CONFIG, Context.MODE_PRIVATE)
+        return sharedPreferences
                 .getFloat(key, defaultValue);
     }
 

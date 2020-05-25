@@ -36,14 +36,7 @@ public abstract class BaseFragment<T extends BasePresenter> extends IBaseFragmen
                 .setBackClick(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
-                        if(isRootFragment(BaseFragment.this)){
-                            getActivity().finish();
-                        }else{
-                            pop();
-                        }
-
-
+                        getActivity().onBackPressed();
                     }
                 });
 

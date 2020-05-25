@@ -2,33 +2,36 @@ package com.youngmanster.collectionlibrary.base.activity;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.DrawableRes;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.ArrayMap;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.youngmanster.collectionlibrary.R;
-import com.youngmanster.collectionlibrary.base.fragmet.BaseSupportFragment;
-import com.youngmanster.collectionlibrary.base.fragmet.FragmentAnimator;
-import com.youngmanster.collectionlibrary.base.helper.ExtraTransaction;
-import com.youngmanster.collectionlibrary.base.helper.SupportActivityDelegate;
-import com.youngmanster.collectionlibrary.base.helper.SupportHelper;
+import com.youngmanster.collectionlibrary.base.fragmet.IBaseFragment;
 import com.youngmanster.collectionlibrary.mvp.BasePresenter;
 import com.youngmanster.collectionlibrary.mvp.ClassGetUtil;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 
 /**
  * Created by yangyan
  * on 2018/3/18.
  */
 
-public abstract class IBaseActivity<T extends BasePresenter> extends AppCompatActivity implements BaseSupportActivity{
+public abstract class IBaseActivity<T extends BasePresenter> extends AppCompatActivity{
 	public T mPresenter;
 
 	private boolean isFirst = false;
@@ -38,13 +41,12 @@ public abstract class IBaseActivity<T extends BasePresenter> extends AppCompatAc
 
 	public DefaultDefineActionBarConfig defineActionBarConfig;
 
-	final SupportActivityDelegate mDelegate = new SupportActivityDelegate(this);
 
 
 	@Override
 	protected void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		mDelegate.onCreate(savedInstanceState);
+		mFManager = getSupportFragmentManager();
 		setContentView(R.layout.collection_library_default_base_activity);
 
 		frame_caption_container=findViewById(R.id.frame_caption_container);
@@ -92,12 +94,6 @@ public abstract class IBaseActivity<T extends BasePresenter> extends AppCompatAc
 	}
 
 	@Override
-	protected void onPostCreate(@Nullable Bundle savedInstanceState) {
-		super.onPostCreate(savedInstanceState);
-		mDelegate.onPostCreate(savedInstanceState);
-	}
-
-	@Override
 	protected void onStart() {
 		super.onStart();
 		if (!isFirst) {
@@ -109,7 +105,6 @@ public abstract class IBaseActivity<T extends BasePresenter> extends AppCompatAc
 
 	@Override
 	public void onDestroy() {
-		mDelegate.onDestroy();
 		super.onDestroy();
 		if (mPresenter != null) {
 			mPresenter.onDestroy();
@@ -125,22 +120,6 @@ public abstract class IBaseActivity<T extends BasePresenter> extends AppCompatAc
 	private void addContainerFrame(int layoutResID) {
 		View view = LayoutInflater.from(this).inflate(layoutResID,frame_content_container , false);
 		frame_content_container.addView(view);
-	}
-
-	/**
-	 * Note： return mDelegate.dispatchTouchEvent(ev) || super.dispatchTouchEvent(ev);
-	 */
-	@Override
-	public boolean dispatchTouchEvent(MotionEvent ev) {
-		return mDelegate.dispatchTouchEvent(ev) || super.dispatchTouchEvent(ev);
-	}
-
-	/**
-	 * 不建议复写该方法,请使用 {@link #onBackPressedSupport} 代替
-	 */
-	@Override
-	final public void onBackPressed() {
-		mDelegate.onBackPressed();
 	}
 
 	/**
@@ -201,16 +180,31 @@ public abstract class IBaseActivity<T extends BasePresenter> extends AppCompatAc
 		}
 
 		public DefaultDefineActionBarConfig setBarDividingLineHeight(int height){
-			defaultDefineView.findViewById(R.id.lineView).getLayoutParams().height=height;
-			return this;
+			if(defaultDefineView==null){
+				return this;
+			}else{
+				defaultDefineView.findViewById(R.id.lineView).getLayoutParams().height=height;
+				return this;
+			}
+
 		}
 
-		public DefaultDefineActionBarConfig setBarDividingLineColor(Context context,int color){
-			defaultDefineView.findViewById(R.id.lineView).setBackgroundColor(ContextCompat.getColor(context,color));
-			return this;
+		public DefaultDefineActionBarConfig setBarDividingLineBackground(int bgId){
+			if(defaultDefineView==null){
+				return this;
+			}else{
+				defaultDefineView.findViewById(R.id.lineView).setBackgroundResource(bgId);
+				return this;
+			}
+
 		}
 
 		public DefaultDefineActionBarConfig setBarDividingLineShowStatus(boolean isShow){
+
+			if(defaultDefineView==null){
+				return this;
+			}
+
 			if(isShow){
 				defaultDefineView.findViewById(R.id.lineView).setVisibility(View.VISIBLE);
 			}else{
@@ -220,11 +214,21 @@ public abstract class IBaseActivity<T extends BasePresenter> extends AppCompatAc
 			return this;
 		}
 
-		public DefaultDefineActionBarConfig setBarBackgroundColor(Context context, int bgColor) {
+		public DefaultDefineActionBarConfig setBarPadding(int left,int top,int right,int bottom){
 			if(defaultDefineView==null){
 				return this;
 			}else{
-				defaultDefineView.findViewById(R.id.common_bar_panel).setBackgroundColor(ContextCompat.getColor(context,bgColor));
+				((LinearLayout.LayoutParams)defaultDefineView.findViewById(R.id.inRootRel).getLayoutParams()).setMargins(left,top,right,bottom);
+				return this;
+			}
+
+		}
+
+		public DefaultDefineActionBarConfig setBarBackground(int bgId) {
+			if(defaultDefineView==null){
+				return this;
+			}else{
+				defaultDefineView.findViewById(R.id.common_bar_panel).setBackgroundResource(bgId);
 				return this;
 			}
 		}
@@ -293,214 +297,289 @@ public abstract class IBaseActivity<T extends BasePresenter> extends AppCompatAc
 
 
 
+
+	/***************************Fragment设置**************************************/
+
+	public static int  REQUEST_CODE_INVALID=-1;
+	public static class FragmentStackEntity {
+		boolean isSticky = false;
+		int requestCode = REQUEST_CODE_INVALID;
+
+		@ResultCode
+		public int resultCode = IBaseFragment.RESULT_CANCELED;
+		public Bundle result;
+	}
+
+	private FragmentManager mFManager;
+	private List<IBaseFragment> mFragmentStack=new ArrayList<>();
+	private Map fragmentStack = new ArrayMap <String,IBaseFragment>();
+	private Map mFragmentEntityMap=new HashMap<IBaseFragment, FragmentStackEntity>();
+
+
+	/**
+	 * 是否是根Fragment
+	 * @return
+	 */
+	public boolean isRootFragment(){
+		if(mFragmentStack.size() > 1){
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * When the back off.
+	 */
+	private boolean onBackStackFragment() {
+		if (mFragmentStack.size() > 1) {
+			mFManager.popBackStack();
+			IBaseFragment inFragment = mFragmentStack.get(mFragmentStack.size() - 2);
+			FragmentTransaction fragmentTransaction = mFManager.beginTransaction();
+			fragmentTransaction.show(inFragment);
+			fragmentTransaction.commit();
+			IBaseFragment outFragment= mFragmentStack.get(mFragmentStack.size() - 1);
+			inFragment.onResume();
+			FragmentStackEntity stackEntity = (FragmentStackEntity) mFragmentEntityMap.get(outFragment);
+			mFragmentStack.remove(outFragment);
+			mFragmentEntityMap.remove(outFragment);
+			fragmentStack.remove(outFragment.getClass().getSimpleName());
+			if (stackEntity!=null&&stackEntity.requestCode != REQUEST_CODE_INVALID) {
+				inFragment.onFragmentResult(
+						stackEntity.requestCode,
+						stackEntity.resultCode,
+						stackEntity.result
+				);
+			}
+			return true;
+		}
+		return false;
+	}
+
 	@Override
-	public SupportActivityDelegate getSupportDelegate() {
-		return mDelegate;
+	public void onBackPressed() {
+		if (!onBackStackFragment()) {
+			finish();
+		}
 	}
-
 	/**
-	 * Perform some extra transactions.
-	 * 额外的事务：自定义Tag，添加SharedElement动画，操作非回退栈Fragment
-	 */
-	@Override
-	public ExtraTransaction extraTransaction() {
-		return mDelegate.extraTransaction();
-	}
-
-	/**
-	 * 该方法回调时机为,Activity回退栈内Fragment的数量 小于等于1 时,默认finish Activity
-	 * 请尽量复写该方法,避免复写onBackPress(),以保证SupportFragment内的onBackPressedSupport()回退事件正常执行
-	 */
-	@Override
-	public void onBackPressedSupport() {
-		mDelegate.onBackPressedSupport();
-	}
-
-	/**
-	 * 获取设置的全局动画 copy
+	 * Show a fragment.
 	 *
-	 * @return FragmentAnimator
+	 * @param clazz fragment class.
 	 */
-	@Override
-	public FragmentAnimator getFragmentAnimator() {
-		return mDelegate.getFragmentAnimator();
+	public  <T extends IBaseFragment> void startFragment(Class<T> clazz) {
+		try {
+			IBaseFragment targetFragment = clazz.newInstance();
+			startFragment(
+					null,
+					targetFragment,
+					true,
+					REQUEST_CODE_INVALID,
+					false
+            );
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
-
 	/**
-	 * Set all fragments animation.
-	 * 设置Fragment内的全局动画
-	 */
-	@Override
-	public void setFragmentAnimator(FragmentAnimator fragmentAnimator) {
-		mDelegate.setFragmentAnimator(fragmentAnimator);
-	}
-
-	/**
-	 * Set all fragments animation.
-	 * 构建Fragment转场动画
-	 * <p/>
-	 * 如果是在Activity内实现,则构建的是Activity内所有Fragment的转场动画,
-	 * 如果是在Fragment内实现,则构建的是该Fragment的转场动画,此时优先级 > Activity的onCreateFragmentAnimator()
+	 * Show a fragment.
 	 *
-	 * @return FragmentAnimator对象
+	 * @param clazz       fragment class.
 	 */
-	@Override
-	public FragmentAnimator onCreateFragmentAnimator() {
-		return mDelegate.onCreateFragmentAnimator();
+	public  <T extends IBaseFragment> void startFragment(
+			Class<T> clazz,
+			boolean isSkipAnimation
+	) {
+		try {
+			IBaseFragment targetFragment= clazz.newInstance();
+			startFragment(
+					null,
+					targetFragment,
+					true,
+					REQUEST_CODE_INVALID,
+					isSkipAnimation
+			);
+		} catch (Exception e ) {
+			e.printStackTrace();
+		}
 	}
-
-	@Override
-	public void post(Runnable runnable) {
-		mDelegate.post(runnable);
-	}
-
-	/****************************************以下为可选方法(Optional methods)******************************************************/
 
 	/**
-	 * 加载根Fragment, 即Activity内的第一个Fragment 或 Fragment内的第一个子Fragment
+	 * Show a fragment.
 	 *
-	 * @param containerId 容器id
-	 * @param toFragment  目标Fragment
-	 */
-	public void loadRootFragment(int containerId, @NonNull BaseSupportFragment toFragment) {
-		mDelegate.loadRootFragment(containerId, toFragment);
-		SupportHelper.addRootFragment(toFragment);
-	}
-
-	public void loadRootFragment(int containerId, BaseSupportFragment toFragment, boolean addToBackStack, boolean allowAnimation) {
-		mDelegate.loadRootFragment(containerId, toFragment, addToBackStack, allowAnimation);
-		SupportHelper.addRootFragment(toFragment);
-	}
-
-	/**
-	 * 加载多个同级根Fragment,类似Wechat, QQ主页的场景
-	 */
-	public void loadMultipleRootFragment(int containerId, int showPosition, BaseSupportFragment... toFragments) {
-		mDelegate.loadMultipleRootFragment(containerId, showPosition, toFragments);
+	 * @param targetFragment fragment to display.
+	</T> */
+	public  <T extends IBaseFragment> void startFragment(T targetFragment) {
+		startFragment(
+				null,
+				targetFragment,
+				true,
+				REQUEST_CODE_INVALID,
+				false
+        );
 	}
 
 	/**
-	 * show一个Fragment,hide其他同栈所有Fragment
-	 * 使用该方法时，要确保同级栈内无多余的Fragment,(只有通过loadMultipleRootFragment()载入的Fragment)
-	 * <p>
-	 * 建议使用更明确的{@link #showHideFragment(BaseSupportFragment, BaseSupportFragment)}
+	 * Show a fragment.
 	 *
-	 * @param showFragment 需要show的Fragment
-	 */
-	public void showHideFragment(BaseSupportFragment showFragment) {
-		mDelegate.showHideFragment(showFragment);
+	 * @param targetFragment fragment to display.
+	</T> */
+	public  <T extends IBaseFragment> void startFragment(
+			T targetFragment,
+			boolean isSkipAnimation
+	) {
+		startFragment(
+				null,
+				targetFragment,
+				true,
+				REQUEST_CODE_INVALID,
+				isSkipAnimation
+        );
 	}
 
 	/**
-	 * show一个Fragment,hide一个Fragment ; 主要用于类似微信主页那种 切换tab的情况
-	 */
-	public void showHideFragment(BaseSupportFragment showFragment, BaseSupportFragment hideFragment) {
-		mDelegate.showHideFragment(showFragment, hideFragment);
-	}
-
-	/**
-	 * It is recommended to use {@link BaseSupportFragment(BaseSupportFragment)}.
-	 */
-	public void start(BaseSupportFragment toFragment) {
-		mDelegate.start(toFragment);
-	}
-
-	/**
-	 * It is recommended to use {@link BaseSupportFragment(BaseSupportFragment, int)}.
+	 * Show a fragment for result.
 	 *
-	 * @param launchMode Similar to Activity's LaunchMode.
-	 */
-	public void start(BaseSupportFragment toFragment, @BaseSupportFragment.LaunchMode int launchMode) {
-		mDelegate.start(toFragment, launchMode);
+	 * @param clazz       fragment to display.
+	 * @param requestCode requestCode.
+	</T> */
+	public  <T extends IBaseFragment> void startFragmentForResult(
+			Class<T> clazz,
+			int requestCode
+	) {
+		if(requestCode != REQUEST_CODE_INVALID){
+			throw new IllegalStateException("The requestCode must be positive integer.");
+		}
+		try {
+			IBaseFragment targetFragment = clazz.newInstance();
+			startFragment(null, targetFragment, true, requestCode,false);
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
-	 * It is recommended to use {@link BaseSupportFragment(BaseSupportFragment, int)}.
-	 * Launch an fragment for which you would like a result when it poped.
-	 */
-	public void startForResult(BaseSupportFragment toFragment, int requestCode) {
-		mDelegate.startForResult(toFragment, requestCode);
-	}
-
-	/**
-	 * It is recommended to use {@link BaseSupportFragment#(BaseSupportFragment)}.
-	 * Start the target Fragment and pop itself
-	 */
-	public void startWithPop(BaseSupportFragment toFragment) {
-		mDelegate.startWithPop(toFragment);
-	}
-
-	/**
-	 * It is recommended to use {@link BaseSupportFragment(BaseSupportFragment, Class, boolean)}.
+	 * Show a fragment for result.
 	 *
-	 * @see #popTo(Class, boolean)
-	 * +
-	 * @see #start(BaseSupportFragment)
-	 */
-	public void startWithPopTo(BaseSupportFragment toFragment, Class<?> targetFragmentClass, boolean includeTargetFragment) {
-		mDelegate.startWithPopTo(toFragment, targetFragmentClass, includeTargetFragment);
+	 * @param clazz       fragment to display.
+	 * @param requestCode requestCode.
+	</T> */
+	public  <T extends IBaseFragment> void startFragmentForResult(
+			Class<T> clazz,
+			int requestCode,
+			boolean isSkipAnimation
+	) {
+		if(requestCode != REQUEST_CODE_INVALID){
+			throw new IllegalStateException("The requestCode must be positive integer.");
+		}
+		try {
+			IBaseFragment targetFragment= clazz.newInstance();
+			startFragment(null, targetFragment, true, requestCode,isSkipAnimation);
+		} catch (java.lang.Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
-	 * It is recommended to use {@link BaseSupportFragment(BaseSupportFragment, boolean)}.
-	 */
-	public void replaceFragment(BaseSupportFragment toFragment, boolean addToBackStack) {
-		mDelegate.replaceFragment(toFragment, addToBackStack);
-	}
-
-	/**
-	 * Pop the fragment.
-	 */
-	public void pop() {
-		mDelegate.pop();
-	}
-
-	/**
-	 * Pop the last fragment transition from the manager's fragment
-	 * back stack.
-	 * <p>
-	 * 出栈到目标fragment
+	 * Show a fragment for result.
 	 *
-	 * @param targetFragmentClass   目标fragment
-	 * @param includeTargetFragment 是否包含该fragment
-	 */
-	public void popTo(Class<?> targetFragmentClass, boolean includeTargetFragment) {
-		mDelegate.popTo(targetFragmentClass, includeTargetFragment);
+	 * @param targetFragment fragment to display.
+	 * @param requestCode    requestCode.
+
+	</T> */
+	public  <T extends IBaseFragment> void startFragmentForResult(T targetFragment, int requestCode) {
+		if(requestCode != REQUEST_CODE_INVALID){
+			throw new IllegalStateException("The requestCode must be positive integer.");
+		}
+		startFragment(null, targetFragment, true, requestCode,false);
+	}
+
+
+	/**
+	 * Show a fragment for result.
+	 *
+	 * @param targetFragment fragment to display.
+	 * @param requestCode    requestCode.
+
+	</T> */
+	public  <T extends IBaseFragment> void startFragmentForResult(T targetFragment, int requestCode,boolean isSkipAnimation) {
+		if(requestCode != REQUEST_CODE_INVALID){
+			throw new IllegalStateException("The requestCode must be positive integer.");
+		}
+		startFragment(null, targetFragment, true, requestCode,isSkipAnimation);
 	}
 
 	/**
-	 * If you want to begin another FragmentTransaction immediately after popTo(), use this method.
-	 * 如果你想在出栈后, 立刻进行FragmentTransaction操作，请使用该方法
-	 */
-	public void popTo(Class<?> targetFragmentClass, boolean includeTargetFragment, Runnable afterPopTransactionRunnable) {
-		mDelegate.popTo(targetFragmentClass, includeTargetFragment, afterPopTransactionRunnable);
+	 * Show a fragment.
+	 *
+	 * @param thisFragment Now show fragment, can be null.
+	 * @param thatFragment fragment to display.
+	 * @param stickyStack  sticky back stack.
+	 * @param requestCode  requestCode.
+	</T> */
+	public  <T extends IBaseFragment> void startFragment(
+			T thisFragment, T thatFragment,
+			boolean stickyStack, int requestCode,
+			boolean isSkipAnimation
+	) {
+		FragmentTransaction fragmentTransaction = mFManager.beginTransaction();
+		if (thisFragment != null) {
+			FragmentStackEntity thisStackEntity = (FragmentStackEntity) mFragmentEntityMap.get(thisFragment);
+			if (thisStackEntity != null) {
+				if (thisStackEntity.isSticky) {
+					thisFragment.onPause();
+					thisFragment.onStop();
+					fragmentTransaction.hide(thisFragment);
+					if(isSkipAnimation){
+						fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
+					}
+
+				} else {
+					fragmentTransaction.remove(thisFragment).commit();
+					if(isSkipAnimation){
+						fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
+					}
+					fragmentTransaction.commitNow();
+					fragmentTransaction = mFManager.beginTransaction();
+					mFragmentEntityMap.remove(thisFragment);
+					mFragmentStack.remove(thisFragment);
+					fragmentStack.remove(thisFragment.getClass().getSimpleName());
+				}
+			}
+		}
+		String fragmentTag =
+				thatFragment.getClass().getSimpleName();
+		fragmentTransaction.add(fragmentLayoutId(), thatFragment, fragmentTag);
+		if(isSkipAnimation){
+			fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+		}
+		fragmentTransaction.addToBackStack(fragmentTag);
+		fragmentTransaction.commit();
+		mFManager.executePendingTransactions();
+		FragmentStackEntity fragmentStackEntity = new FragmentStackEntity();
+		fragmentStackEntity.isSticky = stickyStack;
+		fragmentStackEntity.requestCode = requestCode;
+		thatFragment.setStackEntity(fragmentStackEntity);
+		mFragmentEntityMap.put(thatFragment,fragmentStackEntity);
+		mFragmentStack.add(thatFragment);
+		fragmentStack.put(fragmentTag,thatFragment);
 	}
 
-	public void popTo(Class<?> targetFragmentClass, boolean includeTargetFragment, Runnable afterPopTransactionRunnable, int popAnim) {
-		mDelegate.popTo(targetFragmentClass, includeTargetFragment, afterPopTransactionRunnable, popAnim);
+
+	public  <T extends IBaseFragment> T findFragment(Class<T> clazz){
+		String fragmentTag =
+				clazz.getSimpleName();
+
+		if(fragmentStack.get(fragmentTag)!=null){
+			return (T) fragmentStack.get(fragmentTag);
+		}
+		return null;
 	}
 
-	/**
-	 * 当Fragment根布局 没有 设定background属性时,
-	 * Fragmentation默认使用Theme的android:windowbackground作为Fragment的背景,
-	 * 可以通过该方法改变其内所有Fragment的默认背景。
-	 */
-	public void setDefaultFragmentBackground(@DrawableRes int backgroundRes) {
-		mDelegate.setDefaultFragmentBackground(backgroundRes);
-	}
 
-	/**
-	 * 得到位于栈顶Fragment
-	 */
-	public BaseSupportFragment getTopFragment() {
-		return SupportHelper.getTopFragment(getSupportFragmentManager());
-	}
 
-	/**
-	 * 获取栈内的fragment对象
-	 */
-	public <T extends BaseSupportFragment> T findFragment(Class<T> fragmentClass) {
-		return SupportHelper.findFragment(getSupportFragmentManager(), fragmentClass);
+	public int fragmentLayoutId(){
+		return 0;
 	}
 }

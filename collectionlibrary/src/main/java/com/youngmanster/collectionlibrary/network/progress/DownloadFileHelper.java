@@ -58,19 +58,15 @@ public class DownloadFileHelper {
                         builder.getRxObservableListener().onDownloadProgress(integer);
                     }
                 });
-
-
-                //当百分比为100时下载结束，调用结束回调，并传出下载后的本地路径
-                if ((int) (100 * currentLength / totalLength) == 100) {
-                    RxJavaUtils.doInUIThread(new RxUITask<String>(strFile) {
-                        @Override
-                        public void doInUIThread(String s) {
-                            builder.getRxObservableListener().onNext(s);
-                        }
-                    });
-
-                }
             }
+
+
+            RxJavaUtils.doInUIThread(new RxUITask<String>(strFile) {
+                @Override
+                public void doInUIThread(String s) {
+                    builder.getRxObservableListener().onNext(s);
+                }
+            });
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {

@@ -1,22 +1,19 @@
 package com.youngmanster.collectionlibrary.base.dialog;
 
-import android.content.Context;
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.youngmanster.collectionlibrary.R;
-import com.youngmanster.collectionlibrary.utils.GlideUtils;
 
 /**
  * Created by yangyan
  * on 2018/5/13.
  */
 
-public class CommonDialog extends BaseDialog {
+@SuppressLint("ValidFragment")
+public class CommonDialog extends BaseDialogFragment {
 
 	public static final int DIALOG_TEXT_TWO_BUTTON_DEFAULT = 1;// 提示信息确认和取消
 	public static final int DIALOG_TEXT_TWO_BUTTON_CUSTOMIZE = 2;//自定义按钮
@@ -36,40 +33,37 @@ public class CommonDialog extends BaseDialog {
 	private String rightBtn;
 	private String[] items;
 
-	public CommonDialog(Context context, int type, String content) {
-		super(context);
+	public CommonDialog(int type, String content) {
 		this.type = type;
 		this.content = content;
-		setContentView(getLayoutRes());
+		layoutRes=getLayoutRes();
 	}
 
-	public CommonDialog(Context context, int type, String title, String[] items, OnDialogClickListener listener) {
-		super(context);
+	public CommonDialog(int type, String title, String[] items, OnDialogClickListener listener) {
+		super();
 		this.type = type;
 		this.title = title;
 		this.items = items;
 		this.listener = listener;
-		setContentView(getLayoutRes());
+		layoutRes=getLayoutRes();
 	}
 
-	public CommonDialog(Context context, int type, String title, String content, OnDialogClickListener listener) {
-		super(context);
+	public CommonDialog(int type, String title, String content, OnDialogClickListener listener) {
 		this.type = type;
 		this.title = title;
 		this.content = content;
 		this.listener = listener;
-		setContentView(getLayoutRes());
+		layoutRes=getLayoutRes();
 	}
 
-	public CommonDialog(Context context, int type, String title, String content, String leftBtn, String rightBtn, OnDialogClickListener listener) {
-		super(context);
+	public CommonDialog(int type, String title, String content, String leftBtn, String rightBtn, OnDialogClickListener listener) {
 		this.type = type;
 		this.title = title;
 		this.content = content;
 		this.leftBtn = leftBtn;
 		this.rightBtn = rightBtn;
 		this.listener = listener;
-		setContentView(getLayoutRes());
+		layoutRes=getLayoutRes();
 	}
 
 
@@ -91,7 +85,7 @@ public class CommonDialog extends BaseDialog {
 	}
 
 	@Override
-	protected void onViewCreated() {
+	public void onViewCreated() {
 		switch (type) {
 			case DIALOG_TEXT_TWO_BUTTON_DEFAULT:
 				((TextView) mainView.findViewById(R.id.dg_content)).setText(content);
@@ -100,6 +94,7 @@ public class CommonDialog extends BaseDialog {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						if (listener != null)
+							dismiss();
 							listener.onDialogClick(ONCLICK_RIGHT);
 					}
 				});
@@ -107,6 +102,7 @@ public class CommonDialog extends BaseDialog {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						if (listener != null)
+							dismiss();
 							listener.onDialogClick(ONCLICK_LEFT);
 					}
 				});
@@ -119,6 +115,7 @@ public class CommonDialog extends BaseDialog {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						if (listener != null)
+							dismiss();
 							listener.onDialogClick(ONCLICK_RIGHT);
 					}
 				});
@@ -126,6 +123,7 @@ public class CommonDialog extends BaseDialog {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						if (listener != null)
+							dismiss();
 							listener.onDialogClick(ONCLICK_LEFT);
 					}
 				});
@@ -142,14 +140,17 @@ public class CommonDialog extends BaseDialog {
 						switch (which) {
 							case AlertDialog.BUTTON_POSITIVE:
 								if (listener != null)
+									dismiss();
 									listener.onDialogClick(ONCLICK_RIGHT);
 								break;
 							case AlertDialog.BUTTON_NEGATIVE:
 								if (listener != null)
+									dismiss();
 									listener.onDialogClick(ONCLICK_LEFT);
 								break;
 							default:
 								if (listener != null)
+									dismiss();
 									listener.onDialogClick(which);
 								break;
 						}

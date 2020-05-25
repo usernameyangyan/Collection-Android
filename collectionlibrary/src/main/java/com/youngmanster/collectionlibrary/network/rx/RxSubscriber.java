@@ -15,12 +15,19 @@ public abstract class RxSubscriber<T> extends DisposableObserver<T>{
 
     @Override
     public void onNext(T t) {
+        if (isDisposed()) {
+            return;
+        }else{
+            dispose();
+        }
         _onNext(t);
     }
 
     @Override
     public void onError(Throwable e) {
-        if (!isDisposed()) {
+        if (isDisposed()) {
+            return;
+        }else{
             dispose();
         }
         _onError(NetWorkCodeException.getResponseThrowable(e));
@@ -28,7 +35,9 @@ public abstract class RxSubscriber<T> extends DisposableObserver<T>{
 
     @Override
     public void onComplete() {
-        if (!isDisposed()) {
+        if (isDisposed()) {
+            return;
+        }else{
             dispose();
         }
         _onComplete();

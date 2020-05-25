@@ -3,11 +3,11 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://E:/pyproject/Collection-master/Collection-Android.iml" filepath="E:/pyproject/Collection-master/Collection-Android.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/Collection-Android-app.iml" filepath="$PROJECT_DIR$/app/Collection-Android-app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/Collection-Android-app.iml" filepath="$PROJECT_DIR$/app/Collection-Android-app.iml" group="Collection-Android/app" />
       <module fileurl="file://$PROJECT_DIR$/Collection-master.iml" filepath="$PROJECT_DIR$/Collection-master.iml" />
-      <module fileurl="file://$PROJECT_DIR$/MyAndroidProject-Collection-Android.iml" filepath="$PROJECT_DIR$/MyAndroidProject-Collection-Android.iml" />
+      <module fileurl="file://$PROJECT_DIR$/MyAndroidProject-Collection-Android.iml" filepath="$PROJECT_DIR$/MyAndroidProject-Collection-Android.iml" group="Collection-Android" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/collectionlibrary/collectionlibrary.iml" filepath="$PROJECT_DIR$/collectionlibrary/collectionlibrary.iml" />
+      <module fileurl="file://$PROJECT_DIR$/collectionlibrary/collectionlibrary.iml" filepath="$PROJECT_DIR$/collectionlibrary/collectionlibrary.iml" group="Collection-Android/collectionlibrary" />
     </modules>
   </component>
 </project>
