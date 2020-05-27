@@ -150,7 +150,6 @@ public class CommonDialog extends BaseDialogFragment {
 								break;
 							default:
 								if (listener != null)
-									dismiss();
 									listener.onDialogClick(which);
 								break;
 						}

@@ -1,6 +1,6 @@
 ## Collection
 
-![Travis](https://img.shields.io/badge/release-1.3.7-green.svg)
+![Travis](https://img.shields.io/badge/release-1.3.8-green.svg)
 ![Travis](https://img.shields.io/badge/llicense-MIT-green.svg)
 ![Travis](https://img.shields.io/badge/build-passing-green.svg)
 
@@ -27,7 +27,7 @@ Collection聚合了项目搭建的一些基本模块，节约开发者时间，�
 
 ###  更新说明
 
-####   v1.3.7
+####   v1.3.8
 > 1.DialogFragment替换AlertDialog
 > 2.SharePreference统一初始化
 > 3.简化Fragment的跳转逻辑
@@ -85,7 +85,7 @@ Collection聚合了项目搭建的一些基本模块，节约开发者时间，�
 
 
 ###  框架的引入
->  **implementation 'com.youngman:collectionlibrary:1.3.7'**
+>  **implementation 'com.youngman:collectionlibrary:1.3.8'**
 
 > Error:Could not find com.android.support:appcompat-v7:27.x.x.
 因为library的Support Repository是27.x.x,可能跟项目有所冲突，如果sdk已经装了27还是会出现同样的错误。
