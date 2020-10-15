@@ -1,20 +1,16 @@
-package com.youngmanster.collectionlibrary.network.gson;
+package com.youngmanster.collectionlibrary.network.convert;
 
 import android.text.TextUtils;
 
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonParser;
 import com.youngmanster.collectionlibrary.config.Config;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.List;
 
 /**

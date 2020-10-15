@@ -13,6 +13,7 @@ import com.youngmanster.collection.adapter.MainViewAdapter;
 import com.youngmanster.collection.base.BaseActivity;
 import com.youngmanster.collection.customview.activity.CustomViewActivity;
 import com.youngmanster.collection.data.activity.DataManagerActivity;
+import com.youngmanster.collection.download.DownFileActivity;
 import com.youngmanster.collection.mvp.ui.MVPActivity;
 import com.youngmanster.collectionlibrary.refreshrecyclerview.base.adapter.BaseRecyclerViewAdapter;
 import com.youngmanster.collectionlibrary.refreshrecyclerview.pulltorefresh.PullToRefreshRecyclerView;
@@ -59,6 +60,7 @@ public class MainActivity extends BaseActivity implements BaseRecyclerViewAdapte
 		listData.add("RecyclerView");
 		listData.add("BaseAdapter");
 		listData.add("MVP+RxJava+Retrofit");
+		listData.add("断点上传/下载");
 		listData.add("DataManager(Retrofit/SharePreference/Realm)");
 		listData.add("Base");
 		listData.add("CustomView");
@@ -112,14 +114,18 @@ public class MainActivity extends BaseActivity implements BaseRecyclerViewAdapte
 				startActivity(intent);
 				break;
 			case 3:
-				intent = new Intent(this, DataManagerActivity.class);
+				intent = new Intent(this, DownFileActivity.class);
 				startActivity(intent);
 				break;
 			case 4:
-				intent = new Intent(this, BaseUiActivity.class);
+				intent = new Intent(this, DataManagerActivity.class);
 				startActivity(intent);
 				break;
 			case 5:
+				intent = new Intent(this, BaseUiActivity.class);
+				startActivity(intent);
+				break;
+			case 6:
 				intent = new Intent(this, CustomViewActivity.class);
 				startActivity(intent);
 				break;

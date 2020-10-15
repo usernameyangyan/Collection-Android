@@ -1,8 +1,14 @@
 package com.youngmanster.collectionlibrary.network;
 
+import android.support.annotation.IntDef;
+
 import com.youngmanster.collectionlibrary.network.rx.RxObservableListener;
 
 import java.io.File;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,69 +23,95 @@ import okhttp3.RequestBody;
 
 public class RequestBuilder<T> {
 
-    private ReqType reqType= ReqType.DEFAULT_CACHE_LIST;
-    private ReqMode reqMode= ReqMode.ASYNCHRONOUS;
-    private Class clazz;
+    private int reqType= ReqType.DEFAULT_CACHE_LIST;
+    private int reqMode= ReqMode.ASYNCHRONOUS;
+    private Class clazz;//转化Class
     private String url;
     private String filePath;
     private String fileName;
     private String saveDownFilePath;
     private String saveDownFileName;
-    private int limtHours=1;
-    private boolean isUserCommonClass=true;
+    private boolean isOpenBreakpointDownloadOrUpload;
+    private int limitHours=1;
+    private boolean isUseCommonClass=true;
     private boolean isReturnOriginJson=false;
-    private HttpType httpType= HttpType.DEFAULT_GET;
+    private int httpType= HttpType.DEFAULT_GET;
     private RxObservableListener<T> rxObservableListener;
     private Map<String, Object> requestParam;
-    private MultipartBody.Part part;
     private MultipartBody.Part []parts;
     private boolean isDiskCacheNetworkSaveReturn;
     private Map<String, String> headers;
 
-    public enum ReqType {
-        DOWNLOAD_FILE_MODEL,
+    public static class ReqType {
+
+        public final static int DOWNLOAD_FILE_MODEL=0;
         //没有缓存
-        NO_CACHE_MODEL,
-        No_CACHE_LIST,
+        public final static int NO_CACHE_MODEL=1;
+        public final static int NO_CACHE_LIST=2;
         //默认Retrofit缓存
+        public final static int DEFAULT_CACHE_MODEL=3;
+        public final static int DEFAULT_CACHE_LIST=4;
+        //自定义磁盘缓存，返回List
+        public final static int DISK_CACHE_LIST_LIMIT_TIME=5;
+        //自定义磁盘缓存，返回Model
+        public final static int DISK_CACHE_MODEL_LIMIT_TIME=6;
+        //自定义磁盘缓存，没有网络返回磁盘缓存，返回List
+        public final static int DISK_CACHE_NO_NETWORK_LIST=7;
+        //自定义磁盘缓存，没有网络返回磁盘缓存，返回Model
+        public final static int DISK_CACHE_NO_NETWORK_MODEL=8;
+        //保存网络数据到本地磁盘，可以设定网络请求是否返回数据
+        public final static int DISK_CACHE_NETWORK_SAVE_RETURN_MODEL=9;
+        public final static int DISK_CACHE_NETWORK_SAVE_RETURN_LIST=10;
+
+        @IntDef({
+        DOWNLOAD_FILE_MODEL,
+        NO_CACHE_MODEL,
+        NO_CACHE_LIST,
         DEFAULT_CACHE_MODEL,
         DEFAULT_CACHE_LIST,
-        //自定义磁盘缓存，返回List
         DISK_CACHE_LIST_LIMIT_TIME,
-        //自定义磁盘缓存，返回Model
         DISK_CACHE_MODEL_LIMIT_TIME,
-        //自定义磁盘缓存，没有网络返回磁盘缓存，返回List
         DISK_CACHE_NO_NETWORK_LIST,
-        //自定义磁盘缓存，没有网络返回磁盘缓存，返回Model
         DISK_CACHE_NO_NETWORK_MODEL,
-        //保存网络数据到本地磁盘，可以设定网络请求是否返回数据
         DISK_CACHE_NETWORK_SAVE_RETURN_MODEL,
         DISK_CACHE_NETWORK_SAVE_RETURN_LIST
+        })
+
+
+        @Target({ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER})//限制范围为字段/方法/参数
+        @Retention(RetentionPolicy.SOURCE) //仅在源码期间有效，不会在编译进class文件，影响性能
+        public @interface ReqTypeConstant {}
     }
 
-    public enum HttpType {
-        DEFAULT_GET,
-        DEFAULT_POST,
-        JSON_PARAM_POST,
-        FIELDMAP_POST,
-        //单张图片上传
-        ONE_MULTIPART_POST,
-        //多张图片上传
-        MULTIPLE_MULTIPART_POST,
-        DOWNLOAD_FILE_GET,
+    public static class HttpType{
+        public final static int DEFAULT_GET  = 0;
+        public final static int DEFAULT_POST  = 1;
+        public final static int JSON_PARAM_POST  = 2;
+        public final static int MULTIPLE_MULTIPART_POST  = 3;
+        public final static int DOWNLOAD_FILE_GET  =4;
+
+        @IntDef({ DEFAULT_GET,DEFAULT_POST,JSON_PARAM_POST,MULTIPLE_MULTIPART_POST,DOWNLOAD_FILE_GET})
+        @Target({ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER})//限制范围为字段/方法/参数
+        @Retention(RetentionPolicy.SOURCE) //仅在源码期间有效，不会在编译进class文件，影响性能
+        public @interface HttpTypeConstant {}
     }
 
-    public enum ReqMode{
-        ASYNCHRONOUS, //异步
-        SYNCHRONIZATION //同步
+    public static class ReqMode{
+        public final static int ASYNCHRONOUS  = 0;
+        public final static int SYNCHRONIZATION  = 1;
+
+        @IntDef({ ASYNCHRONOUS,SYNCHRONIZATION})
+        @Target({ElementType.FIELD, ElementType.METHOD, ElementType.PARAMETER})//限制范围为字段/方法/参数
+        @Retention(RetentionPolicy.SOURCE) //仅在源码期间有效，不会在编译进class文件，影响性能
+        public @interface ReqModeConstant {}
     }
+
 
     public RequestBuilder(RxObservableListener<T> rxObservableListener) {
         this.rxObservableListener = rxObservableListener;
         requestParam = new HashMap<>();
         headers=new HashMap<>();
     }
-
 
     public RequestBuilder setTransformClass(Class clazz) {
         this.clazz = clazz;
@@ -99,10 +131,19 @@ public class RequestBuilder<T> {
         return url;
     }
 
-
     public RequestBuilder setSaveDownloadFilePathAndFileName(String filePath, String fileName){
         this.saveDownFilePath=filePath;
         this.saveDownFileName=fileName;
+        return this;
+    }
+
+
+    public boolean isOpenBreakpointDownloadOrUpload() {
+        return isOpenBreakpointDownloadOrUpload;
+    }
+
+    public RequestBuilder setOpenBreakpointDownloadOrUpload(boolean openBreakpointDownloadOrUpload) {
+        isOpenBreakpointDownloadOrUpload = openBreakpointDownloadOrUpload;
         return this;
     }
 
@@ -128,13 +169,12 @@ public class RequestBuilder<T> {
         return fileName;
     }
 
-    public RequestBuilder setLimtHours(int limtHours) {
-        this.limtHours = limtHours;
-        return this;
+    public int getLimitHours() {
+        return limitHours;
     }
 
-    public int getLimtHours() {
-        return limtHours;
+    public void setLimitHours(int limitHours) {
+        this.limitHours = limitHours;
     }
 
     public RequestBuilder setParam(String key, Object object) {
@@ -175,34 +215,22 @@ public class RequestBuilder<T> {
         return isDiskCacheNetworkSaveReturn;
     }
 
-    public RequestBuilder setHttpTypeAndReqType(HttpType httpType, ReqType reqType) {
+    public RequestBuilder setHttpTypeAndReqType(@HttpType.HttpTypeConstant int httpType, @ReqType.ReqTypeConstant int reqType) {
         this.httpType = httpType;
         this.reqType = reqType;
         return this;
     }
 
-    public HttpType getHttpType() {
+    public int getHttpType() {
         return httpType;
     }
 
-    public ReqType getReqType() {
+    public int getReqType() {
         return reqType;
     }
 
-    public MultipartBody.Part getPart() {
-        return part;
-    }
 
-    public RequestBuilder setImagePath(String key, String imagePath) {
-        File file = new File(imagePath);
-        RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
-        MultipartBody.Part part = MultipartBody.Part.createFormData(key, file.getName(), requestFile);
-        this.part = part;
-        return this;
-    }
-
-
-    public RequestBuilder setImagePaths(String key, String[]imagePaths) {
+    public RequestBuilder setFilePaths(String key, String[]imagePaths) {
 
         parts =new MultipartBody.Part[imagePaths.length];
         for(int i=0;i<imagePaths.length;i++){
@@ -218,12 +246,12 @@ public class RequestBuilder<T> {
         return parts;
     }
 
-    public boolean isUserCommonClass() {
-        return isUserCommonClass;
+    public boolean isUseCommonClass() {
+        return isUseCommonClass;
     }
 
-    public RequestBuilder setUserCommonClass(boolean userCommonClass) {
-        isUserCommonClass = userCommonClass;
+    public RequestBuilder setUseCommonClass(boolean useCommonClass) {
+        isUseCommonClass = useCommonClass;
         return this;
     }
 
@@ -237,11 +265,11 @@ public class RequestBuilder<T> {
     }
 
 
-    public ReqMode getReqMode() {
+    public int getReqMode() {
         return reqMode;
     }
 
-    public RequestBuilder setReqMode(ReqMode reqMode) {
+    public RequestBuilder setReqMode(@ReqMode.ReqModeConstant int reqMode) {
         this.reqMode = reqMode;
         return this;
     }
@@ -249,5 +277,4 @@ public class RequestBuilder<T> {
     public RxObservableListener<T> getRxObservableListener() {
         return rxObservableListener;
     }
-
 }

@@ -25,6 +25,15 @@ android {
 //            //指定ndk需要兼容的ABI(这样其他依赖包里x86,armeabi,arm-v8之类的so会被过滤掉)
 //            abiFilters "armeabi", "armeabi-v7a"
 //        }
+
+
+        javaCompileOptions{
+            annotationProcessorOptions{
+                includeCompileClasspath = true
+                arguments = ["mvp_create_package_path": "com.youngmanster.collection",
+                             "project_java_path" : file("src/main/java").getAbsolutePath()]
+            }
+        }
     }
 
     //签名设置
@@ -107,6 +116,9 @@ dependencies {
     annotationProcessor thirdDependencies.butterknifeCompiler
     implementation thirdDependencies.multidex
     implementation project(':collectionlibrary')
+
+    implementation 'com.youngman.mvp:mvpprocessor:1.0.0'
+    annotationProcessor 'com.youngman.mvp:mvpprocessor:1.0.0'
 
 //    //单元测试
     testImplementation 'junit:junit:4.12'

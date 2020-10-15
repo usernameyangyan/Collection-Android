@@ -9,6 +9,7 @@ import com.youngmanster.collectionlibrary.network.NetWorkCodeException;
 
 public interface ObservableListener<T> {
 	void onNext(T result);
-	void onDownloadProgress(int progress);
 	void onError(NetWorkCodeException.ResponseThrowable e);
+	void onDownloadProgress(long total,long currentLength,float progress);
+	void onUploadProgress(long total,float progress);
 }

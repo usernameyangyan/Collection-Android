@@ -16,7 +16,7 @@ public abstract class BasePresenter<T> {
     }
 
     public void onDestroy(){
+        this.mView=null;
         rxManager.clear();
-        rxManager=null;
     }
 }

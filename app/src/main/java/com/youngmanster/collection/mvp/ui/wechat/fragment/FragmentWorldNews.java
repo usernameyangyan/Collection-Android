@@ -4,13 +4,17 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
 
+import com.mvp.annotation.MvpAnnotation;
+import com.mvp.config.AnnotationConfig;
 import com.youngmanster.collection.R;
 import com.youngmanster.collection.base.BaseFragment;
 import com.youngmanster.collection.been.wechat.WeChatNews;
-import com.youngmanster.collection.mvp.contract.wechat.okhttpcache.WeChatWorldNewsContract;
-import com.youngmanster.collection.mvp.presenter.wechat.okhttpcache.WeChatWorldNewsPresenter;
+import com.youngmanster.collection.mvp.presenter.WeChatWorldNewsPresenter;
 import com.youngmanster.collection.mvp.ui.wechat.adapter.WeChatFeaturedAdapter;
+import com.youngmanster.collection.mvp.view.IWeChatWorldNewsView;
 import com.youngmanster.collectionlibrary.base.stateview.StateView;
+import com.youngmanster.collectionlibrary.mvp.BasePresenter;
+import com.youngmanster.collectionlibrary.mvp.BaseView;
 import com.youngmanster.collectionlibrary.refreshrecyclerview.base.adapter.BaseRecyclerViewAdapter;
 import com.youngmanster.collectionlibrary.refreshrecyclerview.pulltorefresh.PullToRefreshRecyclerView;
 
@@ -23,9 +27,14 @@ import butterknife.BindView;
  * Created by yangyan
  * on 2018/3/21.
  */
-
+@MvpAnnotation(
+		prefixName = "WeChatWorldNews",
+		basePresenterClazz = BasePresenter.class,
+		baseViewClazz = BaseView.class,
+		language = AnnotationConfig.LANGUAGE_JAVA
+)
 public class FragmentWorldNews extends BaseFragment<WeChatWorldNewsPresenter> implements
-		WeChatWorldNewsContract.View, PullToRefreshRecyclerView.OnRefreshAndLoadMoreListener,
+		IWeChatWorldNewsView, PullToRefreshRecyclerView.OnRefreshAndLoadMoreListener,
 		BaseRecyclerViewAdapter.OnItemClickListener,SwipeRefreshLayout.OnRefreshListener {
 
 	@BindView(R.id.swipeRefreshLayout)

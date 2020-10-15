@@ -3,13 +3,17 @@ package com.youngmanster.collection.mvp.ui.wechat.fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
 
+import com.mvp.annotation.MvpAnnotation;
+import com.mvp.config.AnnotationConfig;
 import com.youngmanster.collection.R;
 import com.youngmanster.collection.base.BaseFragment;
 import com.youngmanster.collection.been.wechat.WeChatNews;
-import com.youngmanster.collection.mvp.contract.wechat.okhttpcache.WeChatFeaturedContract;
-import com.youngmanster.collection.mvp.presenter.wechat.okhttpcache.WeChatFeaturedPresenter;
+import com.youngmanster.collection.mvp.presenter.WeChatFeaturedPresenter;
 import com.youngmanster.collection.mvp.ui.wechat.adapter.WeChatFeaturedAdapter;
+import com.youngmanster.collection.mvp.view.IWeChatFeaturedView;
 import com.youngmanster.collectionlibrary.base.stateview.StateView;
+import com.youngmanster.collectionlibrary.mvp.BasePresenter;
+import com.youngmanster.collectionlibrary.mvp.BaseView;
 import com.youngmanster.collectionlibrary.refreshrecyclerview.base.adapter.BaseRecyclerViewAdapter;
 import com.youngmanster.collectionlibrary.refreshrecyclerview.pulltorefresh.PullToRefreshRecyclerView;
 
@@ -23,9 +27,14 @@ import butterknife.BindView;
  * Created by yangyan
  * on 2018/5/13.
  */
-
+@MvpAnnotation(
+		prefixName = "WeChatFeatured",
+		basePresenterClazz = BasePresenter.class,
+		baseViewClazz = BaseView.class,
+		language = AnnotationConfig.LANGUAGE_JAVA
+)
 public class FragmentWeChatFeaturedCommonClass extends BaseFragment<WeChatFeaturedPresenter> implements
-		WeChatFeaturedContract.View, PullToRefreshRecyclerView.OnRefreshAndLoadMoreListener, BaseRecyclerViewAdapter.OnItemClickListener{
+		IWeChatFeaturedView, PullToRefreshRecyclerView.OnRefreshAndLoadMoreListener, BaseRecyclerViewAdapter.OnItemClickListener{
 
 	@BindView(R.id.refreshRv)
 	PullToRefreshRecyclerView refreshRv;

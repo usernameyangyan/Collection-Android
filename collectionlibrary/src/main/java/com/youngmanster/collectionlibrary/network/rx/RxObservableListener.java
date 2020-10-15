@@ -1,8 +1,5 @@
 package com.youngmanster.collectionlibrary.network.rx;
 
-import android.text.TextUtils;
-
-import com.youngmanster.collectionlibrary.mvp.BaseView;
 import com.youngmanster.collectionlibrary.network.NetWorkCodeException;
 
 /**
@@ -13,36 +10,22 @@ import com.youngmanster.collectionlibrary.network.NetWorkCodeException;
 public abstract class RxObservableListener<T> implements ObservableListener<T>{
 
 
-	private BaseView mView;
-	private String mErrorMsg;
-
-	protected RxObservableListener(BaseView view){
-		this.mView = view;
-	}
-
 	protected RxObservableListener(){
 	}
 
 	@Override
-	public void onDownloadProgress(int progress) {
+	public void onDownloadProgress(long total, long currentLength, float progress) {
 
 	}
 
-	protected RxObservableListener(BaseView view, String errorMsg){
-		this.mView = view;
-		this.mErrorMsg = errorMsg;
+	@Override
+	public void onUploadProgress(long total, float progress) {
+
 	}
 
 
 
 	@Override
 	public void onError(NetWorkCodeException.ResponseThrowable e) {
-		if (mView == null) {
-			return;
-		} if (mErrorMsg != null && !TextUtils.isEmpty(mErrorMsg)) {
-			mView.onError(mErrorMsg);
-		}else {
-			mView.onError(e.message);
-		}
 	}
 }

@@ -172,6 +172,7 @@
 		<activity
 			android:name=".customview.activity.TagViewActivity"
 			android:screenOrientation="portrait" />
+        <activity android:name=".download.DownFileActivity" />
 
-	</application>
+    </application>
 </manifest>

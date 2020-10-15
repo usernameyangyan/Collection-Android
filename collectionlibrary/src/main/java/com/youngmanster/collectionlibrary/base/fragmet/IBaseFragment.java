@@ -33,7 +33,9 @@ public abstract class IBaseFragment<T extends BasePresenter> extends Fragment {
     /**
      * 是否加载过数据
      */
-    private boolean isDataInitiated = false;
+    boolean isDataInitiated = false;
+    private boolean isInitLazy=false;
+    private boolean isResumeLoad=false;
     private FrameLayout frame_caption_container;
     private FrameLayout frame_content_container;
     public View customBar;
@@ -49,12 +51,6 @@ public abstract class IBaseFragment<T extends BasePresenter> extends Fragment {
         mainView=inflater.inflate(R.layout.collection_library_default_base_fragment,container,false);
         frame_caption_container=mainView.findViewById(R.id.frame_caption_container);
         frame_content_container=mainView.findViewById(R.id.frame_content_container);
-
-        if (getLayoutId() != 0) {
-            addContainerFrame(getLayoutId());
-        }else{
-            throw new IllegalArgumentException("请设置getLayoutId");
-        }
 
         mPresenter= ClassGetUtil.getClass(this,0);
         if(mPresenter!=null){
@@ -81,9 +77,20 @@ public abstract class IBaseFragment<T extends BasePresenter> extends Fragment {
             frame_caption_container.setVisibility(View.GONE);
         }
 
+        isInitLazy=onCreateViewAndInitLazy();
+
+        isResumeLoad=true;
+        if(!isInitLazy){
+            layoutInit();
+        }
+
 
         return mainView;
     }
+
+
+
+
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
@@ -94,9 +101,23 @@ public abstract class IBaseFragment<T extends BasePresenter> extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        if(isInitLazy&&isResumeLoad){
+            isInitLazy=false;
+            layoutInit();
+            init();
+        }
+
         if(!isDataInitiated){
             requestData();
             isDataInitiated=true;
+        }
+    }
+
+    private void layoutInit(){
+        if (getLayoutId() != 0) {
+            addContainerFrame(getLayoutId());
+        }else{
+            throw new IllegalArgumentException("请设置getLayoutId");
         }
     }
 
@@ -237,6 +258,14 @@ public abstract class IBaseFragment<T extends BasePresenter> extends Fragment {
     private void addContainerFrame(int layoutResID) {
         View view = LayoutInflater.from(getActivity()).inflate(layoutResID, frame_content_container, false);
         frame_content_container.addView(view);
+    }
+
+
+    /**
+     * 是否进行布局懒加载
+     */
+    public boolean onCreateViewAndInitLazy() {
+        return false;
     }
 
     /**

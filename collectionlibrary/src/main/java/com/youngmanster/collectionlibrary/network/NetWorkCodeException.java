@@ -3,6 +3,8 @@ package com.youngmanster.collectionlibrary.network;
 import android.net.ParseException;
 
 import com.google.gson.JsonParseException;
+import com.youngmanster.collectionlibrary.config.Config;
+import com.youngmanster.collectionlibrary.utils.NetworkUtils;
 
 import org.json.JSONException;
 
@@ -43,6 +45,16 @@ public class NetWorkCodeException{
     public static final int HTTP_ERROR = 1003;
     //证书出错
     public static final int SSL_ERROR = 1005;
+    //服务器连接失败
+    public static final int CONNECTION_SERVICE_ERROR = 1006;
+
+
+    public static final String CHECK_PERMISSION="请检查权限";
+    public static final String HTTP_ERROR_MESSAGE="服务器错误";
+    public static final String PARSE_ERROR_MESSAGE="解析错误";
+    public static final String NETWORD_ERROR_MESSAGE="网络错误";
+    public static final String CONNECTION_SERVICE_ERROR_MESSAGE="连接服务器错误";
+    public static final String SSL_ERROR_MESSAGE="证书验证失败";
 
     public static ResponseThrowable getResponseThrowable(Throwable e) {
         ResponseThrowable ex;
@@ -54,7 +66,7 @@ public class NetWorkCodeException{
                 case UNAUTHORIZED:
                 case FORBIDDEN:
                     ex.code = HTTP_ERROR;
-                    ex.message = "请检查权限";
+                    ex.message = CHECK_PERMISSION;
                     break;
                 case NOT_FOUND:
                 case REQUEST_TIMEOUT:
@@ -64,7 +76,7 @@ public class NetWorkCodeException{
                 case SERVICE_UNAVAILABLE:
                 default:
                     ex.code = HTTP_ERROR;
-                    ex.message = "网络错误";
+                    ex.message = HTTP_ERROR_MESSAGE;
                     break;
             }
             return ex;
@@ -79,22 +91,29 @@ public class NetWorkCodeException{
                 || e instanceof ParseException) {
             ex = new ResponseThrowable();
             ex.code = PARSE_ERROR;
-            ex.message = "解析错误";
+            ex.message = PARSE_ERROR_MESSAGE;
             return ex;
         } else if (e instanceof Connection) {
             ex = new ResponseThrowable();
-            ex.code = NETWORD_ERROR;
-            ex.message = "连接失败";
+
+            if(NetworkUtils.isNetworkConnected(Config.CONTEXT)){
+                ex.code = CONNECTION_SERVICE_ERROR;
+                ex.message =CONNECTION_SERVICE_ERROR_MESSAGE;
+            }else{
+                ex.code = NETWORD_ERROR;
+                ex.message =NETWORD_ERROR_MESSAGE;
+            }
+
             return ex;
         } else if (e instanceof javax.net.ssl.SSLHandshakeException) {
             ex = new ResponseThrowable();
             ex.code = SSL_ERROR;
-            ex.message = "证书验证失败";
+            ex.message =SSL_ERROR_MESSAGE;
             return ex;
         } else {
             ex = new ResponseThrowable();
             ex.code = NETWORD_ERROR;
-            ex.message = "网络错误";
+            ex.message = NETWORD_ERROR_MESSAGE;
             return ex;
         }
     }
@@ -108,5 +127,17 @@ public class NetWorkCodeException{
     public class ServerException extends RuntimeException {
         public int code;
         public String message;
+    }
+
+
+    public static boolean isError(int code){
+        if(code==UNAUTHORIZED||code==FORBIDDEN||code==NOT_FOUND||
+                code==REQUEST_TIMEOUT||code==INTERNAL_SERVER_ERROR||code==BAD_GATEWAY||
+                code==SERVICE_UNAVAILABLE||code==GATEWAY_TIMEOUT||code==PARSE_ERROR||
+                code==NETWORD_ERROR||code==HTTP_ERROR||code==SSL_ERROR||
+                code==CONNECTION_SERVICE_ERROR){
+            return true;
+        }
+        return false;
     }
 }

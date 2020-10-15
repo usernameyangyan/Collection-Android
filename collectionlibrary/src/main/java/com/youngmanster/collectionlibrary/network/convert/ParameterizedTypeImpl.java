@@ -1,4 +1,4 @@
-package com.youngmanster.collectionlibrary.network.gson;
+package com.youngmanster.collectionlibrary.network.convert;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
