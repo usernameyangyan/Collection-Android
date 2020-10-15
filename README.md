@@ -1,6 +1,6 @@
 ## Collection
 
-![Travis](https://img.shields.io/badge/release-1.3.8-green.svg)
+![Travis](https://img.shields.io/badge/release-1.3.9-green.svg)
 ![Travis](https://img.shields.io/badge/llicense-MIT-green.svg)
 ![Travis](https://img.shields.io/badge/build-passing-green.svg)
 
@@ -26,6 +26,15 @@ Collection聚合了项目搭建的一些基本模块，节约开发者时间，�
 
 
 ###  更新说明
+
+####   v1.3.9
+> 1.上传下载增加进度条
+> 2.Fragment增加布局和数据 初始化懒加载
+> 3.网络请求优化（解决内存泄露问题）
+> 4.增加文件断点下载
+> 5.增加MVP注解生成文件（[https://github.com/usernameyangyan/MvpAnnotationProject](https://github.com/usernameyangyan/MvpAnnotationProject)）
+> 6.增加网络请求通过同步上传文件
+
 
 ####   v1.3.8
 > 1.DialogFragment替换AlertDialog
@@ -85,7 +94,7 @@ Collection聚合了项目搭建的一些基本模块，节约开发者时间，�
 
 
 ###  框架的引入
->  **implementation 'com.youngman:collectionlibrary:1.3.8'**
+>  **implementation 'com.youngman:collectionlibrary:1.3.9'**
 
 > Error:Could not find com.android.support:appcompat-v7:27.x.x.
 因为library的Support Repository是27.x.x,可能跟项目有所冲突，如果sdk已经装了27还是会出现同样的错误。
@@ -633,11 +642,12 @@ Collection聚合了项目搭建的一些基本模块，节约开发者时间，�
 | setImagePaths |设置多张图片路径 |
 | isUserCommonClass |设置是否使用公用类转化 |
 | setReqMode |设置同步异步 |
+| isOpenBreakpointDownloadOrUpload |是否开启断点下载 |
 
 （2）使用模块
 
 
-    RequestBuilder<Result<List<WeChatNews>>> resultRequestBuilder = new RequestBuilder<>(new RxObservableListener<Result<List<WeChatNews>>>(mView) {
+    RequestBuilder<Result<List<WeChatNews>>> resultRequestBuilder = new RequestBuilder<>(new RxObservableListener<Result<List<WeChatNews>>>() {
 			@Override
 			public void onNext(Result<List<WeChatNews>> result) {
 				mView.refreshUI(result.getResult());
@@ -707,15 +717,6 @@ Collection聚合了项目搭建的一些基本模块，节约开发者时间，�
     void onComplete();
     void onError(NetWorkCodeException.ResponseThrowable e);
 ######   只会重写onNext方法，其它两个方法可以自行选择重写。
-######   （2）RxObservableListener提供两个构造函数
-    protected RxObservableListener(BaseView view){
-	    this.mView = view;
-    }
-
-    protected RxObservableListener(BaseView view, String errorMsg){
-	     this.mView = view;
-         this.mErrorMsg = errorMsg;
-    }
 
 
 ######  这两个构造函数主要主要是为了统一处理onError的，如果要自定义错误提醒，则可以选择第二个构造函数。
